@@ -1,0 +1,101 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --color-memry-dark: #073b46;
+  --color-memry-teal: #087f86;
+  --color-memry-turquoise: #06b6d4;
+  --color-memry-orange: #f97316;
+  --color-surface: #ffffff;
+  --color-page: #fafcfc;
+  --color-warm: #fff7ed;
+  --color-ink: #102a2e;
+  --color-muted: #66777a;
+  --color-line: #dde7e8;
+}
+
+:root {
+  --memry-dark: #073b46;
+  --memry-teal: #087f86;
+  --memry-turquoise: #06b6d4;
+  --memry-orange: #f97316;
+
+  --background: #fafcfc;
+  --background-warm: #fff7ed;
+  --surface: #ffffff;
+
+  --text-primary: #102a2e;
+  --text-muted: #66777a;
+  --border: #dde7e8;
+
+  --hero-bg-start: #031e27;
+  --hero-bg-mid: #052f3a;
+  --hero-bg-end: #021820;
+  --hero-ink: #e3f1f3;
+  --hero-ink-muted: #9fb8bc;
+  --terminal-bg: #06303a;
+
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-feature-settings: 'cv11', 'ss01';
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgba(6, 182, 212, 0.25);
+}
+
+.hero-bg {
+  background: linear-gradient(160deg, var(--hero-bg-start) 0%, var(--hero-bg-mid) 50%, var(--hero-bg-end) 100%);
+}
+
+/* Beyond the art's native width, fade its side edges into the background. */
+@media (min-width: 1672px) {
+  .hero-art {
+    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  }
+}
+
+/* On mobile the art sits under the heading; fade its top edge in. */
+@media (max-width: 767px) {
+  .hero-art {
+    mask-image: linear-gradient(to bottom, transparent, #000 18%);
+  }
+}
+
+/* Visible keyboard focus: teal on light surfaces, turquoise on dark ones. */
+.focus-ring:focus-visible {
+  outline: 2px solid var(--memry-teal);
+  outline-offset: 3px;
+}
+.focus-ring-dark:focus-visible {
+  outline: 2px solid var(--memry-turquoise);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
