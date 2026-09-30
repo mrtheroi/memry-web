@@ -10,8 +10,10 @@ export function Agents() {
   return (
     <section aria-labelledby="agents-title" className="border-t border-[var(--border)] bg-white py-20 sm:py-24">
       <Container>
-        <SectionHeading id="agents-title">{agents.heading}</SectionHeading>
-        <p className="mt-5 max-w-[60ch] text-lg leading-relaxed text-[var(--text-primary)]">{agents.body}</p>
+        <div className="grid gap-5 md:grid-cols-2 md:items-end md:gap-16">
+          <SectionHeading id="agents-title">{agents.heading}</SectionHeading>
+          <p className="max-w-[60ch] text-lg leading-relaxed text-[var(--text-primary)]">{agents.body}</p>
+        </div>
         <AgentDiagram />
       </Container>
     </section>
