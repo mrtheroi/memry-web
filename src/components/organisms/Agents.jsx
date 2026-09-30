@@ -10,11 +10,13 @@ export function Agents() {
   return (
     <section aria-labelledby="agents-title" className="border-t border-[var(--border)] bg-white py-20 sm:py-24">
       <Container>
-        <div className="grid gap-5 md:grid-cols-2 md:items-end md:gap-16">
-          <SectionHeading id="agents-title">{agents.heading}</SectionHeading>
-          <p className="max-w-[60ch] text-lg leading-relaxed text-[var(--text-primary)]">{agents.body}</p>
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:items-center lg:gap-14">
+          <div>
+            <SectionHeading id="agents-title">{agents.heading}</SectionHeading>
+            <p className="mt-5 max-w-[60ch] text-lg leading-relaxed text-[var(--text-primary)]">{agents.body}</p>
+          </div>
+          <AgentDiagram />
         </div>
-        <AgentDiagram />
       </Container>
     </section>
   )
@@ -82,16 +84,16 @@ function AgentDiagram() {
   usePauseAnimationsOffscreen(figureRef)
 
   return (
-    <figure ref={figureRef} className="mt-12 rounded-2xl border border-[var(--border)] bg-[var(--background)] p-6 sm:p-10">
-      <div className="relative mx-auto aspect-[320/480] w-full max-w-[420px] md:aspect-[1000/360] md:max-w-none">
-        <FlowDrawing layout="narrow" geometry={narrow} className="md:hidden" />
-        <FlowDrawing layout="wide" geometry={wide} className="hidden md:block" />
+    <figure ref={figureRef} className="rounded-2xl border border-[var(--border)] bg-[var(--background)] p-6 sm:p-10">
+      <div className="relative mx-auto aspect-[320/480] w-full max-w-[420px] md:max-lg:aspect-[1000/360] md:max-lg:max-w-none">
+        <FlowDrawing layout="narrow" geometry={narrow} className="md:max-lg:hidden" />
+        <FlowDrawing layout="wide" geometry={wide} className="hidden md:max-lg:block" />
 
         <ul aria-label={agents.listLabel} className="absolute inset-0">
           {agents.list.map((name, i) => (
             <li
               key={name}
-              className="absolute top-[var(--n-top)] left-[var(--n-left)] w-[42%] -translate-y-1/2 md:top-[var(--w-top)] md:left-[var(--w-left)] md:w-[20%]"
+              className="absolute top-[var(--n-top)] left-[var(--n-left)] w-[42%] -translate-y-1/2 md:max-lg:top-[var(--w-top)] md:max-lg:left-[var(--w-left)] md:max-lg:w-[20%]"
               style={{
                 '--n-top': pct(narrow.chips[i].y, narrow.height),
                 '--n-left': `${narrow.chips[i].left}%`,
@@ -99,7 +101,7 @@ function AgentDiagram() {
                 '--w-left': `${wide.chips[i].left}%`,
               }}
             >
-              <span className="block truncate rounded-full border border-[var(--border)] bg-white px-3 py-2 text-center text-sm font-semibold text-[var(--memry-dark)] md:py-1.5 md:text-xs lg:py-2 lg:text-sm">
+              <span className="block truncate rounded-full border border-[var(--border)] bg-white px-3 py-2 text-center text-sm font-semibold text-[var(--memry-dark)] md:max-lg:py-1.5 md:max-lg:text-xs lg:py-2 lg:text-sm">
                 {name}
               </span>
             </li>
@@ -107,7 +109,7 @@ function AgentDiagram() {
         </ul>
 
         <span
-          className="absolute top-[var(--n-top)] left-[var(--n-left)] -translate-x-1/2 -translate-y-1/2 rounded-xl border border-[var(--memry-teal)] bg-[var(--memry-dark)] px-6 py-4 text-base font-semibold whitespace-nowrap text-white md:top-[var(--w-top)] md:left-[var(--w-left)]"
+          className="absolute top-[var(--n-top)] left-[var(--n-left)] -translate-x-1/2 -translate-y-1/2 rounded-xl border border-[var(--memry-teal)] bg-[var(--memry-dark)] px-6 py-4 text-base font-semibold whitespace-nowrap text-white md:max-lg:top-[var(--w-top)] md:max-lg:left-[var(--w-left)]"
           style={{
             '--n-top': pct(narrow.hub.y, narrow.height),
             '--n-left': pct(narrow.hub.x, narrow.width),
@@ -118,7 +120,7 @@ function AgentDiagram() {
           {agents.hub}
         </span>
 
-        <span className="absolute top-[90%] left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-3 rounded-xl border border-[var(--border)] bg-white px-5 py-4 text-sm font-semibold whitespace-nowrap text-[var(--memry-dark)] md:top-1/2 md:right-[2%] md:left-auto md:max-w-[26%] md:translate-x-0 md:whitespace-normal lg:max-w-none lg:whitespace-nowrap">
+        <span className="absolute top-[90%] left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-3 rounded-xl border border-[var(--border)] bg-white px-5 py-4 text-sm font-semibold whitespace-nowrap text-[var(--memry-dark)] md:max-lg:top-1/2 md:max-lg:right-[2%] md:max-lg:left-auto md:max-lg:max-w-[26%] md:max-lg:translate-x-0 md:max-lg:whitespace-normal lg:max-w-none lg:whitespace-nowrap">
           <AcornIcon className="h-6 w-5 shrink-0" />
           {agents.memory}
         </span>
