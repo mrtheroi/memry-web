@@ -87,6 +87,25 @@ body {
   outline-offset: 3px;
 }
 
+/* Slow, gentle glow on the Memory Tree's memory nodes. */
+.memory-twinkle {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: memory-twinkle 3.6s ease-in-out infinite;
+}
+
+@keyframes memory-twinkle {
+  0%,
+  100% {
+    opacity: 0.14;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.42;
+    transform: scale(1.1);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

@@ -83,7 +83,16 @@ export function MemoryTree({ className = '' }) {
       ))}
       {memories.map(([cx, cy], i) => (
         <motion.g key={`${cx}-${cy}`} {...appear(1.1 + i * 0.07)} style={{ transformOrigin: `${cx}px ${cy}px` }}>
-          <circle cx={cx} cy={cy} r="15" fill="var(--memry-turquoise)" opacity="0.14" />
+          <circle
+            cx={cx}
+            cy={cy}
+            r="11"
+            fill="var(--memry-turquoise)"
+            opacity="0.14"
+            {...(reduced
+              ? {}
+              : { className: 'memory-twinkle', style: { animationDelay: `${(i * 0.53).toFixed(2)}s` } })}
+          />
           <circle cx={cx} cy={cy} r="7.5" fill="var(--memry-turquoise)" />
         </motion.g>
       ))}
