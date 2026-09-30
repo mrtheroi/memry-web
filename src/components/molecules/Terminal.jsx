@@ -1,5 +1,8 @@
+import { Fragment } from 'react'
+
 /**
- * Presentational terminal: prompts in light ink, success lines with a turquoise check.
+ * Presentational terminal: prompts in light ink, success lines with a turquoise check,
+ * and multiselect questions (`{ question, choices }`) with filled boxes for selected choices.
  * `action` renders in the title bar (e.g. a copy button).
  */
 export function Terminal({ commands, output = [], title = 'Terminal', action = null }) {
@@ -20,13 +23,38 @@ export function Terminal({ commands, output = [], title = 'Terminal', action = n
               {command}
             </span>
           ))}
-          {output.map((line) => (
-            <span key={line} className="block text-[var(--hero-ink-muted)]">
-              <span className="text-[var(--memry-turquoise)]">✓</span> {line}
-            </span>
-          ))}
+          {output.map((line) =>
+            typeof line === 'string' ? (
+              <span key={line} className="block text-[var(--hero-ink-muted)]">
+                <span className="text-[var(--memry-turquoise)]">✓</span> {line}
+              </span>
+            ) : (
+              <Choice key={line.question} {...line} />
+            ),
+          )}
         </code>
       </pre>
     </figure>
+  )
+}
+
+function Choice({ question, choices }) {
+  return (
+    <span className="block">
+      <span className="block">
+        <span className="text-[var(--memry-orange)]">?</span> {question}
+      </span>
+      <span className="block pl-4 text-[var(--hero-ink-muted)]">
+        {choices.map(({ label, selected }, i) => (
+          <Fragment key={label}>
+            <span className="whitespace-nowrap">
+              <span className={selected ? 'text-[var(--memry-turquoise)]' : ''}>{selected ? '◼' : '◻'}</span>{' '}
+              <span className={selected ? 'text-[var(--hero-ink)]' : ''}>{label}</span>
+            </span>
+            {i < choices.length - 1 && '  '}
+          </Fragment>
+        ))}
+      </span>
+    </span>
   )
 }

@@ -1,6 +1,6 @@
 import { MotionConfig } from 'motion/react'
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion'
-import { BuiltFor } from './components/organisms/BuiltFor'
+import { Agents } from './components/organisms/Agents'
 import { Footer } from './components/organisms/Footer'
 import { GetStarted } from './components/organisms/GetStarted'
 import { Hero } from './components/organisms/Hero'
@@ -20,7 +20,7 @@ export default function App() {
           <Hero />
           <Intro />
           <HowItWorks />
-          <BuiltFor />
+          <Agents />
           <WhyMemry />
           <GetStarted />
           <Privacy />

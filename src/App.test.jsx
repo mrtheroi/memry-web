@@ -1,6 +1,7 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import App from './App'
+import { agents } from './content'
 
 describe('App', () => {
   it('has exactly one h1', () => {
@@ -20,6 +21,23 @@ describe('App', () => {
     const { container } = render(<App />)
     expect(container.textContent).toContain('memry setup')
     expect(container.textContent).not.toMatch(/memry init/)
+  })
+
+  it('shows one memory for exactly the five supported agents', () => {
+    render(<App />)
+    expect(agents.list).toEqual(['Claude Code', 'Codex', 'OpenCode', 'Antigravity', 'Windsurf'])
+
+    const section = screen.getByRole('region', { name: 'One memory, every agent' })
+    const list = within(section).getByRole('list', { name: /supported agents/i })
+    const names = within(list).getAllByRole('listitem').map((item) => item.textContent)
+    expect(names).toEqual(agents.list)
+  })
+
+  it('no longer claims to be built only for Claude Code', () => {
+    render(<App />)
+    expect(screen.queryByRole('heading', { name: /built for claude code/i })).toBeNull()
+    expect(screen.getByText('Requires macOS or Linux, Homebrew and at least one supported agent.')).toBeInTheDocument()
+    expect(screen.queryByText(/start a new Claude Code session/)).toBeNull()
   })
 
   it('links the privacy policy in English and Spanish', () => {

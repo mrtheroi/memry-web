@@ -5,7 +5,6 @@ export const links = {
   privacy: 'https://github.com/mrtheroi/memry-cli/blob/main/PRIVACY.md',
   privacyEs: 'https://github.com/mrtheroi/memry-cli/blob/main/PRIVACY.es.md',
   license: 'https://github.com/mrtheroi/memry-cli/blob/main/LICENSE',
-  claudeCode: 'https://docs.anthropic.com/en/docs/claude-code',
 }
 
 export const nav = {
@@ -45,16 +44,16 @@ export const howItWorks = {
     },
     {
       title: 'Run memry setup',
-      body: 'Log in with a 6-digit code sent to your email. Setup registers the memry MCP server in Claude Code and adds a SessionStart hook.',
+      body: 'Log in with a 6-digit code sent to your email, then choose the agents you use. Setup connects memry to each one, with the agents it finds already selected.',
       code: 'memry setup',
     },
     {
       title: 'Start a session',
-      body: 'Every new, resumed or compacted session starts with the recent memories of your project, so Claude picks up where you left off.',
+      body: 'Every session starts with the recent memories of your project, in every agent. Claude Code loads them automatically through its SessionStart hook; the other agents fetch them when a session starts.',
     },
     {
       title: 'Let your agent remember',
-      body: 'As it works, Claude saves decisions, bug fixes and discoveries, and searches them when they matter again.',
+      body: 'As it works, your agent saves decisions, bug fixes and discoveries, and searches them when they matter again.',
     },
   ],
   projects: {
@@ -67,29 +66,31 @@ export const howItWorks = {
     'Each acorn is a memory. Together they grow into what your project knows.',
 }
 
-export const builtFor = {
-  heading: 'Built for Claude Code',
-  body: 'memry plugs into Claude Code as an MCP server and a SessionStart hook. Claude gets tools to save and search memories, and every session opens with your project’s context.',
-  linkLabel: 'About Claude Code',
-  connections: ['MCP server', 'SessionStart hook'],
+export const agents = {
+  heading: 'One memory, every agent',
+  body: 'memry works with Claude Code, Codex, OpenCode, Antigravity and Windsurf. Every agent reads and saves the same project memory, so a decision saved in Claude Code is there when you open Codex, and the other way around.',
+  listLabel: 'Supported agents',
+  list: ['Claude Code', 'Codex', 'OpenCode', 'Antigravity', 'Windsurf'],
+  hub: 'memry',
+  memory: 'Your project memory',
   diagramNote:
-    'Save and search memories while you work. Load your project’s context when a session starts.',
+    'memry setup asks which agents you use and connects each one. memry uninstall removes it from all of them.',
 }
 
 export const why = {
   heading: 'Why memry',
   items: [
     {
-      title: 'No server to run',
-      body: 'memry is hosted. Install the CLI, log in, and you are done.',
+      title: 'Switch agents, keep the context',
+      body: 'Claude Code, Codex, OpenCode, Antigravity and Windsurf share one memory. Start in one, continue in another.',
     },
     {
       title: 'Across machines and projects',
-      body: 'Your memories follow your account, so a new laptop picks up the same context.',
+      body: 'memry is hosted, so there is no server to run. Your memories follow your account, and a new laptop picks up the same context.',
     },
     {
       title: 'One command to uninstall',
-      body: 'memry uninstall removes memry from Claude Code and deletes your local login.',
+      body: 'memry uninstall removes memry from every agent you set up and deletes your local login.',
       code: 'memry uninstall',
     },
     {
@@ -102,16 +103,27 @@ export const why = {
 
 export const getStarted = {
   heading: 'Get started',
-  lead: 'Two commands, then start a new Claude Code session.',
+  lead: 'Two commands, then start a new session in any of your agents.',
   commands: ['brew install mrtheroi/tap/memry', 'memry setup'],
   output: [
     'Logged in as you@example.com',
-    'Registered the memry MCP server in Claude Code',
-    'Installed the memry SessionStart hook',
+    {
+      question: 'Which agents do you use?',
+      choices: [
+        { label: 'Claude Code', selected: true },
+        { label: 'Codex', selected: true },
+        { label: 'OpenCode', selected: false },
+        { label: 'Antigravity', selected: true },
+        { label: 'Windsurf', selected: false },
+      ],
+    },
+    'Claude Code: memry is set up',
+    'Codex: memry is set up',
+    'Antigravity: memry is set up',
   ],
   copyLabel: 'Copy install commands',
   copiedLabel: 'Copied',
-  requirements: 'Requires macOS or Linux, Homebrew and Claude Code.',
+  requirements: 'Requires macOS or Linux, Homebrew and at least one supported agent.',
   beta: 'Free public beta.',
 }
 
