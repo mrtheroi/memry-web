@@ -39,6 +39,7 @@ const wide = (() => {
     height: 360,
     pulse: 5,
     hub,
+    memoryBox: { x: 750, y: memory.y, width: 230, height: 64 },
     chips,
     hubCurve: `M${hub.x} ${hub.y} C680 135 780 225 ${memory.x} ${memory.y}`,
   }
@@ -65,6 +66,7 @@ const narrow = (() => {
     height: 480,
     pulse: 3.5,
     hub,
+    memoryBox: { x: 45, y: memory.y, width: 230, height: 60 },
     chips,
     hubCurve: `M${hub.x} ${hub.y} C148 360 172 396 ${memory.x} ${memory.y}`,
   }
@@ -186,17 +188,19 @@ function FlowDrawing({ layout, geometry, className }) {
 
 /*
  * The story, told with SVG SMIL (no JS per frame):
- * SAVE: each agent sends a turquoise pulse into memry on its own offset, and
- * memry glows softly as each one arrives.
+ * SAVE: each agent sends a turquoise pulse on its own offset. It passes through
+ * memry (which glows softly) and goes on into the project memory, which glows
+ * faintly when it arrives. Offsets are spaced wider than the memry-to-memory leg,
+ * so pulses never bunch up on that shared curve.
  * RECALL: one orange pulse (the acorn, a memory that matters) travels from the
  * project memory back through memry to one agent at a time; that chip glows.
  */
 const SAVE_START = 1.6 // after the curves have drawn themselves
-const SAVE_CYCLE = 14
-const SAVE_TRAVEL = 4.2
-const SAVE_OFFSETS = [0, 5.4, 2.6, 9.2, 7.6] // per agent, so arrivals don't march top to bottom
-const GLOW_RISE = 0.35
-const GLOW_FADE = 1.4
+const SAVE_CYCLE = 16
+const SAVE_IN = 4.2 // agent to memry
+const SAVE_OUT = 2.6 // memry to the project memory
+const SAVE_REST = SAVE_CYCLE - SAVE_IN - SAVE_OUT
+const SAVE_OFFSETS = [0, 9.8, 3.1, 12.9, 6.3] // per agent; at least 3.1 s apart, never top to bottom
 const RECALL_START = 5
 const RECALL_TRAVEL = 4.4
 const RECALL_GAP = 4
@@ -204,7 +208,6 @@ const RECALL_ORDER = [0, 3, 1, 4, 2]
 const EASE = '0.45 0 0.25 1'
 
 const seconds = (value) => `${+value.toFixed(3)}s`
-const fractions = (times, total) => times.map((t) => +(t / total).toFixed(4)).join(';')
 
 /** Reverses a single-segment cubic path: "M a C b c d" becomes "M d C c b a". */
 function reverseCubic(d) {
@@ -212,26 +215,13 @@ function reverseCubic(d) {
   return { start: `M${dx} ${dy}`, segment: `C${cx} ${cy} ${bx} ${by} ${ax} ${ay}` }
 }
 
-/** memry's glow: one soft swell per save arrival, on the save cycle. */
-function hubGlowFrames() {
-  const arrivals = [...SAVE_OFFSETS].sort((a, b) => a - b)
-  const times = [0]
-  const values = [0]
-  for (const at of arrivals) {
-    times.push(at, at + GLOW_RISE, at + GLOW_FADE)
-    values.push(0, 1, 0)
-  }
-  times.push(SAVE_CYCLE)
-  values.push(0)
-  return { keyTimes: fractions(times, SAVE_CYCLE), values: values.join(';') }
-}
-
 function Pulses({ layout, geometry }) {
   const glowId = `${layout}AgentsGlow`
   const softId = `${layout}AgentsSoft`
   const recallId = (k) => `${layout}Recall${k}`
-  const hubGlow = hubGlowFrames()
-  const travelShare = SAVE_TRAVEL / SAVE_CYCLE
+  const saveInId = (i) => `${layout}Save${i}In`
+  const saveOutId = (i) => `${layout}Save${i}Out`
+  const box = geometry.memoryBox
   const hubBack = reverseCubic(geometry.hubCurve)
 
   return (
@@ -249,7 +239,7 @@ function Pulses({ layout, geometry }) {
         </filter>
       </defs>
 
-      {/* memry's glow, behind the node. */}
+      {/* memry's glow, behind the node, as each save pulse passes through. */}
       <rect
         x={geometry.hub.x - 62}
         y={geometry.hub.y - 32}
@@ -261,14 +251,41 @@ function Pulses({ layout, geometry }) {
         filter={`url(#${softId})`}
         opacity="0"
       >
-        <animate
-          attributeName="opacity"
-          begin={seconds(SAVE_START + SAVE_TRAVEL)}
-          dur={seconds(SAVE_CYCLE)}
-          repeatCount="indefinite"
-          values={hubGlow.values}
-          keyTimes={hubGlow.keyTimes}
-        />
+        {geometry.chips.map((chip, i) => (
+          <animate
+            key={chip.y}
+            attributeName="opacity"
+            begin={`${saveInId(i)}.end-0.2s`}
+            dur="1.4s"
+            values="0;1;0"
+            keyTimes="0;0.25;1"
+          />
+        ))}
+      </rect>
+
+      {/* The project memory's faint glow, as each save pulse arrives. */}
+      <rect
+        className="memory-glow"
+        x={box.x}
+        y={box.y - box.height / 2}
+        width={box.width}
+        height={box.height}
+        rx="16"
+        fill="var(--memry-turquoise)"
+        fillOpacity="0.4"
+        filter={`url(#${softId})`}
+        opacity="0"
+      >
+        {geometry.chips.map((chip, i) => (
+          <animate
+            key={chip.y}
+            attributeName="opacity"
+            begin={`${saveOutId(i)}.end-0.3s`}
+            dur="1.5s"
+            values="0;1;0"
+            keyTimes="0;0.3;1"
+          />
+        ))}
       </rect>
 
       {/* A faint orange glow behind each chip, when the recall pulse reaches it. */}
@@ -298,38 +315,52 @@ function Pulses({ layout, geometry }) {
         )
       })}
 
-      {geometry.chips.map((chip, i) => {
-        const begin = seconds(SAVE_START + SAVE_OFFSETS[i])
-        return (
-          <circle
-            key={`save-${chip.y}`}
-            className="save-pulse"
-            r={geometry.pulse}
-            fill="var(--memry-turquoise)"
-            filter={`url(#${glowId})`}
-            opacity="0"
-          >
-            <animateMotion
-              path={chip.curve}
-              begin={begin}
-              dur={seconds(SAVE_CYCLE)}
-              repeatCount="indefinite"
-              calcMode="spline"
-              keyPoints="0;1;1"
-              keyTimes={`0;${travelShare.toFixed(4)};1`}
-              keySplines={`${EASE};0 0 1 1`}
-            />
-            <animate
-              attributeName="opacity"
-              begin={begin}
-              dur={seconds(SAVE_CYCLE)}
-              repeatCount="indefinite"
-              values="0;0.9;0.9;0;0"
-              keyTimes={`0;${(travelShare * 0.12).toFixed(4)};${(travelShare * 0.85).toFixed(4)};${travelShare.toFixed(4)};1`}
-            />
-          </circle>
-        )
-      })}
+      {geometry.chips.map((chip, i) => (
+        <circle
+          key={`save-${chip.y}`}
+          className="save-pulse"
+          r={geometry.pulse}
+          fill="var(--memry-turquoise)"
+          filter={`url(#${glowId})`}
+          opacity="0"
+        >
+          {/* Two legs, chained: agent to memry, then memry to the project memory. */}
+          <animateMotion
+            id={saveInId(i)}
+            path={chip.curve}
+            begin={`${seconds(SAVE_START + SAVE_OFFSETS[i])}; ${saveOutId(i)}.end+${seconds(SAVE_REST)}`}
+            dur={seconds(SAVE_IN)}
+            calcMode="spline"
+            keyPoints="0;1"
+            keyTimes="0;1"
+            keySplines={EASE}
+          />
+          <animateMotion
+            id={saveOutId(i)}
+            path={geometry.hubCurve}
+            begin={`${saveInId(i)}.end`}
+            dur={seconds(SAVE_OUT)}
+            calcMode="spline"
+            keyPoints="0;1"
+            keyTimes="0;1"
+            keySplines={EASE}
+          />
+          <animate
+            attributeName="opacity"
+            begin={`${saveInId(i)}.begin`}
+            dur={seconds(SAVE_IN)}
+            values="0;0.9;0.9"
+            keyTimes="0;0.12;1"
+          />
+          <animate
+            attributeName="opacity"
+            begin={`${saveOutId(i)}.begin`}
+            dur={seconds(SAVE_OUT)}
+            values="0.9;0.9;0"
+            keyTimes="0;0.85;1"
+          />
+        </circle>
+      ))}
 
       <circle
         className="recall-pulse"
