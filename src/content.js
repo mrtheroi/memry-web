@@ -26,12 +26,7 @@ export const hero = {
   hook: "Your agents forget. Your project shouldn't.",
   primaryCta: { label: "Get started, it's free", href: '#get-started' },
   secondaryCta: { label: 'View on GitHub', href: links.github },
-}
-
-export const trust = {
   worksWith: 'Works with',
-  factsLabel: 'Key facts',
-  facts: ['2 commands to install', 'Open source (MIT)', 'Never used to train AI models'],
 }
 
 export const problem = {
