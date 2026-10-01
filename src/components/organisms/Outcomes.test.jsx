@@ -1,7 +1,8 @@
 import { render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { outcomes } from '../../content'
+import { outcomes, security } from '../../content'
 import { Outcomes } from './Outcomes'
+import { Security } from './Security'
 
 const cards = () => within(screen.getByRole('region', { name: outcomes.heading })).getAllByRole('listitem')
 
@@ -21,14 +22,29 @@ describe('Outcomes', () => {
     })
   })
 
-  it('gives each card a decorative index and illustration', () => {
+  it('sits on the same deep navy gradient as Security', () => {
     render(<Outcomes />)
 
-    cards().forEach((card, i) => {
-      const index = card.querySelector('[data-index]')
-      expect(index).toHaveTextContent(`0${i + 1}`)
-      expect(index).toHaveAttribute('aria-hidden', 'true')
+    expect(screen.getByRole('region', { name: outcomes.heading })).toHaveClass('security-bg')
+  })
+
+  it('uses the very same glass card as Security, each opened by a decorative illustration', () => {
+    render(
+      <>
+        <Outcomes />
+        <Security />
+      </>,
+    )
+    const securityCard = screen
+      .getByRole('region', { name: security.heading })
+      .querySelector('[data-glass-card]')
+
+    expect(securityCard).not.toBeNull()
+    cards().forEach((card) => {
+      expect(card).toHaveAttribute('data-glass-card')
+      expect(card.className).toBe(securityCard.className)
       expect(card.querySelector('[data-illustration]')).toHaveAttribute('aria-hidden', 'true')
+      expect(card.querySelector('[data-index]')).toBeNull()
     })
   })
 
@@ -39,6 +55,13 @@ describe('Outcomes', () => {
     expect(within(card.querySelector('[data-illustration]')).getByText('Claude Code')).toBeInTheDocument()
     expect(within(card.querySelector('[data-illustration]')).getByText('Codex')).toBeInTheDocument()
     expect(card.querySelectorAll('.travel-acorn animateMotion')).toHaveLength(1)
+  })
+
+  it('labels the two agents with the same monogram tiles as the Agents diagram', () => {
+    render(<Outcomes />)
+    const tiles = [...cards()[1].querySelectorAll('[data-illustration] .agent-tile')]
+
+    expect(tiles.map((tile) => tile.dataset.monogram)).toEqual(['CC', 'Cx'])
   })
 
   it('keeps every illustration still under reduced motion', () => {

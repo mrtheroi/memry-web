@@ -27,6 +27,12 @@ describe('Agents diagram', () => {
     })
   }
 
+  it('puts the whole section on the deep navy gradient', () => {
+    render(<Agents />)
+
+    expect(screen.getByRole('region', { name: agents.heading })).toHaveClass('security-bg')
+  })
+
   it.each(layouts)('draws one curve per agent plus memry to the project memory (%s)', (layout) => {
     const { container } = render(<Agents />)
     const svg = drawing(container, layout)

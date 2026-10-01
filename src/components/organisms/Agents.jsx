@@ -5,14 +5,17 @@ import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion'
 import { AcornIcon, AcornShape } from '../atoms/Acorn'
 import { Container } from '../atoms/Container'
 import { SectionHeading } from '../atoms/SectionHeading'
+import { glassChip } from '../molecules/GlassCard'
 
 export function Agents() {
   return (
-    <section aria-labelledby="agents-title" className="border-t border-[var(--border)] bg-white py-20 sm:py-24">
+    <section aria-labelledby="agents-title" className="security-bg py-20 text-white sm:py-24">
       <Container>
         <div className="mx-auto max-w-[60ch] text-center">
-          <SectionHeading id="agents-title">{agents.heading}</SectionHeading>
-          <p className="mt-5 text-lg leading-relaxed text-[var(--text-primary)]">{agents.body}</p>
+          <SectionHeading id="agents-title" dark>
+            {agents.heading}
+          </SectionHeading>
+          <p className="mt-5 text-lg leading-relaxed text-[var(--hero-ink)]">{agents.body}</p>
         </div>
         <AgentDiagram />
       </Container>
@@ -122,8 +125,6 @@ const TREE = {
   ],
 }
 
-/** Glassy chip on the navy canvas: near-white label, translucent navy fill, faint turquoise edge. */
-const glass = 'border border-[rgba(6,182,212,0.3)] bg-[rgba(3,30,39,0.72)] text-[var(--hero-ink)] backdrop-blur-sm'
 
 const pct = (value, total) => `${(value / total) * 100}%`
 
@@ -152,7 +153,7 @@ function AgentDiagram() {
               }}
             >
               <span
-                className={`${glass} flex items-center justify-center gap-1 rounded-full px-1.5 py-2 text-[0.78rem] font-semibold sm:gap-2 sm:px-3 sm:text-sm md:gap-1.5 md:px-2 md:py-1.5 md:text-xs lg:gap-2 lg:px-3 lg:py-2 lg:text-sm ${reduced ? '' : 'agent-send-glow'}`}
+                className={`${glassChip} flex items-center justify-center gap-1 rounded-full px-1.5 py-2 text-[0.78rem] font-semibold sm:gap-2 sm:px-3 sm:text-sm md:gap-1.5 md:px-2 md:py-1.5 md:text-xs lg:gap-2 lg:px-3 lg:py-2 lg:text-sm ${reduced ? '' : 'agent-send-glow'}`}
                 // The border brightens as this agent's save pulse leaves: same delay and cycle as the SVG pulse.
                 style={
                   reduced
@@ -225,8 +226,8 @@ function ProjectFolder() {
         '--w-left': pct(wide.folder.x, wide.width),
       }}
     >
-      <span aria-hidden="true" className={`${glass} block h-2.5 w-[40%] rounded-t-lg border-b-0`} />
-      <div className={`${glass} rounded-xl rounded-tl-none px-3 pt-2.5 pb-2`}>
+      <span aria-hidden="true" className={`${glassChip} block h-2.5 w-[40%] rounded-t-lg border-b-0`} />
+      <div className={`${glassChip} rounded-xl rounded-tl-none px-3 pt-2.5 pb-2`}>
         <p className="flex items-center gap-2 text-sm font-semibold md:text-xs lg:text-sm">
           {/* The acorn's cap is dark ink by default; lighten it for the navy canvas. */}
           <span className="flex shrink-0 [--memry-dark:var(--hero-ink)]">
