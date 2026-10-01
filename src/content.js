@@ -211,6 +211,17 @@ export const security = {
       body: 'MIT licensed. No tracking, no cookies.',
     },
   ],
+  visuals: {
+    token: {
+      config: ['command = ".../memry"', 'args = ["mcp"]'],
+      chip: 'token',
+      path: '~/.config/memry',
+    },
+    codes: { expires: 'expires in 5:00' },
+    memories: { label: 'not used for training' },
+    leave: { command: 'memry delete-account', done: 'Deleted' },
+    open: { badge: 'MIT', note: 'no tracking · no cookies' },
+  },
   policyLabel: 'Read the privacy policy',
   policyEsLabel: 'Versión en español',
 }

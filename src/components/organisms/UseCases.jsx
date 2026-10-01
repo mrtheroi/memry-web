@@ -6,7 +6,7 @@ import { SectionHeading } from '../atoms/SectionHeading'
 export function UseCases() {
   return (
     <section aria-labelledby="use-cases-title" className="border-t border-[var(--border)] py-24 sm:py-32">
-      <Container className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-20">
+      <Container className="grid gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:items-center lg:gap-20">
         <SectionHeading id="use-cases-title" className="max-w-[14ch]">
           {useCases.heading}
         </SectionHeading>
