@@ -63,6 +63,13 @@ body {
   background: linear-gradient(160deg, var(--hero-bg-start) 0%, var(--hero-bg-mid) 50%, var(--hero-bg-end) 100%);
 }
 
+/* Security band: the hero's deep navy with a faint turquoise light in the top-right corner. */
+.security-bg {
+  background:
+    radial-gradient(44rem 30rem at 100% 0%, rgba(6, 182, 212, 0.13), transparent 70%),
+    linear-gradient(160deg, var(--hero-bg-start) 0%, var(--hero-bg-mid) 50%, var(--hero-bg-end) 100%);
+}
+
 /* Closing band: soft turquoise and orange light from the right edge, decoration only. */
 .closing-glow::before {
   content: '';
