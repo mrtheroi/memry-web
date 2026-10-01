@@ -4,7 +4,7 @@ import { problem } from '../../content'
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion'
 import { AcornIcon } from '../atoms/Acorn'
 
-const { description, sessions, memry } = problem.illustration
+const { description, scenes, memry } = problem.illustration
 
 /*
  * Three sessions that each start from zero (the same context explained again,
@@ -61,18 +61,58 @@ function useLoopsOnScreen(ref, enabled) {
   return loops
 }
 
+/*
+ * Reload cycle: every CYCLE_MS the prompts and memory lines fade out one after
+ * another, the next scene swaps in while they are hidden, and they fade back.
+ */
+const CYCLE_MS = 11000
+const SWAP_MS = 1100
+
+function useSceneCycle(running, count) {
+  const [scene, setScene] = useState(0)
+  const [phase, setPhase] = useState('idle')
+  useEffect(() => {
+    if (!running) return undefined
+    let swap = null
+    const finishSwap = () => {
+      swap = null
+      setScene((current) => (current + 1) % count)
+      setPhase('in')
+    }
+    const cycle = setInterval(() => {
+      setPhase('out')
+      swap = setTimeout(finishSwap, SWAP_MS)
+    }, CYCLE_MS)
+    return () => {
+      clearInterval(cycle)
+      // Stopped mid fade-out (off-screen or unmounted): finish the swap now so the lines never stay hidden.
+      if (swap !== null) {
+        clearTimeout(swap)
+        finishSwap()
+      }
+    }
+  }, [running, count])
+  return { scene, phase }
+}
+
 export function SessionStack({ className = '' }) {
   const reduced = usePrefersReducedMotion()
   const stackRef = useRef(null)
   const loops = useLoopsOnScreen(stackRef, !reduced)
+  const cycle = useSceneCycle(!reduced && loops === 'running', scenes.length)
+  const scene = scenes[cycle.scene]
   const animate = (variants) => (reduced ? {} : { variants })
   const stage = reduced ? {} : { initial: 'hidden', whileInView: 'shown', viewport: { once: true, amount: 0.35 } }
 
   return (
     <figure className={`m-0 ${className}`}>
       <figcaption className="sr-only">{description}</figcaption>
-      <motion.div ref={stackRef} data-loops={reduced ? undefined : loops} aria-hidden="true" className="flex flex-col" {...stage}>
-        {sessions.map((session, i) => (
+      <motion.div
+        ref={stackRef}
+        data-loops={reduced ? undefined : loops}
+        data-phase={reduced ? undefined : cycle.phase}
+        aria-hidden="true" className="flex flex-col" {...stage}>
+        {scene.sessions.map((session, i) => (
           <Float key={session.day} index={i} still={reduced} className={i > 0 ? '-mt-7' : ''}>
             <motion.div
               {...animate(settle(i))}
@@ -85,7 +125,9 @@ export function SessionStack({ className = '' }) {
                 </span>
                 <p className="mt-2 font-mono text-[13px] text-[var(--text-primary)]">
                   <span className="mr-2 text-[var(--memry-teal)]">&gt;</span>
-                  {session.prompt}
+                  <span data-prompt className={reduced ? '' : 'scene-text'} style={reduced ? undefined : { '--line': i }}>
+                    {session.prompt}
+                  </span>
                   {!reduced && <span className="terminal-cursor" />}
                 </p>
                 <div className="mt-3 space-y-2 pl-5">
@@ -120,9 +162,9 @@ export function SessionStack({ className = '' }) {
               </span>
             </div>
             <ul className="mt-4 space-y-2 font-mono text-[12.5px] leading-snug text-[var(--text-primary)]">
-              {memry.lines.map((line, i) => (
+              {scene.memories.map((line, i) => (
                 <li
-                  key={line}
+                  key={i}
                   className={`flex items-start gap-2.5 ${reduced ? '' : 'reload-line'}`}
                   style={reduced ? undefined : { '--line': i }}
                 >

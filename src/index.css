@@ -155,53 +155,43 @@ body {
 }
 
 /*
- * memry reload cycle (11s): the memory lines stay visible most of the time,
- * then clear and come back one after another (0.3s apart), and the status
- * pill glows once they are all in. The negative start puts the first reload
- * a few seconds after the card rises in.
+ * Reload cycle, driven by data-phase on the stack: the prompts and memory
+ * lines fade out one after another (0.3s apart), the next scene swaps in while
+ * they are hidden, they fade back in the same order, and the status pill glows.
  */
+.scene-text,
 .memry-reload .reload-line {
-  animation: reload-line 11s ease-in-out calc(-3s + var(--line, 0) * 0.3s) infinite;
+  transition:
+    opacity 0.45s ease-in-out calc(var(--line, 0) * 0.3s),
+    transform 0.45s ease-in-out calc(var(--line, 0) * 0.3s);
+}
+.scene-text {
+  display: inline-block;
 }
 
-@keyframes reload-line {
-  0%,
-  82% {
-    opacity: 1;
-    transform: translateX(0);
-  }
-  85%,
-  90% {
-    opacity: 0;
-    transform: translateX(-4px);
-  }
-  94%,
-  100% {
-    opacity: 1;
-    transform: translateX(0);
-  }
+[data-phase='out'] .scene-text,
+[data-phase='out'] .reload-line {
+  opacity: 0;
+  transform: translateX(-4px);
 }
 
-.memry-reload .pill-glow {
-  animation: pill-glow 11s ease-in-out -2.1s infinite;
+[data-phase='in'] .pill-glow {
+  animation: pill-glow 1.6s ease-in-out 1s 1;
 }
 
 @keyframes pill-glow {
   0%,
-  92%,
   100% {
     box-shadow: 0 0 0 0 rgba(6, 182, 212, 0);
   }
-  96% {
+  50% {
     box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.22);
   }
 }
 
 /* The Problem illustration's loops wait until it is on screen. */
 [data-loops='paused'] .card-float,
-[data-loops='paused'] .terminal-cursor,
-[data-loops='paused'] .reload-line,
-[data-loops='paused'] .pill-glow {
+[data-loops='paused'] .terminal-cursor {
   animation-play-state: paused;
 }
 
