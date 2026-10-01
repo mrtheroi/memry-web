@@ -117,19 +117,92 @@ body {
   }
 }
 
-/* Slow glow on the memry card's check, starting once the card has risen in. */
-.check-shimmer {
-  animation: check-shimmer 4.8s ease-in-out 2.4s infinite;
+/* Problem illustration: each card drifts a few pixels on its own slow clock. */
+.card-float {
+  animation: card-float var(--float-duration, 7s) ease-in-out var(--float-delay, 2s) infinite;
 }
 
-@keyframes check-shimmer {
+@keyframes card-float {
   0%,
   100% {
-    filter: drop-shadow(0 0 0 rgba(6, 182, 212, 0));
+    transform: translateY(0);
   }
   50% {
-    filter: drop-shadow(0 0 3px rgba(6, 182, 212, 0.75));
+    transform: translateY(-3px);
   }
+}
+
+/* Thin teal caret after each session prompt, blinking once a second. */
+.terminal-cursor {
+  display: inline-block;
+  width: 0.5ch;
+  height: 1.05em;
+  margin-left: 0.2ch;
+  vertical-align: -0.15em;
+  background: var(--memry-teal);
+  animation: terminal-cursor 1s steps(1, end) 2.2s infinite;
+}
+
+@keyframes terminal-cursor {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/*
+ * memry reload cycle (11s): the memory lines stay visible most of the time,
+ * then clear and come back one after another (0.3s apart), and the status
+ * pill glows once they are all in. The negative start puts the first reload
+ * a few seconds after the card rises in.
+ */
+.memry-reload .reload-line {
+  animation: reload-line 11s ease-in-out calc(-3s + var(--line, 0) * 0.3s) infinite;
+}
+
+@keyframes reload-line {
+  0%,
+  82% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  85%,
+  90% {
+    opacity: 0;
+    transform: translateX(-4px);
+  }
+  94%,
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.memry-reload .pill-glow {
+  animation: pill-glow 11s ease-in-out -2.1s infinite;
+}
+
+@keyframes pill-glow {
+  0%,
+  92%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(6, 182, 212, 0);
+  }
+  96% {
+    box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.22);
+  }
+}
+
+/* The Problem illustration's loops wait until it is on screen. */
+[data-loops='paused'] .card-float,
+[data-loops='paused'] .terminal-cursor,
+[data-loops='paused'] .reload-line,
+[data-loops='paused'] .pill-glow {
+  animation-play-state: paused;
 }
 
 @media (prefers-reduced-motion: reduce) {
