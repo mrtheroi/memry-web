@@ -70,6 +70,60 @@ body {
     linear-gradient(160deg, var(--hero-bg-start) 0%, var(--hero-bg-mid) 50%, var(--hero-bg-end) 100%);
 }
 
+/* Agents diagram canvas: the security navy with a faint dot grid for depth. */
+.agents-canvas {
+  background:
+    radial-gradient(circle, rgba(255, 255, 255, 0.05) 1px, transparent 1.5px) 0 0 / 22px 22px,
+    radial-gradient(44rem 30rem at 100% 0%, rgba(6, 182, 212, 0.13), transparent 70%),
+    linear-gradient(160deg, var(--hero-bg-start) 0%, var(--hero-bg-mid) 50%, var(--hero-bg-end) 100%);
+}
+
+/* Agent status dot: dim, then lit turquoise for about a second as that agent's save pulse leaves. */
+.agent-status {
+  background: rgba(227, 241, 243, 0.28);
+  animation: agent-status 16s linear infinite backwards;
+}
+
+@keyframes agent-status {
+  0% {
+    background: rgba(227, 241, 243, 0.28);
+    box-shadow: none;
+  }
+  1.5%,
+  7% {
+    background: var(--memry-turquoise);
+    box-shadow: 0 0 6px 1px rgba(6, 182, 212, 0.7);
+  }
+  12%,
+  100% {
+    background: rgba(227, 241, 243, 0.28);
+    box-shadow: none;
+  }
+}
+
+/* A thin ring around memry that breathes slowly. */
+.hub-ring {
+  border: 1px solid rgba(6, 182, 212, 0.5);
+  animation: hub-ring 4s ease-in-out infinite;
+}
+
+@keyframes hub-ring {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.035);
+  }
+}
+
+/* While the diagram is off-screen, its CSS animations wait with the SVG ones. */
+.agents-canvas[data-playing='false'] :is(.agent-status, .hub-ring) {
+  animation-play-state: paused;
+}
+
 /* Closing band: soft turquoise and orange light from the right edge, decoration only. */
 .closing-glow::before {
   content: '';
