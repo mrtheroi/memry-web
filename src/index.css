@@ -119,8 +119,30 @@ body {
   }
 }
 
+/* A project folder row warms to the acorn's orange for about a second as a save lands. */
+.file-row-glow {
+  opacity: 0;
+  background: rgba(249, 115, 22, 0.2);
+  box-shadow: inset 2px 0 0 var(--memry-orange);
+  animation: file-row-glow 16s linear infinite backwards;
+}
+
+@keyframes file-row-glow {
+  0% {
+    opacity: 0;
+  }
+  1.5%,
+  6% {
+    opacity: 1;
+  }
+  11%,
+  100% {
+    opacity: 0;
+  }
+}
+
 /* While the diagram is off-screen, its CSS animations wait with the SVG ones. */
-.agents-canvas[data-playing='false'] :is(.agent-status, .hub-ring) {
+.agents-canvas[data-playing='false'] :is(.agent-status, .hub-ring, .file-row-glow) {
   animation-play-state: paused;
 }
 

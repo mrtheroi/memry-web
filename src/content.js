@@ -129,7 +129,13 @@ export const agents = {
   listLabel: 'Supported agents',
   list: ['Claude Code', 'Codex', 'OpenCode', 'Antigravity', 'Windsurf'],
   hub: 'memry',
-  memory: 'Your project memory',
+  memory: 'Your project',
+  files: [
+    { kind: 'branch', name: 'main' },
+    { kind: 'folder', name: 'src/' },
+    { kind: 'file', name: 'README.md' },
+    { kind: 'file', name: '.memry.json' },
+  ],
   diagramNote:
     'memry setup asks which agents you use and connects each one. memry uninstall removes it from all of them.',
 }
