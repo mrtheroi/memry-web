@@ -43,13 +43,16 @@ export function Hero() {
           >
             {hero.hook}
           </motion.p>
-          <motion.div {...reveal(0.35)} className="mt-7 flex flex-wrap gap-3 xl:mt-9">
-            <ButtonLink href={hero.primaryCta.href} variant="onDark">
-              {hero.primaryCta.label}
-            </ButtonLink>
-            <ButtonLink href={hero.secondaryCta.href} variant="ghostOnDark">
-              {hero.secondaryCta.label}
-            </ButtonLink>
+          <motion.div {...reveal(0.35)} className="mt-7 xl:mt-9">
+            <div className="flex flex-wrap gap-3">
+              <ButtonLink href={hero.primaryCta.href} variant="onDark">
+                {hero.primaryCta.label}
+              </ButtonLink>
+              <ButtonLink href={hero.secondaryCta.href} variant="ghostOnDark">
+                {hero.secondaryCta.label}
+              </ButtonLink>
+            </div>
+            <p className="mt-3 text-sm text-[var(--hero-ink-muted)]">{hero.betaNote}</p>
           </motion.div>
           {/* Inline flow, so the label and the chips share rows when they wrap. */}
           <motion.div {...reveal(0.5)} className="mt-4 max-w-[34rem] pb-8 lg:pb-0 xl:mt-6">

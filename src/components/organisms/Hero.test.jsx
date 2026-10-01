@@ -7,10 +7,17 @@ describe('Hero', () => {
   it('links the primary CTA to the get started section and the secondary CTA to GitHub', () => {
     render(<Hero />)
 
-    expect(screen.getByRole('link', { name: "Get started, it's free" })).toHaveAttribute('href', '#get-started')
+    expect(screen.getByRole('link', { name: 'Get started' })).toHaveAttribute('href', '#get-started')
     const github = screen.getByRole('link', { name: 'View on GitHub' })
     expect(github).toHaveAttribute('href', 'https://github.com/mrtheroi/memry-cli')
     expect(github).toHaveAttribute('rel', 'noopener noreferrer')
+  })
+
+  it('keeps the free beta note out of the button, as a small line near the CTAs', () => {
+    render(<Hero />)
+
+    expect(screen.getByText('Free during the public beta.')).toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: /free/i })).toBeNull()
   })
 
   it('shows the wordmark and tagline as a visible h1', () => {

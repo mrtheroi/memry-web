@@ -2,9 +2,8 @@ import { motion } from 'motion/react'
 import { agents as agentList, outcomes } from '../../content'
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion'
 import { AcornIcon, AcornShape } from '../atoms/Acorn'
-import { glassChip } from './GlassCard'
 
-/* Small decorative illustrations for the Outcomes cards (dark band). Hidden from assistive tech. */
+/* Small decorative illustrations for the Outcomes cards (light section). Hidden from assistive tech. */
 
 const { restored, agents, tokens } = outcomes.visuals
 const ease = [0.22, 1, 0.36, 1]
@@ -25,11 +24,11 @@ export function RestoredVisual() {
 
   return (
     <div className="flex flex-col gap-3">
-      <span className="inline-flex items-center gap-1.5 self-start rounded-full border border-[rgba(6,182,212,0.35)] bg-[rgba(6,182,212,0.1)] py-1 pr-3 pl-2 text-xs font-semibold text-white [--memry-dark:var(--hero-ink)]">
+      <span className="inline-flex items-center gap-1.5 self-start rounded-full border border-[rgba(8,127,134,0.3)] bg-white py-1 pr-3 pl-2 text-xs font-semibold text-[var(--memry-dark)]">
         <AcornIcon className="h-4 w-3.5" />
         {restored.status}
       </span>
-      <ul className="space-y-1.5 font-mono text-[11.5px] leading-snug text-[var(--hero-ink)]">
+      <ul className="space-y-1.5 font-mono text-[11.5px] leading-snug text-[var(--text-primary)]">
         {restored.lines.map((line, i) => (
           <motion.li key={line} {...appear(i)} className="flex items-start gap-2">
             <span className="mt-[0.45em] h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--memry-turquoise)]" />
@@ -41,13 +40,13 @@ export function RestoredVisual() {
   )
 }
 
-const chip = `${glassChip} flex min-w-0 items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-semibold`
+const chip = `border border-[rgba(8,127,134,0.3)] bg-white text-[var(--memry-dark)] flex min-w-0 items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-semibold`
 
-/** Glass agent chip with its monogram tile, as in the Agents diagram. */
+/** Agent chip with its monogram tile (light variant of the Agents diagram's). */
 function AgentChip({ name }) {
   return (
     <span className={chip}>
-      <span data-monogram={agentList.monograms[agentList.list.indexOf(name)]} className="agent-tile" />
+      <span data-monogram={agentList.monograms[agentList.list.indexOf(name)]} className="agent-tile agent-tile-light" />
       <span className="truncate">{name}</span>
     </span>
   )
@@ -101,11 +100,11 @@ export function TokensVisual() {
   return (
     <div className="flex flex-col gap-3.5">
       <div>
-        <span className="text-xs font-medium text-[var(--hero-ink-muted)]">{tokens.repeated}</span>
-        <span data-bar="repeated" className="mt-1.5 block h-2.5 w-full rounded-full bg-white/15" />
+        <span className="text-xs font-medium text-[#5B6C6F]">{tokens.repeated}</span>
+        <span data-bar="repeated" className="mt-1.5 block h-2.5 w-full rounded-full bg-[var(--border)]" />
       </div>
       <div>
-        <span className="text-xs font-semibold text-[var(--memry-turquoise)]">{tokens.summary}</span>
+        <span className="text-xs font-semibold text-[var(--memry-teal)]">{tokens.summary}</span>
         <motion.span
           data-bar="summary"
           {...grow}

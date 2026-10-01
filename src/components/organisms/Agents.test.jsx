@@ -27,10 +27,14 @@ describe('Agents diagram', () => {
     })
   }
 
-  it('puts the whole section on the deep navy gradient', () => {
-    render(<Agents />)
+  it('sits on a light section with dark text, keeping the diagram on its own navy canvas', () => {
+    const { container } = render(<Agents />)
+    const region = screen.getByRole('region', { name: agents.heading })
 
-    expect(screen.getByRole('region', { name: agents.heading })).toHaveClass('security-bg')
+    expect(region).not.toHaveClass('security-bg')
+    expect(region).toHaveClass('bg-[var(--background)]', 'border-t', 'border-[var(--border)]')
+    expect(screen.getByRole('heading', { level: 2, name: agents.heading })).toHaveClass('text-[var(--memry-dark)]')
+    expect(container.querySelector('figure.agents-canvas')).not.toBeNull()
   })
 
   it.each(layouts)('draws one curve per agent plus memry to the project memory (%s)', (layout) => {

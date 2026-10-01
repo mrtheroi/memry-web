@@ -22,13 +22,16 @@ describe('Outcomes', () => {
     })
   })
 
-  it('sits on the same deep navy gradient as Security', () => {
+  it('sits on a light surface, set off from its light neighbours by a hairline', () => {
     render(<Outcomes />)
+    const region = screen.getByRole('region', { name: outcomes.heading })
 
-    expect(screen.getByRole('region', { name: outcomes.heading })).toHaveClass('security-bg')
+    expect(region).not.toHaveClass('security-bg')
+    expect(region).toHaveClass('bg-[var(--background)]', 'border-t', 'border-[var(--border)]')
+    expect(screen.getByRole('heading', { level: 2 })).toHaveClass('text-[var(--memry-dark)]')
   })
 
-  it('uses the very same glass card as Security, each opened by a decorative illustration', () => {
+  it('uses the same card as Security in its light tone: white, hairline border, no glass', () => {
     render(
       <>
         <Outcomes />
@@ -39,10 +42,13 @@ describe('Outcomes', () => {
       .getByRole('region', { name: security.heading })
       .querySelector('[data-glass-card]')
 
-    expect(securityCard).not.toBeNull()
+    expect(securityCard).toHaveAttribute('data-tone', 'dark')
     cards().forEach((card) => {
       expect(card).toHaveAttribute('data-glass-card')
-      expect(card.className).toBe(securityCard.className)
+      expect(card).toHaveAttribute('data-tone', 'light')
+      expect(card).toHaveClass('bg-white', 'border-[var(--border)]', 'rounded-2xl')
+      expect(card.className).not.toMatch(/backdrop|bg-white\/|bg-\[rgba/)
+      expect(card.querySelectorAll('[class*="backdrop"]')).toHaveLength(0)
       expect(card.querySelector('[data-illustration]')).toHaveAttribute('aria-hidden', 'true')
       expect(card.querySelector('[data-index]')).toBeNull()
     })

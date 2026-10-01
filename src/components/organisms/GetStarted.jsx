@@ -1,4 +1,5 @@
 import { getStarted } from '../../content'
+import { ButtonLink } from '../atoms/ButtonLink'
 import { Container } from '../atoms/Container'
 import { SectionHeading } from '../atoms/SectionHeading'
 import { CopyButton } from '../molecules/CopyButton'
@@ -9,7 +10,7 @@ export function GetStarted() {
     <section
       id="get-started"
       aria-labelledby="get-started-title"
-      className="scroll-mt-8 border-t border-[var(--border)] bg-white py-24 sm:py-32"
+      className="scroll-mt-8 bg-[var(--background)] py-24 sm:py-32"
     >
       <Container className="grid gap-12 lg:grid-cols-[1fr_1.25fr] lg:items-center lg:gap-20">
         <div>
@@ -23,17 +24,25 @@ export function GetStarted() {
             {getStarted.beta}
           </p>
         </div>
-        <Terminal
-          commands={getStarted.commands}
-          output={getStarted.output}
-          action={
-            <CopyButton
-              text={getStarted.commands.join('\n')}
-              label={getStarted.copyLabel}
-              copiedLabel={getStarted.copiedLabel}
-            />
-          }
-        />
+        <div className="min-w-0">
+          <Terminal
+            commands={getStarted.commands}
+            output={getStarted.output}
+            action={
+              <CopyButton
+                text={getStarted.commands.join('\n')}
+                label={getStarted.copyLabel}
+                copiedLabel={getStarted.copiedLabel}
+              />
+            }
+          />
+          <div role="group" aria-label={getStarted.nextLabel} className="mt-6 flex flex-wrap gap-3">
+            <ButtonLink href={getStarted.docsCta.href}>{getStarted.docsCta.label}</ButtonLink>
+            <ButtonLink href={getStarted.githubCta.href} variant="secondary">
+              {getStarted.githubCta.label}
+            </ButtonLink>
+          </div>
+        </div>
       </Container>
     </section>
   )

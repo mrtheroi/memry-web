@@ -9,13 +9,11 @@ import { glassChip } from '../molecules/GlassCard'
 
 export function Agents() {
   return (
-    <section aria-labelledby="agents-title" className="security-bg py-20 text-white sm:py-24">
+    <section aria-labelledby="agents-title" className="border-t border-[var(--border)] bg-[var(--background)] py-20 sm:py-24">
       <Container>
         <div className="mx-auto max-w-[60ch] text-center">
-          <SectionHeading id="agents-title" dark>
-            {agents.heading}
-          </SectionHeading>
-          <p className="mt-5 text-lg leading-relaxed text-[var(--hero-ink)]">{agents.body}</p>
+          <SectionHeading id="agents-title">{agents.heading}</SectionHeading>
+          <p className="mt-5 text-lg leading-relaxed text-[var(--text-primary)]">{agents.body}</p>
         </div>
         <AgentDiagram />
       </Container>
@@ -135,7 +133,7 @@ function AgentDiagram() {
   usePauseAnimationsOffscreen(figureRef)
 
   return (
-    <figure ref={figureRef} className="agents-canvas mt-12 rounded-2xl p-5 sm:p-10">
+    <figure ref={figureRef} className="agents-canvas mt-12 rounded-2xl p-5 sm:p-8">
       <div className="relative mx-auto @container aspect-[320/560] w-full max-w-[420px] md:aspect-[1000/360] md:max-w-none">
         <FlowDrawing layout="narrow" geometry={narrow} className="md:hidden" />
         <FlowDrawing layout="wide" geometry={wide} className="hidden md:block" />
@@ -202,7 +200,7 @@ function AgentDiagram() {
 
         <ProjectFolder />
       </div>
-      <figcaption className="mt-8 border-t border-white/10 pt-4 text-sm leading-relaxed text-[var(--hero-ink-muted)]">
+      <figcaption className="mt-6 border-t border-white/10 pt-4 text-sm leading-relaxed text-[var(--hero-ink-muted)]">
         {agents.diagramNote}
       </figcaption>
     </figure>

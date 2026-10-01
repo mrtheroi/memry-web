@@ -8,7 +8,7 @@ import { MemoryTree } from '../molecules/MemoryTree'
 export function HowItWorks() {
   const { projects } = howItWorks
   return (
-    <section id="how-it-works" aria-labelledby="how-title" className="scroll-mt-8 py-24 sm:py-32">
+    <section id="how-it-works" aria-labelledby="how-title" className="scroll-mt-8 border-t border-[var(--border)] bg-white py-24 sm:py-32">
       <Container>
         <div className="grid gap-16 lg:grid-cols-[1fr_minmax(0,420px)] lg:gap-24">
           <div>

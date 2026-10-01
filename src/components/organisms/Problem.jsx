@@ -5,7 +5,7 @@ import { SessionStack } from '../molecules/SessionStack'
 
 export function Problem() {
   return (
-    <section aria-labelledby="problem-title" className="py-24 sm:py-32">
+    <section aria-labelledby="problem-title" className="bg-white py-24 sm:py-32">
       <Container>
         <div className="grid gap-14 lg:grid-cols-2 lg:items-center lg:gap-20">
           <div>

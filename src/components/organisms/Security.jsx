@@ -16,7 +16,7 @@ export function Security() {
     <section
       id="security"
       aria-labelledby="security-title"
-      className="security-bg scroll-mt-8 py-24 text-white sm:py-32"
+      className="security-bg scroll-mt-8 py-20 text-white sm:py-24"
     >
       <Container>
         <h2
@@ -31,13 +31,14 @@ export function Security() {
             return (
               <GlassCard
                 key={item.title}
+                tone="dark"
                 illustration={<Visual />}
                 title={item.title}
                 body={<CodeText chipClassName="border-white/15 bg-white/10 text-white">{item.body}</CodeText>}
               />
             )
           })}
-          <GlassCard className="justify-end gap-3">
+          <GlassCard tone="dark" className="justify-end gap-3">
             <a {...linkProps(links.privacy)} className={`${darkLink} self-start text-lg`}>
               {security.policyLabel}
             </a>
