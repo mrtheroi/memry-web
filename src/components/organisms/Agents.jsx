@@ -26,19 +26,24 @@ export function Agents() {
  * and the box keeps the viewBox's aspect ratio, so the curves meet the chips at
  * every width. Curves start and end under the chips and nodes, which hide the joins.
  *
- * memry is a Memory Tree drawn in the SVG, with its "memry" pill at the hub point
- * where the agent curves meet. The project folder is HTML; the hub curve ends just
+ * memry is a Memory Tree drawn in the SVG, growing up from a glowing junction at
+ * the hub point where the agent curves meet, with the HTML wordmark under it. The project folder is HTML; the hub curve ends just
  * inside its edge (wide: left edge, narrow: top edge), wherever its height grows.
  */
 const wide = (() => {
-  const hub = { x: 560, y: 212 }
+  /*
+   * The tree + wordmark group is centred on the canvas's middle (y 180), and so is
+   * the folder. Group: tree top = hub.y - (102 + 4.5) * 1.3, wordmark bottom =
+   * hub.y + 12 + 30, so hub.y = (360 + 138.45 - 42) / 2 ≈ 228.
+   */
+  const hub = { x: 560, y: 228 }
   const folder = { x: 740, y: 180 } // the folder's left edge, vertically centred
   const bends = [10, -8, -14, 8, -10]
   const chips = [44, 112, 180, 248, 316].map((y, i) => ({
     left: 2,
     y,
     box: { x: 20, width: 200, height: 40 },
-    curve: `M200 ${y} C330 ${y + bends[i]} 420 ${hub.y + (y - hub.y) * 0.15} ${hub.x} ${hub.y}`,
+    curve: `M200 ${y} C330 ${y + bends[i]} 420 ${hub.y + (y - hub.y) * 0.05} ${hub.x} ${hub.y}`,
   }))
   return {
     width: 1000,
@@ -46,18 +51,20 @@ const wide = (() => {
     pulse: 5,
     strokeAxis: { x1: 200, y1: 0, x2: 900, y2: 0 },
     hub,
-    // The tree grows up out of the pill: trunk base hidden under it.
+    // The tree grows up from the junction; the wordmark sits under it (units).
     tree: { x: hub.x, y: hub.y, scale: 1.3 },
+    wordmark: { gap: 12, size: 30 },
     folder,
     memoryBox: { x: folder.x, y: folder.y, width: 240, height: 150 },
     chips,
-    hubCurve: `M${hub.x} ${hub.y} C650 ${hub.y} 670 ${folder.y} ${folder.x + 10} ${folder.y}`,
+    hubCurve: `M${hub.x} ${hub.y} C650 ${hub.y} 660 ${folder.y} ${folder.x + 10} ${folder.y}`,
   }
 })()
 
 const narrow = (() => {
-  const hub = { x: 160, y: 268 }
-  const folder = { x: 160, y: 404 } // the folder's top edge, horizontally centred
+  // Chips, then the tree growing up from the junction, the wordmark, and the folder, all on x 160.
+  const hub = { x: 160, y: 333 }
+  const folder = { x: 160, y: 385 } // the folder's top edge: 16 below the wordmark (333 + 12 + 24)
   // Chips alternate left and right; their curves braid down the gap between them.
   const lanes = [-5, 5, -2, 2, 0]
   const chips = [28, 76, 124, 172, 220].map((y, i) => {
@@ -65,7 +72,7 @@ const narrow = (() => {
     const startX = onLeft ? 144 : 176
     const tangentX = onLeft ? 156 : 164
     return {
-      left: onLeft ? 2 : 52,
+      left: onLeft ? 1 : 51,
       y,
       box: { x: onLeft ? 6 : 166, width: 147, height: 38 },
       curve: `M${startX} ${y} C${tangentX} ${y} ${hub.x + lanes[i]} ${y + (hub.y - y) * 0.6} ${hub.x} ${hub.y}`,
@@ -73,16 +80,18 @@ const narrow = (() => {
   })
   return {
     width: 320,
-    height: 580,
+    height: 560,
     pulse: 3.5,
     strokeAxis: { x1: 0, y1: 28, x2: 0, y2: folder.y },
     hub,
-    // The tree stands below the pill; the hub curve runs straight down its trunk into the folder.
-    tree: { x: hub.x, y: 378, scale: 0.82 },
+    // The agent curves braid down the tree's axis into the junction at its base;
+    // the hub curve runs on down, behind the wordmark, into the folder.
+    tree: { x: hub.x, y: hub.y, scale: 0.82 },
+    wordmark: { gap: 12, size: 24 },
     folder,
-    memoryBox: { x: 35, y: 480, width: 250, height: 150 },
+    memoryBox: { x: 35, y: 460, width: 250, height: 150 },
     chips,
-    hubCurve: `M${hub.x} ${hub.y} C${hub.x} 320 ${hub.x} 370 ${folder.x} ${folder.y + 18}`,
+    hubCurve: `M${hub.x} ${hub.y} C${hub.x} 355 ${hub.x} 370 ${folder.x} ${folder.y + 18}`,
   }
 })()
 
@@ -126,7 +135,7 @@ function AgentDiagram() {
 
   return (
     <figure ref={figureRef} className="agents-canvas mt-12 rounded-2xl p-5 sm:p-10">
-      <div className="relative mx-auto aspect-[320/580] w-full max-w-[420px] md:aspect-[1000/360] md:max-w-none">
+      <div className="relative mx-auto @container aspect-[320/560] w-full max-w-[420px] md:aspect-[1000/360] md:max-w-none">
         <FlowDrawing layout="narrow" geometry={narrow} className="md:hidden" />
         <FlowDrawing layout="wide" geometry={wide} className="hidden md:block" />
 
@@ -134,7 +143,7 @@ function AgentDiagram() {
           {agents.list.map((name, i) => (
             <li
               key={name}
-              className="absolute top-[var(--n-top)] left-[var(--n-left)] w-[46%] -translate-y-1/2 md:top-[var(--w-top)] md:left-[var(--w-left)] md:w-[20%]"
+              className="absolute top-[var(--n-top)] left-[var(--n-left)] w-[48%] -translate-y-1/2 md:top-[var(--w-top)] md:left-[var(--w-left)] md:w-[20%]"
               style={{
                 '--n-top': pct(narrow.chips[i].y, narrow.height),
                 '--n-left': `${narrow.chips[i].left}%`,
@@ -142,26 +151,44 @@ function AgentDiagram() {
                 '--w-left': `${wide.chips[i].left}%`,
               }}
             >
-              <span className={`${glass} flex items-center justify-center gap-1.5 rounded-full px-2 py-2 text-[0.8125rem] font-semibold sm:gap-2 sm:px-3 sm:text-sm md:py-1.5 md:text-xs lg:py-2 lg:text-sm`}>
-                {!reduced && (
-                  // Lights up as this agent's save pulse leaves: same delay and cycle as the SVG pulse.
-                  <span
-                    aria-hidden="true"
-                    className="agent-status size-1.5 shrink-0 rounded-full"
-                    style={{
-                      animationDelay: seconds(SAVE_START + SAVE_OFFSETS[i]),
-                      animationDuration: seconds(SAVE_CYCLE),
-                    }}
-                  />
-                )}
+              <span
+                className={`${glass} flex items-center justify-center gap-1 rounded-full px-1.5 py-2 text-[0.78rem] font-semibold sm:gap-2 sm:px-3 sm:text-sm md:gap-1.5 md:px-2 md:py-1.5 md:text-xs lg:gap-2 lg:px-3 lg:py-2 lg:text-sm ${reduced ? '' : 'agent-send-glow'}`}
+                // The border brightens as this agent's save pulse leaves: same delay and cycle as the SVG pulse.
+                style={
+                  reduced
+                    ? undefined
+                    : { animationDelay: seconds(SAVE_START + SAVE_OFFSETS[i]), animationDuration: seconds(SAVE_CYCLE) }
+                }
+              >
+                {/* Letters drawn by CSS from data-monogram, so the chip's text stays the agent's name. */}
+                <span aria-hidden="true" data-monogram={agents.monograms[i]} className="agent-tile" />
                 <span className="truncate">{name}</span>
               </span>
             </li>
           ))}
         </ul>
 
+        {/* The brand wordmark under the tree, sized in container units so it scales with the drawing. */}
         <span
-          className="absolute top-[var(--n-top)] left-[var(--n-left)] -translate-x-1/2 -translate-y-1/2 rounded-full border border-[var(--memry-turquoise)] bg-[var(--memry-teal)] px-3.5 py-1 text-sm font-semibold whitespace-nowrap text-white md:top-[var(--w-top)] md:left-[var(--w-left)] md:text-xs lg:px-4 lg:text-sm"
+          data-testid="memry-wordmark"
+          className="absolute top-[var(--n-top)] left-[var(--n-left)] -translate-x-1/2 text-[length:var(--n-size)] leading-none font-extrabold tracking-[-0.04em] whitespace-nowrap text-white [text-shadow:0_0_6px_var(--hero-bg-mid),0_0_14px_var(--hero-bg-mid)] md:top-[var(--w-top)] md:left-[var(--w-left)] md:text-[length:var(--w-size)]"
+          style={{
+            '--n-top': pct(narrow.hub.y + narrow.wordmark.gap, narrow.height),
+            '--n-left': pct(narrow.hub.x, narrow.width),
+            '--n-size': `${(narrow.wordmark.size / narrow.width) * 100}cqw`,
+            '--w-top': pct(wide.hub.y + wide.wordmark.gap, wide.height),
+            '--w-left': pct(wide.hub.x, wide.width),
+            '--w-size': `${(wide.wordmark.size / wide.width) * 100}cqw`,
+          }}
+        >
+          {agents.hub.slice(0, -1)}
+          <span className="text-[var(--memry-orange)]">{agents.hub.slice(-1)}</span>
+        </span>
+
+        {/* The junction where the agent curves meet, at the trunk's base; pulses pass through it. */}
+        <span
+          aria-hidden="true"
+          className="hub-junction absolute top-[var(--n-top)] left-[var(--n-left)] size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full md:top-[var(--w-top)] md:left-[var(--w-left)] lg:size-3"
           style={{
             '--n-top': pct(narrow.hub.y, narrow.height),
             '--n-left': pct(narrow.hub.x, narrow.width),
@@ -169,8 +196,7 @@ function AgentDiagram() {
             '--w-left': pct(wide.hub.x, wide.width),
           }}
         >
-          {!reduced && <span aria-hidden="true" className="hub-ring pointer-events-none absolute -inset-1 rounded-full" />}
-          {agents.hub}
+          {!reduced && <span className="hub-ring pointer-events-none absolute -inset-1.5 rounded-full" />}
         </span>
 
         <ProjectFolder />
