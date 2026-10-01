@@ -9,12 +9,12 @@ export function Footer() {
       <Container className="flex flex-col gap-8 md:flex-row md:items-center md:justify-between">
         <BrandMark />
         <nav aria-label="Footer">
-          <ul className="flex flex-wrap gap-x-6 gap-y-3 text-[15px] font-medium">
+          <ul className="flex flex-wrap gap-x-6 gap-y-3 text-sm font-medium">
             {footer.links.map((link) => (
               <li key={link.label}>
                 <a
                   {...linkProps(link.href)}
-                  className="focus-ring rounded-sm text-[var(--memry-teal)] underline-offset-4 hover:underline"
+                  className="focus-ring rounded-lg text-[var(--memry-teal)] underline-offset-4 hover:underline"
                 >
                   {link.label}
                 </a>

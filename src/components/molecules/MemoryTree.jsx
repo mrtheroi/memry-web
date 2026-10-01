@@ -1,4 +1,5 @@
 import { motion } from 'motion/react'
+import { useEffect, useRef } from 'react'
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion'
 import { AcornShape } from '../atoms/Acorn'
 
@@ -38,43 +39,50 @@ const acorns = [
   [236, 74],
 ]
 
+/** Marks the svg as playing only while it is on screen, so the CSS twinkle pauses off-screen. */
+function usePlayingOnScreen(ref, enabled) {
+  useEffect(() => {
+    if (!enabled) return undefined
+    const svg = ref.current
+    svg.dataset.playing = 'false'
+    const observer = new IntersectionObserver(([entry]) => {
+      svg.dataset.playing = String(entry.isIntersecting)
+    })
+    observer.observe(svg)
+    return () => observer.disconnect()
+  }, [ref, enabled])
+}
+
 export function MemoryTree({ className = '' }) {
   const reduced = usePrefersReducedMotion()
-  const draw = (delay) =>
-    reduced
-      ? {}
-      : {
-          initial: { pathLength: 0 },
-          whileInView: { pathLength: 1 },
-          viewport: { once: true, amount: 0.4 },
-          transition: { duration: 0.9, delay, ease: 'easeOut' },
-        }
+  const svgRef = useRef(null)
+  usePlayingOnScreen(svgRef, !reduced)
+  // Memories and acorns settle from a slightly smaller size; they are never hidden, so the tree
+  // is complete even if the entrance never plays (fast scroll, screenshots).
   const appear = (delay) =>
     reduced
       ? {}
       : {
-          initial: { opacity: 0, scale: 0.4 },
-          whileInView: { opacity: 1, scale: 1 },
+          initial: { scale: 0.7 },
+          whileInView: { scale: 1 },
           viewport: { once: true, amount: 0.4 },
           transition: { duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] },
         }
 
   return (
-    <svg viewBox="40 30 330 400" className={className} aria-hidden="true" focusable="false">
+    <svg ref={svgRef} viewBox="40 30 330 400" className={className} aria-hidden="true" focusable="false">
       <line x1="130" y1="413" x2="270" y2="413" stroke="var(--border)" strokeWidth="2" strokeLinecap="round" />
-      <motion.path
+      <path
         d={trunk}
-        {...draw(0)}
         fill="none"
         stroke="var(--memry-dark)"
         strokeWidth="9"
         strokeLinecap="round"
       />
       {branches.map((d, i) => (
-        <motion.path
+        <path
           key={d}
           d={d}
-          {...draw(0.4 + i * 0.05)}
           fill="none"
           stroke={i < 5 ? 'var(--memry-dark)' : 'var(--memry-teal)'}
           strokeWidth={i < 5 ? 5 : 3}
@@ -82,7 +90,7 @@ export function MemoryTree({ className = '' }) {
         />
       ))}
       {memories.map(([cx, cy], i) => (
-        <motion.g key={`${cx}-${cy}`} {...appear(1.1 + i * 0.07)} style={{ transformOrigin: `${cx}px ${cy}px` }}>
+        <motion.g key={`${cx}-${cy}`} {...appear(0.2 + i * 0.07)} style={{ transformOrigin: `${cx}px ${cy}px` }}>
           <circle
             cx={cx}
             cy={cy}
@@ -97,7 +105,7 @@ export function MemoryTree({ className = '' }) {
         </motion.g>
       ))}
       {acorns.map(([x, y], i) => (
-        <motion.g key={`${x}-${y}`} {...appear(1.8 + i * 0.15)} style={{ transformOrigin: `${x}px ${y}px` }}>
+        <motion.g key={`${x}-${y}`} {...appear(0.8 + i * 0.15)} style={{ transformOrigin: `${x}px ${y}px` }}>
           <AcornShape x={x} y={y} />
         </motion.g>
       ))}

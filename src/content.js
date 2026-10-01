@@ -34,10 +34,10 @@ export const hero = {
 export const problem = {
   heading: 'Every session starts from zero.',
   body: 'You explain the architecture. The decisions. The bug you fixed last week. Then the session ends, and tomorrow you explain it all again. Your agents are brilliant, but they have no memory.',
-  closing: 'memry gives your project one.',
+  closing: 'Memry gives your project one.',
   illustration: {
     description:
-      'Three sessions, Monday to Wednesday, where the same context is explained again each day. Then a memry session that starts with the context already loaded.',
+      'Three sessions, Monday to Wednesday, where the same context is explained again each day. Then a Memry session that starts with the context already loaded.',
     scenes: [
       {
         sessions: [
@@ -72,7 +72,7 @@ export const problem = {
 }
 
 export const outcomes = {
-  heading: 'What changes with memry',
+  heading: 'What changes with Memry',
   items: [
     {
       title: 'Pick up where you left off.',
@@ -80,11 +80,11 @@ export const outcomes = {
     },
     {
       title: 'Switch agents, keep the context.',
-      body: 'Start in Claude Code, continue in Codex. The memory follows the project, not the tool.',
+      body: 'Start a task in one agent and finish it in another. The memory follows the project, not the tool.',
     },
     {
       title: 'Spend tokens on work, not repetition.',
-      body: 'memry loads a compact summary first and fetches the details only when they matter.',
+      body: 'Memry loads a compact summary first and fetches the details only when they matter.',
     },
   ],
   visuals: {
@@ -92,8 +92,9 @@ export const outcomes = {
       status: 'Session restored',
       lines: ['Decision: one JSON error shape', 'Fixed: login code email', 'Convention: validate before saving'],
     },
-    agents: ['Claude Code', 'Codex'],
-    tokens: { repeated: 're-explaining', summary: 'memry summary' },
+    // Monogram tiles of two agents (see agents.monograms); no names, the card title carries the idea.
+    agents: ['CC', 'Cx'],
+    tokens: { repeated: 're-explaining', summary: 'Memry summary' },
   },
 }
 
@@ -110,7 +111,7 @@ export const howItWorks = {
       body: '`memry setup` logs you in with an email code and wires every agent you choose.',
     },
     {
-      title: 'Work. memry remembers.',
+      title: 'Work. Memry remembers.',
       body: 'Your agents save what matters as they go, and every new session starts with it.',
     },
   ],
@@ -127,7 +128,7 @@ export const howItWorks = {
 
 export const agents = {
   heading: 'Five agents. One memory.',
-  body: "A decision saved in Claude Code is waiting for you in Codex. Switch tools whenever you want; your project's context comes with you.",
+  body: "A decision saved in one agent is waiting for you in the next. Switch tools whenever you want; your project's context comes with you.",
   listLabel: 'Supported agents',
   list: ['Claude Code', 'Codex', 'OpenCode', 'Antigravity', 'Windsurf'],
   // Lettered tiles shown before each name, in the same order as `list` (no logos).
@@ -140,8 +141,7 @@ export const agents = {
     { kind: 'file', name: 'README.md' },
     { kind: 'file', name: '.memry.json' },
   ],
-  diagramNote:
-    'memry setup asks which agents you use and connects each one. memry uninstall removes it from all of them.',
+  diagramNote: '`memry setup` asks which agents you use and connects each one.',
 }
 
 export const useCases = {
@@ -152,16 +152,12 @@ export const useCases = {
       body: 'Weeks of decisions stay available, not buried in old chats.',
     },
     {
-      title: 'Multi-agent workflows.',
-      body: 'Use the best agent for each task without re-explaining the project.',
+      title: 'Bugs that take days.',
+      body: 'What you tried, what failed and what finally fixed it carry over to the next session.',
     },
     {
       title: 'Coming back after a break.',
       body: 'Monday morning, or after vacation: your agent already knows where you were.',
-    },
-    {
-      title: 'One product, many repos.',
-      body: 'Group backend and frontend into one project with a `.memry.json`.',
     },
   ],
 }
@@ -212,7 +208,7 @@ export const security = {
     },
     {
       title: 'Leave anytime.',
-      body: '`memry uninstall` removes memry from every agent; `memry delete-account` erases everything.',
+      body: '`memry uninstall` removes Memry from every agent; `memry delete-account` erases everything.',
     },
     {
       title: 'Open source.',
@@ -229,6 +225,7 @@ export const security = {
     memories: { label: 'not used for training' },
     leave: { command: 'memry delete-account', done: 'Deleted' },
     open: { badge: 'MIT', note: 'no tracking · no cookies' },
+    policy: { title: 'Privacy policy', languages: ['EN', 'ES'] },
   },
   policyLabel: 'Read the privacy policy',
   policyEsLabel: 'Versión en español',

@@ -17,7 +17,7 @@ export function ButtonLink({ href, variant = 'primary', children, className = ''
   return (
     <a
       {...linkProps(href)}
-      className={`inline-flex h-11 items-center justify-center gap-2 rounded-lg px-5 text-[15px] font-semibold transition-colors ${variants[variant]} ${className}`}
+      className={`inline-flex h-11 items-center justify-center gap-2 rounded-lg px-5 text-base font-semibold transition-colors ${variants[variant]} ${className}`}
     >
       {children}
     </a>

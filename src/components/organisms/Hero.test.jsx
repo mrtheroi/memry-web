@@ -41,7 +41,27 @@ describe('Hero', () => {
 
     expect(screen.getByRole('img').getAttribute('src')).toBe('/hero/memry-hero-desktop.webp')
     const mobile = container.querySelector('picture source[media="(max-width: 767px)"]')
-    expect(mobile).toHaveAttribute('srcset', '/hero/memry-hero-mobile.webp')
+    expect(mobile.getAttribute('srcset')).toMatch(/memry-hero-mobile\.webp/)
+  })
+
+  it('serves responsive widths of the art, with sizes, on desktop and mobile', () => {
+    const { container } = render(<Hero />)
+    const img = screen.getByRole('img')
+    const mobile = container.querySelector('picture source[media="(max-width: 767px)"]')
+
+    expect(img.getAttribute('srcset')).toMatch(/ 960w/)
+    expect(img.getAttribute('srcset')).toMatch(/ 1280w/)
+    expect(img.getAttribute('sizes')).toMatch(/1672px/)
+    expect(mobile.getAttribute('srcset')).toMatch(/ 600w/)
+    expect(mobile).toHaveAttribute('sizes', '100vw')
+  })
+
+  it('stacks the two CTAs at equal, full width on the narrowest screens', () => {
+    render(<Hero />)
+    const group = screen.getByRole('link', { name: 'Get started' }).parentElement
+
+    expect(group).toHaveClass('flex-col', 'min-[360px]:flex-row')
+    expect(group).not.toHaveClass('flex-wrap')
   })
 
   it('lists the five supported agents under the CTAs', () => {

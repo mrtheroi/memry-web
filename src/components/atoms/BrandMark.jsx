@@ -1,4 +1,4 @@
-import mascot from '../../assets/mascot.webp'
+import mascot from '../../assets/mascot-72.webp'
 import { Wordmark } from './Wordmark'
 
 /** Mascot + wordmark, used in the navigation and footer. */

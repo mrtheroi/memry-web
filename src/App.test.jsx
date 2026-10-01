@@ -83,13 +83,13 @@ describe('App', () => {
   it('opens with the problem instead of the old intro', () => {
     render(<App />)
     const problem = screen.getByRole('region', { name: 'Every session starts from zero.' })
-    expect(problem).toHaveTextContent('memry gives your project one.')
+    expect(problem).toHaveTextContent('Memry gives your project one.')
     expect(screen.queryByRole('heading', { name: 'Your project remembers.' })).toBeNull()
   })
 
   it('shows three outcomes', () => {
     render(<App />)
-    const outcomes = screen.getByRole('region', { name: 'What changes with memry' })
+    const outcomes = screen.getByRole('region', { name: 'What changes with Memry' })
     expect(within(outcomes).getAllByRole('heading', { level: 3 }).map((h) => h.textContent)).toEqual([
       'Pick up where you left off.',
       'Switch agents, keep the context.',
@@ -104,20 +104,19 @@ describe('App', () => {
     expect(steps.map((step) => within(step).getByRole('heading', { level: 3 }).textContent)).toEqual([
       'Install in seconds.',
       'Connect your agents.',
-      'Work. memry remembers.',
+      'Work. Memry remembers.',
     ])
     expect(steps[0]).toHaveTextContent('brew install mrtheroi/tap/memry')
     expect(within(how).getByText('.memry.json', { selector: 'figcaption' })).toBeInTheDocument()
   })
 
-  it('lists four use cases', () => {
+  it('lists three use cases, none repeating another section', () => {
     render(<App />)
     const cases = screen.getByRole('region', { name: 'Built for the way you actually work' })
     expect(within(cases).getAllByRole('heading', { level: 3 }).map((h) => h.textContent)).toEqual([
       'Long-running projects.',
-      'Multi-agent workflows.',
+      'Bugs that take days.',
       'Coming back after a break.',
-      'One product, many repos.',
     ])
   })
 
@@ -204,5 +203,70 @@ describe('App with reduced motion', () => {
     prefer(true)
     render(<App />)
     expect(screen.getByRole('heading', { level: 1 }).style.opacity).toBe('')
+  })
+})
+
+describe('App content without repetition', () => {
+  /** Page text outside the places allowed to name things (hero chips, the diagram, the terminal). */
+  const textOutside = (container, allowed) => {
+    const clone = container.cloneNode(true)
+    clone.querySelectorAll(allowed).forEach((el) => el.remove())
+    return clone.textContent
+  }
+
+  it('names the five agents only in the hero chips, the Agents diagram and the setup terminal', () => {
+    const { container } = render(<App />)
+    const text = textOutside(container, '[aria-labelledby="hero-works-with"], .agents-canvas, figure[aria-label^="Terminal"]')
+
+    agents.list.forEach((name) => expect(text).not.toContain(name))
+  })
+
+  it('mentions the free beta at most twice', () => {
+    const { container } = render(<App />)
+    const mentions = [...container.querySelectorAll('p, li, span')].filter(
+      (el) => el.children.length === 0 && /\bfree\b|\bbeta\b/i.test(el.textContent),
+    )
+
+    expect(mentions.length).toBeLessThanOrEqual(2)
+  })
+
+  it('says "two commands" at most twice', () => {
+    const { container } = render(<App />)
+
+    expect(container.textContent.match(/two commands/gi)?.length ?? 0).toBeLessThanOrEqual(2)
+  })
+
+  it('explains .memry.json once, in How it works', () => {
+    const { container } = render(<App />)
+    const explanations = [...container.querySelectorAll('section')].filter((section) =>
+      /\.memry\.json/.test(textOutside(section, '.agents-canvas, figure figcaption')),
+    )
+
+    expect(explanations.map((s) => s.getAttribute('aria-labelledby'))).toEqual(['how-title'])
+  })
+
+  it('covers uninstalling and deleting the account in Security only', () => {
+    const { container } = render(<App />)
+    const sections = [...container.querySelectorAll('section')].filter((s) => /uninstall|delete-account/.test(s.textContent))
+
+    expect(sections.map((s) => s.getAttribute('aria-labelledby'))).toEqual(['security-title'])
+  })
+
+  it('keeps the switch-agents idea out of the use cases', () => {
+    const { container } = render(<App />)
+    const useCases = container.querySelector('[aria-labelledby="use-cases-title"]')
+
+    expect(useCases.textContent).not.toMatch(/switch|multi-agent|best agent/i)
+  })
+})
+
+describe('App type scale', () => {
+  it('sets every section heading on one H2 scale, the closing one step larger (56px max)', () => {
+    const { container } = render(<App />)
+    const headings = [...container.querySelectorAll('main h2')]
+    const closing = headings.find((h) => h.id === 'closing-title')
+
+    headings.filter((h) => h !== closing).forEach((h) => expect(h, h.id).toHaveClass('text-[clamp(2rem,4vw,3rem)]'))
+    expect(closing).toHaveClass('text-[clamp(2rem,4.5vw,3.5rem)]')
   })
 })

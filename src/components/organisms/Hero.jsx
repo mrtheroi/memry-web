@@ -6,10 +6,12 @@ import { Wordmark } from '../atoms/Wordmark'
 
 // Text-free art: squirrel and acorn on the left, ribbons to the upper right,
 // empty dark space in the lower right where the heading sits on desktop.
+// From xl the heading sits over the art; below xl the art is stacked under it, full width.
 const art = {
   desktop: '/hero/memry-hero-desktop.webp',
-  desktopSmall: '/hero/memry-hero-desktop-960.webp',
-  mobile: '/hero/memry-hero-mobile.webp',
+  desktopSrcSet: '/hero/memry-hero-desktop-960.webp 960w, /hero/memry-hero-desktop-1280.webp 1280w, /hero/memry-hero-desktop.webp 1672w',
+  desktopSizes: '(min-width: 1672px) 1672px, 100vw',
+  mobileSrcSet: '/hero/memry-hero-mobile-600.webp 600w, /hero/memry-hero-mobile-800.webp 800w, /hero/memry-hero-mobile.webp 1122w',
   width: 1672,
   height: 941,
 }
@@ -28,11 +30,11 @@ export function Hero() {
   return (
     <section aria-labelledby="hero-title" className="hero-bg relative overflow-hidden">
       <div className="relative mx-auto max-w-[1672px]">
-        <div className="relative z-10 px-4 pt-28 sm:px-8 lg:absolute lg:left-[55.5%] lg:bottom-[5%] lg:p-0 lg:pr-4 xl:pr-6">
+        <div className="relative z-10 px-4 pt-28 sm:px-8 xl:absolute xl:left-[55.5%] xl:bottom-[5%] xl:p-0 xl:pr-6">
           <motion.h1 id="hero-title" {...reveal(0.15)} className="text-white">
             <Wordmark className="block text-[clamp(3.75rem,8.2vw,8.5rem)] leading-[0.9]" />
             <span className="sr-only"> — </span>
-            <span className="mt-4 block max-w-[17ch] text-[clamp(1.375rem,2.3vw,2.25rem)] font-medium leading-[1.2] tracking-[-0.015em] text-[var(--hero-ink)]">
+            <span className="mt-4 block max-w-[17ch] text-[clamp(1.5rem,2.3vw,2rem)] font-medium leading-[1.2] tracking-[-0.015em] text-[var(--hero-ink)]">
               {hero.taglineLead}{' '}
               <span className="text-[var(--memry-turquoise)]">{hero.taglineAccent}</span>
             </span>
@@ -44,7 +46,7 @@ export function Hero() {
             {hero.hook}
           </motion.p>
           <motion.div {...reveal(0.35)} className="mt-7 xl:mt-9">
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-col gap-3 min-[360px]:flex-row">
               <ButtonLink href={hero.primaryCta.href} variant="onDark">
                 {hero.primaryCta.label}
               </ButtonLink>
@@ -55,15 +57,15 @@ export function Hero() {
             <p className="mt-3 text-sm text-[var(--hero-ink-muted)]">{hero.betaNote}</p>
           </motion.div>
           {/* Inline flow, so the label and the chips share rows when they wrap. */}
-          <motion.div {...reveal(0.5)} className="mt-4 max-w-[34rem] pb-8 lg:pb-0 xl:mt-6">
-            <p id="hero-works-with" className="mr-2 inline align-middle text-sm text-[var(--hero-ink-muted)] lg:max-xl:mr-1 lg:max-xl:text-xs">
+          <motion.div {...reveal(0.5)} className="mt-4 max-w-[34rem] pb-8 xl:mt-6 xl:pb-0">
+            <p id="hero-works-with" className="mr-2 inline align-middle text-sm text-[var(--hero-ink-muted)]">
               {hero.worksWith}
             </p>
             <ul aria-labelledby="hero-works-with" className="inline">
               {agents.list.map((name) => (
                 <li
                   key={name}
-                  className="mt-2 mr-1.5 inline-block last:mr-0 lg:max-xl:mr-1 align-middle rounded-full border border-[rgba(6,182,212,0.3)] bg-[rgba(3,30,39,0.72)] px-2.5 py-1 text-xs font-medium text-[var(--hero-ink)] backdrop-blur-sm lg:max-xl:px-2 lg:max-xl:text-[0.6875rem]"
+                  className="mt-2 mr-1.5 inline-block whitespace-nowrap last:mr-0 align-middle rounded-full border border-[var(--border-glass-strong)] bg-[rgba(3,30,39,0.72)] px-2.5 py-1 text-xs font-medium text-[var(--hero-ink)] backdrop-blur-sm"
                 >
                   {name}
                 </li>
@@ -72,16 +74,16 @@ export function Hero() {
           </motion.div>
         </div>
         <picture>
-          <source media="(max-width: 767px)" srcSet={art.mobile} width="1122" height="1402" />
+          <source media="(max-width: 767px)" srcSet={art.mobileSrcSet} sizes="100vw" width="1122" height="1402" />
           <img
             src={art.desktop}
-            srcSet={`${art.desktopSmall} 960w, ${art.desktop} 1672w`}
-            sizes="100vw"
+            srcSet={art.desktopSrcSet}
+            sizes={art.desktopSizes}
             width={art.width}
             height={art.height}
             alt={hero.imageAlt}
             fetchPriority="high"
-            className="hero-art -mt-6 block w-full lg:mt-0"
+            className="hero-art -mt-6 block w-full xl:mt-0"
           />
         </picture>
       </div>

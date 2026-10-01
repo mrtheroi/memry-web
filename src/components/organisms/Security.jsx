@@ -2,11 +2,12 @@ import { links, security } from '../../content'
 import { linkProps } from '../../lib/linkProps'
 import { CodeText } from '../atoms/CodeText'
 import { Container } from '../atoms/Container'
+import { SectionHeading } from '../atoms/SectionHeading'
 import { GlassCard } from '../molecules/GlassCard'
-import { CodesVisual, LeaveVisual, MemoriesVisual, OpenVisual, TokenVisual } from '../molecules/SecurityVisuals'
+import { CodesVisual, LeaveVisual, MemoriesVisual, OpenVisual, PolicyVisual, TokenVisual } from '../molecules/SecurityVisuals'
 
 const darkLink =
-  'focus-ring-dark rounded-sm font-medium text-white underline decoration-white/40 underline-offset-4 transition-colors hover:decoration-[var(--memry-turquoise)]'
+  'focus-ring-dark rounded-lg font-medium text-white underline decoration-white/40 underline-offset-4 transition-colors hover:decoration-[var(--memry-turquoise)]'
 
 const visuals = [TokenVisual, CodesVisual, MemoriesVisual, LeaveVisual, OpenVisual]
 
@@ -16,16 +17,13 @@ export function Security() {
     <section
       id="security"
       aria-labelledby="security-title"
-      className="security-bg scroll-mt-8 py-20 text-white sm:py-24"
+      className="security-bg scroll-mt-8 py-16 text-white sm:py-24"
     >
       <Container>
-        <h2
-          id="security-title"
-          className="max-w-[16ch] text-[clamp(2.25rem,5vw,4rem)] font-extrabold leading-[1] tracking-[-0.04em]"
-        >
+        <SectionHeading id="security-title" dark className="max-w-[16ch]">
           {security.heading}
-        </h2>
-        <ul className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        </SectionHeading>
+        <ul className="mt-10 grid gap-4 sm:mt-14 sm:gap-5 md:grid-cols-2 lg:grid-cols-3">
           {security.items.map((item, i) => {
             const Visual = visuals[i]
             return (
@@ -38,11 +36,11 @@ export function Security() {
               />
             )
           })}
-          <GlassCard tone="dark" className="justify-end gap-3">
-            <a {...linkProps(links.privacy)} className={`${darkLink} self-start text-lg`}>
+          <GlassCard tone="dark" illustration={<PolicyVisual />}>
+            <a {...linkProps(links.privacy)} className={`${darkLink} mt-4 self-start text-xl sm:mt-6`}>
               {security.policyLabel}
             </a>
-            <span lang="es" className="self-start">
+            <span lang="es" className="mt-2 self-start">
               <a {...linkProps(links.privacyEs)} className={darkLink}>
                 {security.policyEsLabel}
               </a>

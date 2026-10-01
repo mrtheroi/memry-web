@@ -72,12 +72,15 @@ describe('Problem section', () => {
     expect(cards[0]).toHaveTextContent('Context loaded')
   })
 
-  it('settles the cards in on first view when motion is allowed', () => {
+  it('settles the cards in on first view when motion is allowed, from a visible start', () => {
     const { container } = render(<Problem />)
     const cards = [...container.querySelectorAll('[data-card]')]
 
     expect(cards).toHaveLength(4)
-    cards.forEach((card) => expect(card.style.opacity).toBe('0'))
+    cards.forEach((card) => {
+      expect(card.style.opacity).not.toBe('0')
+      expect(card.style.transform).toMatch(/translateY/)
+    })
   })
 
   it('shows the cards static, with no entrance or pill glow, when the user prefers reduced motion', () => {
@@ -221,5 +224,34 @@ describe('Problem section', () => {
       restore()
       vi.useRealTimers()
     }
+  })
+
+  describe('fading the forgotten sessions', () => {
+    /** Elements between the day label and its card (exclusive) that set their own opacity. */
+    const fadedAncestors = (day) => {
+      const faded = []
+      for (let el = day; el && !el.matches('[data-card]'); el = el.parentElement) if (el.style.opacity !== '') faded.push(el)
+      return faded
+    }
+
+    it.each([
+      ['motion allowed', false],
+      ['reduced motion', true],
+    ])('keeps the day labels and prompts at full opacity and fades the skeleton lines instead (%s)', (_, reduce) => {
+      window.matchMedia = vi.fn().mockReturnValue({
+        matches: reduce,
+        media: '(prefers-reduced-motion: reduce)',
+        addEventListener: () => {},
+        removeEventListener: () => {},
+      })
+      const { container } = render(<Problem />)
+
+      container.querySelectorAll('[data-card="session"] [data-day], [data-card="session"] [data-prompt]').forEach((el) => {
+        expect(fadedAncestors(el)).toEqual([])
+      })
+      container.querySelectorAll('[data-card="session"]').forEach((card) => {
+        expect(card.querySelector('[data-skeleton]')).not.toBeNull()
+      })
+    })
   })
 })

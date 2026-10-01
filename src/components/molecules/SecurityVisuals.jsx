@@ -5,13 +5,13 @@ import { AcornShape } from '../atoms/Acorn'
 
 /* Small decorative illustrations for the Security cards (dark band). Hidden from assistive tech. */
 
-const { token, codes, memories, leave, open } = security.visuals
+const { token, codes, memories, leave, open, policy } = security.visuals
 const ease = [0.22, 1, 0.36, 1]
 const inView = { viewport: { once: true, amount: 0.6 } }
-/** Entrance props, or none under reduced motion (the final state shows as is). */
+/** Entrance props, or none under reduced motion. Entrances move or resize, never hide, so the final state always shows. */
 const enter = (reduced, from, to, transition) =>
   reduced ? {} : { initial: from, whileInView: to, ...inView, transition: { ease, ...transition } }
-const mono = 'font-mono text-[11.5px] leading-relaxed'
+const mono = 'font-mono text-xs leading-relaxed'
 
 /** "Your token stays with you": the agent config has no token; it lives in its own file. */
 export function TokenVisual() {
@@ -33,7 +33,7 @@ export function TokenVisual() {
           <path d="M8.5 8h6M12.5 8v2.5M14.5 8v2" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
         </svg>
         <span className="font-semibold text-white">{token.chip}</span>
-        <span className="truncate font-mono text-[11px] text-[var(--hero-ink-muted)]">{token.path}</span>
+        <span className="truncate font-mono text-xs text-[var(--hero-ink-muted)]">{token.path}</span>
       </span>
     </div>
   )
@@ -49,11 +49,11 @@ export function CodesVisual() {
           <span
             key={i}
             data-code-box
-            className="flex h-8 w-7 items-center justify-center rounded-md border border-white/15 bg-white/[0.04]"
+            className="flex h-8 w-7 items-center justify-center rounded-lg border border-white/15 bg-white/[0.04]"
           >
             <motion.span
               data-code-dot
-              {...enter(reduced, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1 }, { duration: 0.3, delay: 0.3 + i * 0.18 })}
+              {...enter(reduced, { scale: 0.4 }, { scale: 1 }, { duration: 0.3, delay: 0.3 + i * 0.18 })}
               className="h-1.5 w-1.5 rounded-full bg-white"
             />
           </span>
@@ -95,7 +95,7 @@ export function LeaveVisual() {
       </div>
       <motion.div
         data-deleted
-        {...enter(reduced, { opacity: 0 }, { opacity: 1 }, { duration: 0.4, delay: 1.1 })}
+        {...enter(reduced, { x: -6 }, { x: 0 }, { duration: 0.4, delay: 1.1 })}
         className="mt-1 whitespace-nowrap text-white"
       >
         <span className="text-[var(--memry-turquoise)]">✓</span> {leave.done}
@@ -108,10 +108,33 @@ export function LeaveVisual() {
 export function OpenVisual() {
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <span className="rounded-md border border-[rgba(6,182,212,0.45)] px-2.5 py-1 text-sm font-bold tracking-[0.02em] text-white">
+      <span className="rounded-lg border border-[var(--border-glass-strong)] px-2.5 py-1 text-sm font-bold tracking-[0.02em] text-white">
         {open.badge}
       </span>
       <span className="text-xs text-[var(--hero-ink)]">{open.note}</span>
+    </div>
+  )
+}
+
+/** Privacy policy card: a policy document, available in English and Spanish. */
+export function PolicyVisual() {
+  return (
+    <div className="flex items-center gap-3">
+      <svg viewBox="0 0 32 40" className="h-11 w-9 shrink-0" focusable="false">
+        <path d="M4 2h17l7 7v29H4Z" fill="rgba(6,182,212,0.08)" stroke="var(--memry-turquoise)" strokeWidth="1.6" strokeLinejoin="round" />
+        <path d="M21 2v7h7" fill="none" stroke="var(--memry-turquoise)" strokeWidth="1.6" strokeLinejoin="round" />
+        <path d="M9 17h14M9 22h14M9 27h9" stroke="var(--hero-ink-muted)" strokeWidth="1.6" strokeLinecap="round" />
+      </svg>
+      <div className="flex flex-col gap-1.5">
+        <span className="text-xs text-[var(--hero-ink)]">{policy.title}</span>
+        <span className="flex gap-1.5">
+          {policy.languages.map((code) => (
+            <span key={code} className="rounded-lg border border-white/15 px-1.5 py-0.5 font-mono text-xs text-white">
+              {code}
+            </span>
+          ))}
+        </span>
+      </div>
     </div>
   )
 }

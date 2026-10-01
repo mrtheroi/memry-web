@@ -11,23 +11,25 @@ const { description, scenes, memry } = problem.illustration
  * fading and drifting as it is forgotten), then one memry session that opens
  * with the context already loaded.
  */
+// The skeleton lines fade card by card; the text only steps to a lighter ink that still reads at 4.5:1.
 const sessionLook = [
-  { fade: 0.78, offset: 'translate-x-0 -rotate-[1.5deg]' },
-  { fade: 0.58, offset: 'translate-x-3 rotate-[1deg] sm:translate-x-5' },
-  { fade: 0.4, offset: 'translate-x-6 -rotate-[0.75deg] sm:translate-x-10' },
+  { fade: 0.78, ink: 'text-[var(--text-primary)]', offset: 'translate-x-0 -rotate-[1.5deg]' },
+  { fade: 0.5, ink: 'text-[#3d5458]', offset: 'translate-x-3 rotate-[1deg] sm:translate-x-5' },
+  { fade: 0.28, ink: 'text-[#5b6c6f]', offset: 'translate-x-6 -rotate-[0.75deg] sm:translate-x-10' },
 ]
+// Entrances move cards into place but never hide them, so the stack is complete without animation.
 const ease = [0.22, 1, 0.36, 1]
 const settle = (i) => ({
-  hidden: { opacity: 0, y: 18 },
-  shown: { opacity: 1, y: 0, transition: { duration: 0.6, delay: 0.1 + i * 0.35, ease } },
+  hidden: { y: 18 },
+  shown: { y: 0, transition: { duration: 0.6, delay: 0.1 + i * 0.35, ease } },
 })
 const dim = (i, fade) => ({
   hidden: { opacity: 1 },
   shown: { opacity: fade, transition: { duration: 0.9, delay: 0.55 + i * 0.35, ease: 'easeOut' } },
 })
 const rise = {
-  hidden: { opacity: 0, y: 28 },
-  shown: { opacity: 1, y: 0, transition: { duration: 0.7, delay: 1.45, ease } },
+  hidden: { y: 28 },
+  shown: { y: 0, transition: { duration: 0.7, delay: 1.45, ease } },
 }
 
 // Each card floats on its own slow clock so the stack breathes instead of moving in unison.
@@ -119,23 +121,27 @@ export function SessionStack({ className = '' }) {
               data-card="session"
               className={`relative mr-6 rounded-2xl border border-[var(--border)] bg-white px-5 pt-4 pb-10 sm:mr-10 ${sessionLook[i].offset}`}
             >
-              <motion.div {...(reduced ? { style: { opacity: sessionLook[i].fade } } : { variants: dim(i, sessionLook[i].fade) })}>
+              <div>
                 <span data-day className="text-xs font-semibold text-[var(--text-muted)]">
                   {session.day}
                 </span>
-                <p className="mt-2 font-mono text-[13px] text-[var(--text-primary)]">
+                <p className={`mt-2 font-mono text-xs ${sessionLook[i].ink}`}>
                   <span className="mr-2 text-[var(--memry-teal)]">&gt;</span>
                   <span data-prompt className={reduced ? '' : 'scene-text'} style={reduced ? undefined : { '--line': i }}>
                     {session.prompt}
                   </span>
                   {!reduced && <span className="terminal-cursor" />}
                 </p>
-                <div className="mt-3 space-y-2 pl-5">
+                <motion.div
+                  data-skeleton
+                  className="mt-3 space-y-2 pl-5"
+                  {...(reduced ? { style: { opacity: sessionLook[i].fade } } : { variants: dim(i, sessionLook[i].fade) })}
+                >
                   {skeleton[i].map((width) => (
                     <span key={width} className={`block h-1.5 rounded-full bg-[var(--border)] ${width}`} />
                   ))}
-                </div>
-              </motion.div>
+                </motion.div>
+              </div>
             </motion.div>
           </Float>
         ))}
@@ -151,17 +157,17 @@ export function SessionStack({ className = '' }) {
                 {memry.name}
               </span>
               <span
-                className={`inline-flex items-center gap-1.5 rounded-full bg-[#e6f4f5] px-3 py-1 text-xs font-semibold text-[var(--memry-teal)] ${
+                className={`inline-flex items-center gap-1.5 rounded-full bg-[#e6f4f5] px-3 py-1 text-xs font-semibold text-[var(--memry-dark)] ${
                   reduced ? '' : 'pill-glow'
                 }`}
               >
                 {memry.status}
-                <svg viewBox="0 0 16 16" className="h-3.5 w-3.5" focusable="false">
+                <svg viewBox="0 0 16 16" className="h-3.5 w-3.5 text-[var(--memry-teal)]" focusable="false">
                   <path d="M3.5 8.5 6.5 11.5 12.5 4.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </span>
             </div>
-            <ul className="mt-4 space-y-2 font-mono text-[12.5px] leading-snug text-[var(--text-primary)]">
+            <ul className="mt-4 space-y-2 font-mono text-xs leading-snug text-[var(--text-primary)]">
               {scene.memories.map((line, i) => (
                 <li
                   key={i}
