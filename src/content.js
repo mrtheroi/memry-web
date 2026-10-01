@@ -38,6 +38,20 @@ export const problem = {
   heading: 'Every session starts from zero.',
   body: 'You explain the architecture. The decisions. The bug you fixed last week. Then the session ends, and tomorrow you explain it all again. Your agents are brilliant, but they have no memory.',
   closing: 'memry gives your project one.',
+  illustration: {
+    description:
+      'Three sessions, Monday to Wednesday, where the same context is explained again each day. Then a memry session that starts with the context already loaded.',
+    sessions: [
+      { day: 'Monday', prompt: 'Let me explain the architecture again…' },
+      { day: 'Tuesday', prompt: 'As I said yesterday, we use…' },
+      { day: 'Wednesday', prompt: '…and again: the auth flow works like…' },
+    ],
+    memry: {
+      name: 'memry',
+      status: 'Context loaded',
+      lines: ['Decision: Postgres full-text search', 'Fixed: login code email', 'Convention: one topic per memory'],
+    },
+  },
 }
 
 export const outcomes = {
