@@ -2,6 +2,7 @@
 
 export const links = {
   github: 'https://github.com/mrtheroi/memry-cli',
+  docs: 'https://github.com/mrtheroi/memry-cli#readme',
   privacy: 'https://github.com/mrtheroi/memry-cli/blob/main/PRIVACY.md',
   privacyEs: 'https://github.com/mrtheroi/memry-cli/blob/main/PRIVACY.es.md',
   license: 'https://github.com/mrtheroi/memry-cli/blob/main/LICENSE',
@@ -24,7 +25,8 @@ export const hero = {
   imageAlt:
     'The Memry squirrel holding a glowing orange acorn, with ribbons of turquoise and orange light flowing from it.',
   hook: "Your agents forget. Your project shouldn't.",
-  primaryCta: { label: "Get started, it's free", href: '#get-started' },
+  primaryCta: { label: 'Get started', href: '#get-started' },
+  betaNote: 'Free during the public beta.',
   secondaryCta: { label: 'View on GitHub', href: links.github },
   worksWith: 'Works with',
 }
@@ -188,6 +190,9 @@ export const getStarted = {
   copiedLabel: 'Copied',
   requirements: 'Requires macOS or Linux, Homebrew and at least one supported agent.',
   beta: 'Free public beta.',
+  nextLabel: 'Next steps',
+  docsCta: { label: 'Read the docs', href: links.docs },
+  githubCta: { label: 'View on GitHub', href: links.github },
 }
 
 export const security = {
@@ -231,8 +236,9 @@ export const security = {
 
 export const closing = {
   heading: 'Give your project a memory.',
-  line: 'Free during the public beta. Two commands. Every agent.',
-  cta: { label: 'Get started', href: '#get-started' },
+  line: 'Two commands. Every agent.',
+  docsCta: { label: 'Read the docs', href: links.docs },
+  githubCta: { label: 'View on GitHub', href: links.github },
 }
 
 export const footer = {

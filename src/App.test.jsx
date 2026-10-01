@@ -11,6 +11,39 @@ describe('App', () => {
     expect(screen.getAllByRole('list', { name: 'Works with' })).toHaveLength(1)
   })
 
+  it('keeps only three dark bands and alternates the light sections between them', () => {
+    const { container } = render(<App />)
+    const sections = [...container.querySelectorAll('main > section')]
+    const isDark = (s) => s.classList.contains('hero-bg') || s.classList.contains('security-bg')
+    const dark = sections.filter(isDark).map((s) => s.getAttribute('aria-labelledby'))
+
+    expect(dark).toEqual(['hero-title', 'security-title', 'closing-title'])
+
+    let previous = null
+    sections.forEach((section, i) => {
+      if (isDark(section)) {
+        previous = null
+        return
+      }
+      const surface = section.classList.contains('bg-white') ? 'white' : section.classList.contains('bg-[var(--background)]') ? 'tint' : null
+      expect(surface, section.getAttribute('aria-labelledby')).not.toBeNull()
+      expect(surface).not.toBe(previous)
+      // A hairline only where two light sections meet.
+      const afterLight = i > 0 && !isDark(sections[i - 1])
+      expect(section.classList.contains('border-t'), section.getAttribute('aria-labelledby')).toBe(afterLight)
+      previous = surface
+    })
+  })
+
+  it('labels every get started call to action with exactly "Get started"', () => {
+    render(<App />)
+    const ctas = screen.getAllByRole('link', { name: /get started/i })
+
+    expect(ctas.length).toBeGreaterThan(0)
+    ctas.forEach((link) => expect(link).toHaveAccessibleName('Get started'))
+    expect(screen.queryByText(/get started, it's free/i)).toBeNull()
+  })
+
   it('has exactly one h1', () => {
     render(<App />)
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
@@ -116,11 +149,21 @@ describe('App', () => {
     expect(screen.queryByRole('heading', { name: 'Your memories stay yours' })).toBeNull()
   })
 
-  it('closes with a call to action that links to get started', () => {
+  it('closes with a next step forward (the docs and GitHub), never an anchor back up to get started', () => {
     render(<App />)
     const closing = screen.getByRole('region', { name: 'Give your project a memory.' })
-    expect(closing).toHaveTextContent('Free during the public beta. Two commands. Every agent.')
-    expect(within(closing).getByRole('link', { name: 'Get started' })).toHaveAttribute('href', '#get-started')
+    // The free beta is said once in the hero and once in Get started; the closing line doesn't repeat it.
+    expect(closing).toHaveTextContent('Two commands. Every agent.')
+    expect(closing).not.toHaveTextContent(/free/i)
+    expect(closing.querySelector('a[href="#get-started"]')).toBeNull()
+    expect(within(closing).getByRole('link', { name: 'Read the docs' })).toHaveAttribute(
+      'href',
+      'https://github.com/mrtheroi/memry-cli#readme',
+    )
+    expect(within(closing).getByRole('link', { name: 'View on GitHub' })).toHaveAttribute(
+      'href',
+      'https://github.com/mrtheroi/memry-cli',
+    )
   })
 
   it('links the privacy policy in English and Spanish', () => {
