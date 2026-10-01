@@ -41,15 +41,35 @@ export const problem = {
   illustration: {
     description:
       'Three sessions, Monday to Wednesday, where the same context is explained again each day. Then a memry session that starts with the context already loaded.',
-    sessions: [
-      { day: 'Monday', prompt: 'Let me explain the architecture again…' },
-      { day: 'Tuesday', prompt: 'As I said yesterday, we use…' },
-      { day: 'Wednesday', prompt: '…and again: the auth flow works like…' },
+    scenes: [
+      {
+        sessions: [
+          { day: 'Monday', prompt: 'Let me explain the architecture again…' },
+          { day: 'Tuesday', prompt: 'As I said yesterday, we use…' },
+          { day: 'Wednesday', prompt: '…and again: the auth flow works like…' },
+        ],
+        memories: ['Decision: Postgres full-text search', 'Fixed: login code email', 'Convention: one topic per memory'],
+      },
+      {
+        sessions: [
+          { day: 'Monday', prompt: 'Again, we deploy with Laravel Cloud…' },
+          { day: 'Tuesday', prompt: 'Reminder: never push to main directly…' },
+          { day: 'Wednesday', prompt: '…and staging uses its own database' },
+        ],
+        memories: ['Config: deploy on Laravel Cloud', 'Decision: PRs only, no direct pushes', 'Config: separate staging database'],
+      },
+      {
+        sessions: [
+          { day: 'Monday', prompt: 'Remember the API returns 422 when…' },
+          { day: 'Tuesday', prompt: 'Validation happens before saving…' },
+          { day: 'Wednesday', prompt: '…and errors use the same JSON shape' },
+        ],
+        memories: ['Convention: validate before saving', 'Decision: one JSON error shape', 'Fixed: 422 on duplicate emails'],
+      },
     ],
     memry: {
       name: 'memry',
       status: 'Context loaded',
-      lines: ['Decision: Postgres full-text search', 'Fixed: login code email', 'Convention: one topic per memory'],
     },
   },
 }
@@ -70,6 +90,14 @@ export const outcomes = {
       body: 'memry loads a compact summary first and fetches the details only when they matter.',
     },
   ],
+  visuals: {
+    restored: {
+      status: 'Session restored',
+      lines: ['Decision: one JSON error shape', 'Fixed: login code email', 'Convention: validate before saving'],
+    },
+    agents: ['Claude Code', 'Codex'],
+    tokens: { repeated: 're-explaining', summary: 'memry summary' },
+  },
 }
 
 export const howItWorks = {

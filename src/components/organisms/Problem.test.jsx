@@ -3,6 +3,41 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { problem } from '../../content'
 import { Problem } from './Problem'
 
+const promptsShown = (container) =>
+  [...container.querySelectorAll('[data-card="session"] [data-prompt]')].map((prompt) => prompt.textContent)
+const memoriesShown = (container) =>
+  [...container.querySelectorAll('[data-card="memry"] li')].map((line) => line.textContent)
+
+// One full reload cycle: lines clear, the scene swaps, lines come back.
+const CYCLE_MS = 12500
+
+/** Replaces IntersectionObserver so a test can report a target entering or leaving the screen. */
+function trackIntersections() {
+  const original = window.IntersectionObserver
+  const observed = []
+  window.IntersectionObserver = class {
+    constructor(callback) {
+      this.callback = callback
+    }
+    observe(target) {
+      observed.push({ target, callback: this.callback })
+    }
+    unobserve() {}
+    disconnect() {}
+    takeRecords() {
+      return []
+    }
+  }
+  const restore = () => {
+    window.IntersectionObserver = original
+  }
+  restore.report = (element, isIntersecting) =>
+    observed
+      .filter(({ target }) => target === element)
+      .forEach(({ target, callback }) => callback([{ target, isIntersecting }]))
+  return restore
+}
+
 describe('Problem section', () => {
   const original = window.matchMedia
   afterEach(() => {
@@ -106,37 +141,65 @@ describe('Problem section', () => {
   })
 
   it('holds the loops until the illustration is on screen and pauses them off-screen', () => {
-    const originalObserver = window.IntersectionObserver
-    const observed = []
-    window.IntersectionObserver = class {
-      constructor(callback) {
-        this.callback = callback
-      }
-      observe(target) {
-        observed.push({ target, callback: this.callback })
-      }
-      unobserve() {}
-      disconnect() {}
-      takeRecords() {
-        return []
-      }
-    }
-
+    const restore = trackIntersections()
     try {
       const { container } = render(<Problem />)
       const stack = container.querySelector('[data-loops]')
-      const report = (isIntersecting) =>
-        observed
-          .filter(({ target }) => target === stack)
-          .forEach(({ target, callback }) => callback([{ target, isIntersecting }]))
 
       expect(stack).toHaveAttribute('data-loops', 'paused')
-      act(() => report(true))
+      act(() => restore.report(stack, true))
       expect(stack).toHaveAttribute('data-loops', 'running')
-      act(() => report(false))
+      act(() => restore.report(stack, false))
       expect(stack).toHaveAttribute('data-loops', 'paused')
     } finally {
-      window.IntersectionObserver = originalObserver
+      restore()
+    }
+  })
+
+  it('opens on the first scene', () => {
+    const { container } = render(<Problem />)
+    const [first] = problem.illustration.scenes
+
+    expect(promptsShown(container)).toEqual(first.sessions.map((session) => session.prompt))
+    expect(memoriesShown(container)).toEqual(first.memories)
+  })
+
+  it('moves on to the next scene after one reload cycle while on screen', () => {
+    vi.useFakeTimers()
+    const restore = trackIntersections()
+    try {
+      const { container } = render(<Problem />)
+      const [, second] = problem.illustration.scenes
+      act(() => restore.report(container.querySelector('[data-loops]'), true))
+
+      act(() => vi.advanceTimersByTime(CYCLE_MS))
+
+      expect(promptsShown(container)).toEqual(second.sessions.map((session) => session.prompt))
+      expect(memoriesShown(container)).toEqual(second.memories)
+    } finally {
+      restore()
+      vi.useRealTimers()
+    }
+  })
+
+  it('stays on the first scene under reduced motion', () => {
+    window.matchMedia = vi.fn().mockReturnValue({
+      matches: true,
+      media: '(prefers-reduced-motion: reduce)',
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    })
+    vi.useFakeTimers()
+    try {
+      const { container } = render(<Problem />)
+      const [first] = problem.illustration.scenes
+
+      act(() => vi.advanceTimersByTime(CYCLE_MS))
+
+      expect(promptsShown(container)).toEqual(first.sessions.map((session) => session.prompt))
+      expect(memoriesShown(container)).toEqual(first.memories)
+    } finally {
+      vi.useRealTimers()
     }
   })
 })
