@@ -56,7 +56,26 @@ describe('Security', () => {
     const dots = [...commitments()[1].querySelectorAll('[data-code-box] [data-code-dot]')]
 
     expect(dots).toHaveLength(6)
-    dots.forEach((dot) => expect(dot.style.opacity).toBe('0'))
+    dots.forEach((dot) => {
+      expect(dot.style.opacity).not.toBe('0')
+      expect(dot.style.transform).toMatch(/scale/)
+    })
+  })
+
+  it('never hides an illustration part before its entrance plays', () => {
+    render(<Security />)
+
+    region()
+      .querySelectorAll('[data-illustration] *')
+      .forEach((node) => expect(node.style?.opacity ?? '').not.toBe('0'))
+  })
+
+  it('gives the privacy links card a decorative illustration like the others', () => {
+    render(<Security />)
+    const policy = within(region()).getByRole('link', { name: security.policyLabel }).closest('li')
+
+    expect(policy.querySelector('[data-illustration]')).toHaveAttribute('aria-hidden', 'true')
+    expect(within(policy).getByRole('link', { name: security.policyEsLabel })).toBeInTheDocument()
   })
 
   it('shows the account deleted after the command', () => {

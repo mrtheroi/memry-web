@@ -6,7 +6,7 @@
 export function CodeChip({ children, nowrap = false, className = 'border-[var(--border)] bg-white text-[var(--memry-dark)]' }) {
   return (
     <code
-      className={`rounded-md border px-1.5 py-0.5 font-mono text-[0.85em] ${
+      className={`rounded-lg border px-1.5 py-0.5 font-mono text-sm ${
         nowrap ? 'whitespace-nowrap' : '[overflow-wrap:anywhere]'
       } ${className}`}
     >

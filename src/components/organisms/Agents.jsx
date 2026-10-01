@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react'
-import { motion } from 'motion/react'
 import { agents } from '../../content'
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion'
 import { AcornIcon, AcornShape } from '../atoms/Acorn'
+import { CodeText } from '../atoms/CodeText'
 import { Container } from '../atoms/Container'
 import { SectionHeading } from '../atoms/SectionHeading'
 import { glassChip } from '../molecules/GlassCard'
@@ -151,7 +151,7 @@ function AgentDiagram() {
               }}
             >
               <span
-                className={`${glassChip} flex items-center justify-center gap-1 rounded-full px-1.5 py-2 text-[0.78rem] font-semibold sm:gap-2 sm:px-3 sm:text-sm md:gap-1.5 md:px-2 md:py-1.5 md:text-xs lg:gap-2 lg:px-3 lg:py-2 lg:text-sm ${reduced ? '' : 'agent-send-glow'}`}
+                className={`${glassChip} flex items-center justify-center gap-1 rounded-full px-1.5 py-2 text-xs font-semibold sm:gap-2 sm:px-3 sm:text-sm md:gap-1.5 md:px-2 md:py-1.5 md:text-xs lg:gap-2 lg:px-3 lg:py-2 lg:text-sm ${reduced ? '' : 'agent-send-glow'}`}
                 // The border brightens as this agent's save pulse leaves: same delay and cycle as the SVG pulse.
                 style={
                   reduced
@@ -201,7 +201,7 @@ function AgentDiagram() {
         <ProjectFolder />
       </div>
       <figcaption className="mt-6 border-t border-white/10 pt-4 text-sm leading-relaxed text-[var(--hero-ink-muted)]">
-        {agents.diagramNote}
+        <CodeText chipClassName="border-white/15 bg-white/10 text-white">{agents.diagramNote}</CodeText>
       </figcaption>
     </figure>
   )
@@ -225,7 +225,7 @@ function ProjectFolder() {
       }}
     >
       <span aria-hidden="true" className={`${glassChip} block h-2.5 w-[40%] rounded-t-lg border-b-0`} />
-      <div className={`${glassChip} rounded-xl rounded-tl-none px-3 pt-2.5 pb-2`}>
+      <div className={`${glassChip} rounded-2xl rounded-tl-none px-3 pt-2.5 pb-2`}>
         <p className="flex items-center gap-2 text-sm font-semibold md:text-xs lg:text-sm">
           {/* The acorn's cap is dark ink by default; lighten it for the navy canvas. */}
           <span className="flex shrink-0 [--memry-dark:var(--hero-ink)]">
@@ -233,9 +233,9 @@ function ProjectFolder() {
           </span>
           {agents.memory}
         </p>
-        <ul aria-hidden="true" className="mt-1.5 font-mono text-[0.75rem] leading-5 md:text-[0.6875rem] lg:text-[0.75rem]">
+        <ul aria-hidden="true" className="mt-1.5 font-mono text-xs leading-5">
           {agents.files.map((file, row) => (
-            <li key={file.name} className="file-row relative flex items-center gap-2 rounded-md px-1.5">
+            <li key={file.name} className="file-row relative flex items-center gap-2 rounded-lg px-1.5">
               {!reduced &&
                 agents.list.map(
                   (agent, i) =>
@@ -244,7 +244,7 @@ function ProjectFolder() {
                       <span
                         key={agent}
                         aria-hidden="true"
-                        className="file-row-glow pointer-events-none absolute inset-0 rounded-md"
+                        className="file-row-glow pointer-events-none absolute inset-0 rounded-lg"
                         style={{
                           animationDelay: seconds(folderArrival(i) - 0.2),
                           animationDuration: seconds(SAVE_CYCLE),
@@ -315,15 +315,6 @@ function usePauseAnimationsOffscreen(ref) {
 /** The curves for one layout. Decorative: the list and nodes carry the meaning. */
 function FlowDrawing({ layout, geometry, className }) {
   const reduced = usePrefersReducedMotion()
-  const draw = (delay) =>
-    reduced
-      ? {}
-      : {
-          initial: { pathLength: 0 },
-          whileInView: { pathLength: 1 },
-          viewport: { once: true, amount: 0.5 },
-          transition: { duration: 1.1, delay, ease: 'easeOut' },
-        }
   const strokeId = `${layout}AgentsStroke`
   const haloId = `${layout}AgentsHalo`
   const stroke = {
@@ -363,9 +354,9 @@ function FlowDrawing({ layout, geometry, className }) {
         filter={`url(#${haloId})`}
       />
       {geometry.chips.map((chip, i) => (
-        <motion.path key={chip.curve} className="agent-curve" d={chip.curve} {...stroke} {...draw(i * 0.08)} />
+        <path key={chip.curve} className="agent-curve" d={chip.curve} {...stroke} />
       ))}
-      <motion.path className="hub-curve" d={geometry.hubCurve} {...stroke} {...draw(0.9)} />
+      <path className="hub-curve" d={geometry.hubCurve} {...stroke} />
       <MemoryTreeGlyph {...geometry.tree} />
       {!reduced && <Pulses layout={layout} geometry={geometry} />}
     </svg>

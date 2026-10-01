@@ -14,3 +14,27 @@ describe('problem illustration scenes', () => {
     })
   })
 })
+
+describe('product name casing', () => {
+  // Fields that hold commands, code, file contents or the lowercase wordmark logo.
+  const codeKeys = new Set(['commands', 'output', 'code', 'filename', 'config', 'path', 'command', 'hub', 'files', 'name'])
+  const prose = (value, key = '') => {
+    if (codeKeys.has(key)) return []
+    if (typeof value === 'string') return [value.split('`').filter((_, i) => i % 2 === 0).join(' ')]
+    if (Array.isArray(value)) return value.flatMap((v) => prose(v))
+    if (value && typeof value === 'object') return Object.entries(value).flatMap(([k, v]) => prose(v, k))
+    return []
+  }
+
+  it('writes the product as "Memry" in prose, keeping lowercase memry for commands and code', async () => {
+    const content = await import('./content')
+    const { links, ...copy } = content
+    const lowercase = prose(copy).filter((text) => /(^|[^.\w/~-])memry\b/.test(text))
+
+    expect(lowercase).toEqual([])
+  })
+
+  it('closes the Problem section with "Memry gives your project one."', () => {
+    expect(problem.closing).toBe('Memry gives your project one.')
+  })
+})

@@ -246,4 +246,22 @@ describe('Agents diagram', () => {
     const list = screen.getByRole('list', { name: 'Supported agents' })
     expect(within(list).getAllByRole('listitem').map((item) => item.textContent)).toEqual(agents.list)
   })
+
+  it('captions the diagram with setup only, the command set as code', () => {
+    const { container } = render(<Agents />)
+    const caption = container.querySelector('figure figcaption')
+
+    expect(caption).toHaveTextContent('memry setup asks which agents you use and connects each one.')
+    expect(caption.textContent).not.toMatch(/uninstall|`/)
+    expect(caption.querySelector('code')).toHaveTextContent('memry setup')
+  })
+
+  it('draws every curve in full before any animation runs, so the diagram is complete on a fast scroll', () => {
+    const { container } = render(<Agents />)
+
+    container.querySelectorAll('.agent-curve, .hub-curve').forEach((curve) => {
+      expect(curve.getAttribute('pathLength')).toBeNull()
+      expect(curve.style.strokeDasharray ?? '').toBe('')
+    })
+  })
 })

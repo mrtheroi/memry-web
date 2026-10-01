@@ -20,7 +20,7 @@ export function HowItWorks() {
                 <li key={step.title} className="grid grid-cols-[2.5rem_1fr] gap-4">
                   <span
                     aria-hidden="true"
-                    className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--memry-teal)] font-mono text-sm font-medium text-[var(--memry-teal)]"
+                    className="flex h-9 w-9 items-center justify-center rounded-full border border-[var(--memry-teal)] font-mono text-sm text-[var(--memry-teal)]"
                   >
                     {i + 1}
                   </span>
@@ -55,7 +55,7 @@ export function HowItWorks() {
             <h3 className="text-xl font-semibold tracking-[-0.015em] text-[var(--memry-dark)]">{projects.heading}</h3>
             <p className="mt-2 max-w-[60ch] leading-relaxed text-[var(--text-primary)]">{projects.body}</p>
           </div>
-          <figure className="overflow-hidden rounded-xl border border-white/10 bg-[var(--terminal-bg)] md:min-w-[280px]">
+          <figure className="overflow-hidden rounded-2xl border border-white/10 bg-[var(--terminal-bg)] md:min-w-[280px]">
             <figcaption className="border-b border-white/10 px-4 py-2 font-mono text-xs text-[var(--hero-ink-muted)]">
               {projects.filename}
             </figcaption>

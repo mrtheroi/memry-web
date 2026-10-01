@@ -26,7 +26,7 @@ export function CopyButton({ text, label, copiedLabel, className = '' }) {
         onClick={copy}
         aria-label={label}
         title={label}
-        className="focus-ring-dark inline-flex h-8 w-8 items-center justify-center rounded-md border border-white/15 text-[var(--hero-ink-muted)] transition-colors hover:border-[var(--memry-turquoise)] hover:text-white"
+        className="focus-ring-dark inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/15 text-[var(--hero-ink-muted)] transition-colors hover:border-[var(--memry-turquoise)] hover:text-white"
       >
         {copied ? <CheckIcon /> : <CopyIcon />}
       </button>

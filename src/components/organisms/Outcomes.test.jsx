@@ -54,12 +54,11 @@ describe('Outcomes', () => {
     })
   })
 
-  it('sends an acorn back and forth between the two agents when motion is allowed', () => {
+  it('sends an acorn back and forth between two agent tiles when motion is allowed, without naming the agents', () => {
     render(<Outcomes />)
     const card = cards()[1]
 
-    expect(within(card.querySelector('[data-illustration]')).getByText('Claude Code')).toBeInTheDocument()
-    expect(within(card.querySelector('[data-illustration]')).getByText('Codex')).toBeInTheDocument()
+    expect(card.querySelector('[data-illustration]').textContent).not.toMatch(/Claude Code|Codex/)
     expect(card.querySelectorAll('.travel-acorn animateMotion')).toHaveLength(1)
   })
 
@@ -91,13 +90,22 @@ describe('Outcomes', () => {
     )
   })
 
-  it('compares re-explaining with the memry summary as labelled bars, without numbers', () => {
+  it('compares re-explaining with the Memry summary as labelled bars, without numbers', () => {
     render(<Outcomes />)
     const illustration = cards()[2].querySelector('[data-illustration]')
 
     expect(within(illustration).getByText(outcomes.visuals.tokens.repeated)).toBeInTheDocument()
     expect(within(illustration).getByText(outcomes.visuals.tokens.summary)).toBeInTheDocument()
     expect(illustration.textContent).not.toMatch(/\d/)
-    expect(illustration.querySelector('[data-bar="summary"]').style.transform).toMatch(/scaleX\(0\)/)
+    // The summary bar starts as long as the repeated one and shrinks to its size: never hidden.
+    expect(illustration.querySelector('[data-bar="summary"]').style.transform).not.toMatch(/scaleX\(0\)/)
+  })
+
+  it('never hides an illustration part before its entrance plays', () => {
+    render(<Outcomes />)
+
+    cards().forEach((card) =>
+      card.querySelectorAll('[data-illustration] *').forEach((node) => expect(node.style?.opacity ?? '').not.toBe('0')),
+    )
   })
 })

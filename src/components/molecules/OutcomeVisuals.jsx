@@ -1,9 +1,12 @@
 import { motion } from 'motion/react'
-import { agents as agentList, outcomes } from '../../content'
+import { outcomes } from '../../content'
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion'
 import { AcornIcon, AcornShape } from '../atoms/Acorn'
 
-/* Small decorative illustrations for the Outcomes cards (light section). Hidden from assistive tech. */
+/*
+ * Small decorative illustrations for the Outcomes cards (light section). Hidden from assistive tech.
+ * Entrances only move or resize parts, never hide them, so each one is complete without animation.
+ */
 
 const { restored, agents, tokens } = outcomes.visuals
 const ease = [0.22, 1, 0.36, 1]
@@ -16,8 +19,8 @@ export function RestoredVisual() {
     reduced
       ? {}
       : {
-          initial: { opacity: 0, x: -6 },
-          whileInView: { opacity: 1, x: 0 },
+          initial: { x: -8 },
+          whileInView: { x: 0 },
           ...inView,
           transition: { duration: 0.5, delay: 0.25 + i * 0.3, ease },
         }
@@ -28,7 +31,7 @@ export function RestoredVisual() {
         <AcornIcon className="h-4 w-3.5" />
         {restored.status}
       </span>
-      <ul className="space-y-1.5 font-mono text-[11.5px] leading-snug text-[var(--text-primary)]">
+      <ul className="space-y-1.5 font-mono text-xs leading-snug text-[var(--text-primary)]">
         {restored.lines.map((line, i) => (
           <motion.li key={line} {...appear(i)} className="flex items-start gap-2">
             <span className="mt-[0.45em] h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--memry-turquoise)]" />
@@ -40,16 +43,9 @@ export function RestoredVisual() {
   )
 }
 
-const chip = `border border-[rgba(8,127,134,0.3)] bg-white text-[var(--memry-dark)] flex min-w-0 items-center gap-1.5 rounded-full px-2.5 py-1.5 text-xs font-semibold`
-
-/** Agent chip with its monogram tile (light variant of the Agents diagram's). */
-function AgentChip({ name }) {
-  return (
-    <span className={chip}>
-      <span data-monogram={agentList.monograms[agentList.list.indexOf(name)]} className="agent-tile agent-tile-light" />
-      <span className="truncate">{name}</span>
-    </span>
-  )
+/** Agent monogram tile (light variant of the Agents diagram's), enlarged; the card title names the idea. */
+function AgentTile({ monogram }) {
+  return <span data-monogram={monogram} className="agent-tile agent-tile-light agent-tile-lg" />
 }
 
 const bridge = 'M6 30 C34 4 86 4 114 30'
@@ -58,8 +54,8 @@ const bridge = 'M6 30 C34 4 86 4 114 30'
 export function AgentsVisual() {
   const reduced = usePrefersReducedMotion()
   return (
-    <div className="flex items-center gap-1">
-      <AgentChip name={agents[0]} />
+    <div className="flex items-center gap-2">
+      <AgentTile monogram={agents[0]} />
       <svg viewBox="0 0 120 40" className="min-w-10 flex-1 overflow-visible" focusable="false">
         <path d={bridge} fill="none" stroke="var(--memry-turquoise)" strokeOpacity="0.6" strokeWidth="1.5" strokeDasharray="3 4" strokeLinecap="round" />
         {/* Reduced motion: the acorn rests at the top of the bridge. */}
@@ -80,7 +76,7 @@ export function AgentsVisual() {
           )}
         </g>
       </svg>
-      <AgentChip name={agents[1]} />
+      <AgentTile monogram={agents[1]} />
     </div>
   )
 }
@@ -91,7 +87,7 @@ export function TokensVisual() {
   const grow = reduced
     ? {}
     : {
-        initial: { scaleX: 0 },
+        initial: { scaleX: 1 / 0.3 },
         whileInView: { scaleX: 1 },
         ...inView,
         transition: { duration: 0.9, delay: 0.3, ease },
