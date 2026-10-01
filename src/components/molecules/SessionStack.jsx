@@ -73,17 +73,23 @@ function useSceneCycle(running, count) {
   const [phase, setPhase] = useState('idle')
   useEffect(() => {
     if (!running) return undefined
-    let swap
+    let swap = null
+    const finishSwap = () => {
+      swap = null
+      setScene((current) => (current + 1) % count)
+      setPhase('in')
+    }
     const cycle = setInterval(() => {
       setPhase('out')
-      swap = setTimeout(() => {
-        setScene((current) => (current + 1) % count)
-        setPhase('in')
-      }, SWAP_MS)
+      swap = setTimeout(finishSwap, SWAP_MS)
     }, CYCLE_MS)
     return () => {
       clearInterval(cycle)
-      clearTimeout(swap)
+      // Stopped mid fade-out (off-screen or unmounted): finish the swap now so the lines never stay hidden.
+      if (swap !== null) {
+        clearTimeout(swap)
+        finishSwap()
+      }
     }
   }, [running, count])
   return { scene, phase }

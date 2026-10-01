@@ -23,7 +23,7 @@ export function RestoredVisual() {
         }
 
   return (
-    <div className="flex h-full flex-col justify-center gap-3">
+    <div className="flex flex-col gap-3">
       <span className="inline-flex items-center gap-1.5 self-start rounded-full bg-[#e6f4f5] py-1 pr-3 pl-2 text-xs font-semibold text-[var(--memry-teal)]">
         <AcornIcon className="h-4 w-3.5" />
         {restored.status}
@@ -41,16 +41,16 @@ export function RestoredVisual() {
 }
 
 const chip =
-  'shrink-0 rounded-lg border border-[var(--border)] bg-[var(--background)] px-2.5 py-1.5 text-xs font-semibold text-[var(--memry-dark)]'
+  'min-w-0 truncate rounded-lg border border-[var(--border)] bg-[var(--background)] px-2.5 py-1.5 text-xs font-semibold text-[var(--memry-dark)]'
 const bridge = 'M6 30 C34 4 86 4 114 30'
 
 /** "Switch agents, keep the context": one memory travels between two agents. */
 export function AgentsVisual() {
   const reduced = usePrefersReducedMotion()
   return (
-    <div className="flex h-full items-center gap-1">
+    <div className="flex items-center gap-1">
       <span className={chip}>{agents[0]}</span>
-      <svg viewBox="0 0 120 40" className="min-w-0 flex-1 overflow-visible" focusable="false">
+      <svg viewBox="0 0 120 40" className="min-w-10 flex-1 overflow-visible" focusable="false">
         <path d={bridge} fill="none" stroke="var(--memry-turquoise)" strokeOpacity="0.5" strokeWidth="1.5" strokeDasharray="3 4" strokeLinecap="round" />
         {/* Reduced motion: the acorn rests at the top of the bridge. */}
         <g className="travel-acorn" transform={reduced ? 'translate(60 10.5)' : undefined}>
@@ -88,7 +88,7 @@ export function TokensVisual() {
       }
 
   return (
-    <div className="flex h-full flex-col justify-center gap-3.5">
+    <div className="flex flex-col gap-3.5">
       <div>
         <span className="text-xs font-medium text-[var(--memry-dark)]">{tokens.repeated}</span>
         <span data-bar="repeated" className="mt-1.5 block h-2.5 w-full rounded-full bg-[var(--border)]" />

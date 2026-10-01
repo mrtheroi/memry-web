@@ -202,4 +202,24 @@ describe('Problem section', () => {
       vi.useRealTimers()
     }
   })
+
+  it('never comes back blank when it leaves the screen in the middle of a fade-out', () => {
+    vi.useFakeTimers()
+    const restore = trackIntersections()
+    try {
+      const { container } = render(<Problem />)
+      const stack = container.querySelector('[data-loops]')
+      act(() => restore.report(stack, true))
+
+      act(() => vi.advanceTimersByTime(11500))
+      expect(stack).toHaveAttribute('data-phase', 'out')
+      act(() => restore.report(stack, false))
+      act(() => restore.report(stack, true))
+
+      expect(stack).not.toHaveAttribute('data-phase', 'out')
+    } finally {
+      restore()
+      vi.useRealTimers()
+    }
+  })
 })
