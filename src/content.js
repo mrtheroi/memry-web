@@ -128,6 +128,8 @@ export const agents = {
   body: "A decision saved in Claude Code is waiting for you in Codex. Switch tools whenever you want; your project's context comes with you.",
   listLabel: 'Supported agents',
   list: ['Claude Code', 'Codex', 'OpenCode', 'Antigravity', 'Windsurf'],
+  // Lettered tiles shown before each name, in the same order as `list` (no logos).
+  monograms: ['CC', 'Cx', 'OC', 'AG', 'WS'],
   hub: 'memry',
   memory: 'Your project',
   files: [

@@ -88,13 +88,9 @@ describe('Agents diagram', () => {
     expect(container.querySelector('figure')).toHaveClass('agents-canvas')
   })
 
-  it('gives every agent chip a status dot that blinks as its save pulse leaves', () => {
-    render(<Agents />)
-    const items = within(screen.getByRole('list', { name: 'Supported agents' })).getAllByRole('listitem')
-    const dots = items.map((item) => item.querySelectorAll('.agent-status'))
-
-    expect(dots.map((found) => found.length)).toEqual(agents.list.map(() => 1))
-    expect(new Set(dots.map(([dot]) => dot.style.animationDelay)).size).toBe(agents.list.length)
+  it('shows no status dots: the monogram tile and border glow carry each chip', () => {
+    const { container } = render(<Agents />)
+    expect(container.querySelectorAll('.agent-status')).toHaveLength(0)
   })
 
   it('shows no status dots when the user prefers reduced motion', () => {
@@ -176,6 +172,63 @@ describe('Agents diagram', () => {
     })
     expect(container.querySelectorAll('.file-row')).toHaveLength(agents.files.length)
     expect(container.querySelectorAll('.file-row-glow')).toHaveLength(0)
+  })
+
+  it('labels memry without a pill chip', () => {
+    const { container } = render(<Agents />)
+    const figure = container.querySelector('figure')
+
+    expect(figure.querySelector('[class*="bg-[var(--memry-teal)]"]')).toBeNull()
+  })
+
+  it('names memry with the brand wordmark under the tree, its final "y" in orange', () => {
+    const { container } = render(<Agents />)
+    const wordmark = container.querySelector('[data-testid="memry-wordmark"]')
+    const y = wordmark.querySelector('span')
+
+    expect(wordmark).toHaveTextContent(agents.hub)
+    expect(y).toHaveTextContent(/^y$/)
+    expect(y).toHaveClass('text-[var(--memry-orange)]')
+  })
+
+  it('marks where the agent curves meet with a junction, ringed only when motion is allowed', () => {
+    const { container, unmount } = render(<Agents />)
+    const junction = container.querySelector('.hub-junction')
+    expect(junction).not.toBeNull()
+    expect(junction.querySelectorAll('.hub-ring')).toHaveLength(1)
+    unmount()
+
+    preferReducedMotion()
+    const reduced = render(<Agents />)
+    expect(reduced.container.querySelectorAll('.hub-junction')).toHaveLength(1)
+    expect(reduced.container.querySelectorAll('.hub-ring')).toHaveLength(0)
+  })
+
+  it('puts a hidden monogram tile before each agent name, keeping the name as the accessible text', () => {
+    render(<Agents />)
+    const items = within(screen.getByRole('list', { name: 'Supported agents' })).getAllByRole('listitem')
+    const tiles = items.map((item) => item.querySelector('.agent-tile'))
+
+    expect(tiles.map((tile) => tile.dataset.monogram)).toEqual(['CC', 'Cx', 'OC', 'AG', 'WS'])
+    tiles.forEach((tile) => expect(tile).toHaveAttribute('aria-hidden', 'true'))
+    agents.list.forEach((name) => expect(within(screen.getByRole('list', { name: 'Supported agents' })).getByText(name)).toBeVisible())
+  })
+
+  it('brightens each chip border as its save pulse leaves, only when motion is allowed', () => {
+    const { container, unmount } = render(<Agents />)
+    const items = within(screen.getByRole('list', { name: 'Supported agents' })).getAllByRole('listitem')
+    const chips = items.map((item) => item.querySelector('.agent-send-glow'))
+    const sendTimes = [...drawing(container, 'wide').querySelectorAll('.save-pulse')].map((pulse) =>
+      pulse.querySelector('animateMotion').getAttribute('begin').split(';')[0],
+    )
+
+    expect(chips.map((chip) => chip.style.animationDelay)).toEqual(sendTimes)
+    chips.forEach((chip) => expect(chip.style.animationDuration).toBe('16s'))
+    unmount()
+
+    preferReducedMotion()
+    const reduced = render(<Agents />)
+    expect(reduced.container.querySelectorAll('.agent-send-glow')).toHaveLength(0)
   })
 
   it('still lists exactly the five supported agents', () => {
