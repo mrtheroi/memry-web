@@ -1,5 +1,6 @@
 import { howItWorks } from '../../content'
 import { CodeChip } from '../atoms/CodeChip'
+import { CodeText } from '../atoms/CodeText'
 import { Container } from '../atoms/Container'
 import { SectionHeading } from '../atoms/SectionHeading'
 import { MemoryTree } from '../molecules/MemoryTree'
@@ -14,7 +15,7 @@ export function HowItWorks() {
             <SectionHeading id="how-title">{howItWorks.heading}</SectionHeading>
             <p className="mt-5 max-w-[56ch] text-lg leading-relaxed text-[var(--text-muted)]">{howItWorks.lead}</p>
 
-            <ol className="mt-14 space-y-10">
+            <ol aria-label={howItWorks.stepsLabel} className="mt-14 space-y-10">
               {howItWorks.steps.map((step, i) => (
                 <li key={step.title} className="grid grid-cols-[2.5rem_1fr] gap-4">
                   <span
@@ -25,7 +26,11 @@ export function HowItWorks() {
                   </span>
                   <div>
                     <h3 className="text-xl font-semibold tracking-[-0.015em] text-[var(--memry-dark)]">{step.title}</h3>
-                    <p className="mt-2 max-w-[58ch] leading-relaxed text-[var(--text-primary)]">{step.body}</p>
+                    {step.body && (
+                      <p className="mt-2 max-w-[58ch] leading-relaxed text-[var(--text-primary)]">
+                        <CodeText>{step.body}</CodeText>
+                      </p>
+                    )}
                     {step.code && (
                       <p className="mt-3">
                         <CodeChip>{step.code}</CodeChip>

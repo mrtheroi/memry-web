@@ -37,6 +37,12 @@ export function Hero() {
               <span className="text-[var(--memry-turquoise)]">{hero.taglineAccent}</span>
             </span>
           </motion.h1>
+          <motion.p
+            {...reveal(0.25)}
+            className="mt-4 max-w-[44ch] text-[clamp(1rem,1.25vw,1.25rem)] leading-snug text-[var(--hero-ink-muted)]"
+          >
+            {hero.hook}
+          </motion.p>
           <motion.div {...reveal(0.35)} className="mt-7 flex flex-wrap gap-3 lg:mt-9">
             <ButtonLink href={hero.primaryCta.href} variant="onDark">
               {hero.primaryCta.label}

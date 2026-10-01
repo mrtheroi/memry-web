@@ -27,7 +27,7 @@ describe('App', () => {
     render(<App />)
     expect(agents.list).toEqual(['Claude Code', 'Codex', 'OpenCode', 'Antigravity', 'Windsurf'])
 
-    const section = screen.getByRole('region', { name: 'One memory, every agent' })
+    const section = screen.getByRole('region', { name: 'Five agents. One memory.' })
     const list = within(section).getByRole('list', { name: /supported agents/i })
     const names = within(list).getAllByRole('listitem').map((item) => item.textContent)
     expect(names).toEqual(agents.list)
@@ -38,6 +38,78 @@ describe('App', () => {
     expect(screen.queryByRole('heading', { name: /built for claude code/i })).toBeNull()
     expect(screen.getByText('Requires macOS or Linux, Homebrew and at least one supported agent.')).toBeInTheDocument()
     expect(screen.queryByText(/start a new Claude Code session/)).toBeNull()
+  })
+
+  it('opens with the problem instead of the old intro', () => {
+    render(<App />)
+    const problem = screen.getByRole('region', { name: 'Every session starts from zero.' })
+    expect(problem).toHaveTextContent('memry gives your project one.')
+    expect(screen.queryByRole('heading', { name: 'Your project remembers.' })).toBeNull()
+  })
+
+  it('shows three outcomes', () => {
+    render(<App />)
+    const outcomes = screen.getByRole('region', { name: 'What changes with memry' })
+    expect(within(outcomes).getAllByRole('heading', { level: 3 }).map((h) => h.textContent)).toEqual([
+      'Pick up where you left off.',
+      'Switch agents, keep the context.',
+      'Spend tokens on work, not repetition.',
+    ])
+  })
+
+  it('explains how it works in exactly three steps', () => {
+    render(<App />)
+    const how = screen.getByRole('region', { name: 'How it works' })
+    const steps = within(within(how).getByRole('list', { name: 'Steps' })).getAllByRole('listitem')
+    expect(steps.map((step) => within(step).getByRole('heading', { level: 3 }).textContent)).toEqual([
+      'Install in seconds.',
+      'Connect your agents.',
+      'Work. memry remembers.',
+    ])
+    expect(steps[0]).toHaveTextContent('brew install mrtheroi/tap/memry')
+    expect(within(how).getByText('.memry.json', { selector: 'figcaption' })).toBeInTheDocument()
+  })
+
+  it('lists four use cases', () => {
+    render(<App />)
+    const cases = screen.getByRole('region', { name: 'Built for the way you actually work' })
+    expect(within(cases).getAllByRole('heading', { level: 3 }).map((h) => h.textContent)).toEqual([
+      'Long-running projects.',
+      'Multi-agent workflows.',
+      'Coming back after a break.',
+      'One product, many repos.',
+    ])
+  })
+
+  it('no longer has a Why memry section', () => {
+    render(<App />)
+    expect(screen.queryByRole('heading', { name: 'Why memry' })).toBeNull()
+  })
+
+  it('shows five security commitments and points the Privacy nav link at them', () => {
+    render(<App />)
+    const security = screen.getByRole('region', { name: 'Built to be trusted with your work.' })
+    expect(within(security).getAllByRole('heading', { level: 3 }).map((h) => h.textContent)).toEqual([
+      'Your token stays with you.',
+      'No passwords.',
+      'Your memories are yours.',
+      'Leave anytime.',
+      'Open source.',
+    ])
+    within(security).getByRole('link', { name: 'Read the privacy policy' })
+    within(security).getByRole('link', { name: 'Versión en español' })
+
+    const nav = screen.getByRole('navigation', { name: 'Main' })
+    const privacyLink = within(nav).getByRole('link', { name: 'Privacy' })
+    expect(privacyLink).toHaveAttribute('href', `#${security.id}`)
+    expect(screen.queryByRole('heading', { name: 'Your memories stay yours' })).toBeNull()
+  })
+
+  it('closes with a call to action that links to get started', () => {
+    render(<App />)
+    const closing = screen.getByRole('region', { name: 'Give your project a memory.' })
+    expect(closing).toHaveTextContent('Free during the public beta. Two commands. Every agent.')
+    expect(within(closing).getByRole('link', { name: 'Get started' })).toHaveAttribute('href', '#get-started')
   })
 
   it('links the privacy policy in English and Spanish', () => {

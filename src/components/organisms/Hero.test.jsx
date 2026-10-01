@@ -6,8 +6,8 @@ describe('Hero', () => {
   it('links the primary CTA to the get started section and the secondary CTA to GitHub', () => {
     render(<Hero />)
 
-    expect(screen.getByRole('link', { name: 'Get started' })).toHaveAttribute('href', '#get-started')
-    const github = screen.getByRole('link', { name: 'GitHub' })
+    expect(screen.getByRole('link', { name: "Get started, it's free" })).toHaveAttribute('href', '#get-started')
+    const github = screen.getByRole('link', { name: 'View on GitHub' })
     expect(github).toHaveAttribute('href', 'https://github.com/mrtheroi/memry-cli')
     expect(github).toHaveAttribute('rel', 'noopener noreferrer')
   })
@@ -19,6 +19,13 @@ describe('Hero', () => {
     expect(h1).toHaveTextContent('Memry')
     expect(h1).toHaveTextContent('Persistent memory for your AI agents.')
     expect(h1.className).not.toMatch(/sr-only/)
+  })
+
+  it('adds the hook line under the tagline, outside the h1', () => {
+    render(<Hero />)
+
+    const hook = screen.getByText("Your agents forget. Your project shouldn't.")
+    expect(screen.getByRole('heading', { level: 1 })).not.toContainElement(hook)
   })
 
   it('serves the text-free art, with a vertical crop for mobile', () => {
