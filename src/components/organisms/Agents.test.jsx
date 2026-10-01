@@ -113,6 +113,71 @@ describe('Agents diagram', () => {
     expect(reduced.container.querySelectorAll('.hub-ring')).toHaveLength(0)
   })
 
+  it.each(layouts)('grows memry as a Memory Tree with one memory node per agent (%s)', (layout) => {
+    const { container } = render(<Agents />)
+    const tree = drawing(container, layout).querySelector('[data-testid="memry-tree"]')
+
+    expect(tree).not.toBeNull()
+    expect(tree.querySelectorAll('.tree-node')).toHaveLength(agents.list.length)
+  })
+
+  it('shows the project as a folder of file rows labelled "Your project"', () => {
+    const { container } = render(<Agents />)
+    const folder = container.querySelector('[data-testid="project-folder"]')
+
+    expect(folder).toHaveTextContent('Your project')
+    expect([...folder.querySelectorAll('.file-row')].map((row) => row.textContent)).toEqual([
+      'main',
+      'src/',
+      'README.md',
+      '.memry.json',
+    ])
+  })
+
+  it.each(layouts)('lights a different tree node as each save pulse reaches memry (%s)', (layout) => {
+    const { container } = render(<Agents />)
+    const svg = drawing(container, layout)
+    const sparks = [...svg.querySelectorAll('.tree-spark')]
+    const arrivals = [...svg.querySelectorAll('.save-pulse')].map(
+      (pulse) => `${pulse.querySelector('animateMotion').id}.end`,
+    )
+
+    expect(sparks).toHaveLength(agents.list.length)
+    expect(sparks.map((spark) => spark.querySelector('animate').getAttribute('begin').split('-')[0]).sort()).toEqual(
+      [...arrivals].sort(),
+    )
+    expect(new Set(sparks.map((spark) => `${spark.getAttribute('cx')} ${spark.getAttribute('cy')}`)).size).toBe(
+      agents.list.length,
+    )
+  })
+
+  it('highlights a folder row as each save pulse arrives, one schedule per agent', () => {
+    const { container } = render(<Agents />)
+    const rows = [...container.querySelectorAll('[data-testid="project-folder"] .file-row')]
+    const glows = rows.flatMap((row) => [...row.querySelectorAll('.file-row-glow')])
+    const delays = glows.map((glow) => glow.style.animationDelay)
+
+    expect(glows).toHaveLength(agents.list.length)
+    expect(new Set(delays).size).toBe(agents.list.length)
+    expect(rows.every((row) => row.querySelector('.file-row-glow'))).toBe(true)
+    // Arrival = start + agent offset + agent-to-memry + memry-to-folder legs (1.6 + 0 + 4.2 + 2.6), less a beat.
+    expect(delays).toContain('8.2s')
+    glows.forEach((glow) => expect(glow.style.animationDuration).toBe('16s'))
+  })
+
+  it('draws the tree and folder still, with no lighting, when the user prefers reduced motion', () => {
+    preferReducedMotion()
+    const { container } = render(<Agents />)
+
+    layouts.forEach((layout) => {
+      const svg = drawing(container, layout)
+      expect(svg.querySelectorAll('[data-testid="memry-tree"] .tree-node')).toHaveLength(agents.list.length)
+      expect(svg.querySelectorAll('.tree-spark')).toHaveLength(0)
+    })
+    expect(container.querySelectorAll('.file-row')).toHaveLength(agents.files.length)
+    expect(container.querySelectorAll('.file-row-glow')).toHaveLength(0)
+  })
+
   it('still lists exactly the five supported agents', () => {
     render(<Agents />)
     const list = screen.getByRole('list', { name: 'Supported agents' })
