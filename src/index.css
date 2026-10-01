@@ -81,8 +81,8 @@ body {
   }
 }
 
-/* On mobile the art sits under the heading; fade its top edge in. */
-@media (max-width: 767px) {
+/* Below lg the art sits under the heading; fade its top edge in. */
+@media (max-width: 1023px) {
   .hero-art {
     mask-image: linear-gradient(to bottom, transparent, #000 18%);
   }

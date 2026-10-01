@@ -1,7 +1,15 @@
-/** Inline command or file name in JetBrains Mono. */
-export function CodeChip({ children, className = 'border-[var(--border)] bg-white text-[var(--memry-dark)]' }) {
+/**
+ * Inline command or file name in JetBrains Mono. Long commands wrap (at spaces
+ * first, anywhere if needed) so they never push the page wider; `nowrap` keeps
+ * short inline chips such as `memry delete-account` from splitting at a hyphen.
+ */
+export function CodeChip({ children, nowrap = false, className = 'border-[var(--border)] bg-white text-[var(--memry-dark)]' }) {
   return (
-    <code className={`rounded-md border px-1.5 py-0.5 font-mono whitespace-nowrap text-[0.85em] ${className}`}>
+    <code
+      className={`rounded-md border px-1.5 py-0.5 font-mono text-[0.85em] ${
+        nowrap ? 'whitespace-nowrap' : '[overflow-wrap:anywhere]'
+      } ${className}`}
+    >
       {children}
     </code>
   )

@@ -28,7 +28,7 @@ export function Hero() {
   return (
     <section aria-labelledby="hero-title" className="hero-bg relative overflow-hidden">
       <div className="relative mx-auto max-w-[1672px]">
-        <div className="relative z-10 px-4 pt-28 sm:px-8 md:absolute md:left-[55.5%] md:top-[52%] md:p-0 md:pr-6">
+        <div className="relative z-10 px-4 pt-28 sm:px-8 lg:absolute lg:left-[55.5%] lg:top-[45%] xl:top-[52%] lg:p-0 lg:pr-6">
           <motion.h1 id="hero-title" {...reveal(0.15)} className="text-white">
             <Wordmark className="block text-[clamp(3.75rem,8.2vw,8.5rem)] leading-[0.9]" />
             <span className="sr-only"> — </span>
@@ -62,7 +62,7 @@ export function Hero() {
             height={art.height}
             alt={hero.imageAlt}
             fetchPriority="high"
-            className="hero-art -mt-6 block w-full md:mt-0"
+            className="hero-art -mt-6 block w-full lg:mt-0"
           />
         </picture>
       </div>

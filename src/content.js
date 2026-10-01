@@ -158,7 +158,7 @@ export const security = {
     },
     {
       title: 'Your memories are yours.',
-      body: "Never used to train AI models. We don't read them.",
+      body: "Never used to train AI models. We don't read them unless you ask us to help or the law requires it.",
     },
     {
       title: 'Leave anytime.',

@@ -96,6 +96,10 @@ describe('App', () => {
       'Leave anytime.',
       'Open source.',
     ])
+    const memories = within(security).getByRole('heading', { name: 'Your memories are yours.' }).closest('li')
+    expect(memories).toHaveTextContent(
+      "Never used to train AI models. We don't read them unless you ask us to help or the law requires it.",
+    )
     within(security).getByRole('link', { name: 'Read the privacy policy' })
     within(security).getByRole('link', { name: 'Versión en español' })
 
