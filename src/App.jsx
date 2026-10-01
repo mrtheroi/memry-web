@@ -10,7 +10,6 @@ import { Nav } from './components/organisms/Nav'
 import { Problem } from './components/organisms/Problem'
 import { Outcomes } from './components/organisms/Outcomes'
 import { Security } from './components/organisms/Security'
-import { TrustStrip } from './components/organisms/TrustStrip'
 import { UseCases } from './components/organisms/UseCases'
 
 export default function App() {
@@ -21,7 +20,6 @@ export default function App() {
         <Nav />
         <main id="main">
           <Hero />
-          <TrustStrip />
           <Problem />
           <Outcomes />
           <HowItWorks />

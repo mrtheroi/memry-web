@@ -4,6 +4,13 @@ import App from './App'
 import { agents } from './content'
 
 describe('App', () => {
+  it('drops the light trust strip under the hero; the agents live in the hero now', () => {
+    render(<App />)
+    expect(screen.queryByRole('region', { name: 'Works with' })).toBeNull()
+    expect(screen.queryByRole('list', { name: 'Key facts' })).toBeNull()
+    expect(screen.getAllByRole('list', { name: 'Works with' })).toHaveLength(1)
+  })
+
   it('has exactly one h1', () => {
     render(<App />)
     expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)

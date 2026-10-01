@@ -1,5 +1,6 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
+import { agents } from '../../content'
 import { Hero } from './Hero'
 
 describe('Hero', () => {
@@ -34,5 +35,13 @@ describe('Hero', () => {
     expect(screen.getByRole('img').getAttribute('src')).toBe('/hero/memry-hero-desktop.webp')
     const mobile = container.querySelector('picture source[media="(max-width: 767px)"]')
     expect(mobile).toHaveAttribute('srcset', '/hero/memry-hero-mobile.webp')
+  })
+
+  it('lists the five supported agents under the CTAs', () => {
+    render(<Hero />)
+
+    expect(screen.getByText('Works with')).toBeInTheDocument()
+    const list = screen.getByRole('list', { name: 'Works with' })
+    expect(within(list).getAllByRole('listitem').map((item) => item.textContent)).toEqual(agents.list)
   })
 })
