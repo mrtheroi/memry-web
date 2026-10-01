@@ -74,6 +74,45 @@ describe('Agents diagram', () => {
     expect(svg.querySelectorAll('animate, animateMotion')).toHaveLength(0)
   })
 
+  it('centres the heading and body above a full-width diagram', () => {
+    const { container } = render(<Agents />)
+    const header = screen.getByRole('heading', { level: 2, name: agents.heading }).parentElement
+
+    expect(header).toHaveClass('text-center')
+    expect(container.querySelector('[class*="grid-cols"]')).toBeNull()
+    expect(container.querySelector('[class*="max-lg:"]')).toBeNull()
+  })
+
+  it('draws the diagram on the dark navy canvas', () => {
+    const { container } = render(<Agents />)
+    expect(container.querySelector('figure')).toHaveClass('agents-canvas')
+  })
+
+  it('gives every agent chip a status dot that blinks as its save pulse leaves', () => {
+    render(<Agents />)
+    const items = within(screen.getByRole('list', { name: 'Supported agents' })).getAllByRole('listitem')
+    const dots = items.map((item) => item.querySelectorAll('.agent-status'))
+
+    expect(dots.map((found) => found.length)).toEqual(agents.list.map(() => 1))
+    expect(new Set(dots.map(([dot]) => dot.style.animationDelay)).size).toBe(agents.list.length)
+  })
+
+  it('shows no status dots when the user prefers reduced motion', () => {
+    preferReducedMotion()
+    const { container } = render(<Agents />)
+    expect(container.querySelectorAll('.agent-status')).toHaveLength(0)
+  })
+
+  it('rings memry with a slow pulse only when motion is allowed', () => {
+    const { container, unmount } = render(<Agents />)
+    expect(container.querySelectorAll('.hub-ring')).toHaveLength(1)
+    unmount()
+
+    preferReducedMotion()
+    const reduced = render(<Agents />)
+    expect(reduced.container.querySelectorAll('.hub-ring')).toHaveLength(0)
+  })
+
   it('still lists exactly the five supported agents', () => {
     render(<Agents />)
     const list = screen.getByRole('list', { name: 'Supported agents' })

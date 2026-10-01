@@ -10,13 +10,11 @@ export function Agents() {
   return (
     <section aria-labelledby="agents-title" className="border-t border-[var(--border)] bg-white py-20 sm:py-24">
       <Container>
-        <div className="grid gap-12 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:items-center lg:gap-14">
-          <div>
-            <SectionHeading id="agents-title">{agents.heading}</SectionHeading>
-            <p className="mt-5 max-w-[60ch] text-lg leading-relaxed text-[var(--text-primary)]">{agents.body}</p>
-          </div>
-          <AgentDiagram />
+        <div className="mx-auto max-w-[60ch] text-center">
+          <SectionHeading id="agents-title">{agents.heading}</SectionHeading>
+          <p className="mt-5 text-lg leading-relaxed text-[var(--text-primary)]">{agents.body}</p>
         </div>
+        <AgentDiagram />
       </Container>
     </section>
   )
@@ -42,6 +40,7 @@ const wide = (() => {
     width: 1000,
     height: 360,
     pulse: 5,
+    strokeAxis: { x1: 200, y1: 0, x2: 900, y2: 0 },
     hub,
     memoryBox: { x: 750, y: memory.y, width: 230, height: 64 },
     chips,
@@ -53,15 +52,15 @@ const narrow = (() => {
   const hub = { x: 160, y: 322 }
   const memory = { x: 160, y: 432 }
   // Chips alternate left and right; their curves braid down the gap between them.
-  const lanes = [-9, 9, -4, 4, 0]
+  const lanes = [-5, 5, -2, 2, 0]
   const chips = [28, 76, 124, 172, 220].map((y, i) => {
     const onLeft = i % 2 === 0
-    const startX = onLeft ? 134 : 186
+    const startX = onLeft ? 144 : 176
     const tangentX = onLeft ? 156 : 164
     return {
-      left: onLeft ? 3 : 55,
+      left: onLeft ? 2 : 52,
       y,
-      box: { x: onLeft ? 10 : 176, width: 134, height: 38 },
+      box: { x: onLeft ? 6 : 166, width: 147, height: 38 },
       curve: `M${startX} ${y} C${tangentX} ${y} ${hub.x + lanes[i]} ${y + (hub.y - y) * 0.6} ${hub.x} ${hub.y}`,
     }
   })
@@ -69,6 +68,7 @@ const narrow = (() => {
     width: 320,
     height: 480,
     pulse: 3.5,
+    strokeAxis: { x1: 0, y1: 28, x2: 0, y2: 432 },
     hub,
     memoryBox: { x: 45, y: memory.y, width: 230, height: 60 },
     chips,
@@ -76,24 +76,28 @@ const narrow = (() => {
   }
 })()
 
+/** Glassy chip on the navy canvas: near-white label, translucent navy fill, faint turquoise edge. */
+const glass = 'border border-[rgba(6,182,212,0.3)] bg-[rgba(3,30,39,0.72)] text-[var(--hero-ink)] backdrop-blur-sm'
+
 const pct = (value, total) => `${(value / total) * 100}%`
 
-/** Five agents converge on memry, which keeps one project memory. Stacks vertically below 768px. */
+/** Five agents converge on memry, which keeps one project memory. Stacks vertically below 768px; spans the full width from 768px. */
 function AgentDiagram() {
   const figureRef = useRef(null)
+  const reduced = usePrefersReducedMotion()
   usePauseAnimationsOffscreen(figureRef)
 
   return (
-    <figure ref={figureRef} className="rounded-2xl border border-[var(--border)] bg-[var(--background)] p-6 sm:p-10">
-      <div className="relative mx-auto aspect-[320/480] w-full max-w-[420px] md:max-lg:aspect-[1000/360] md:max-lg:max-w-none">
-        <FlowDrawing layout="narrow" geometry={narrow} className="md:max-lg:hidden" />
-        <FlowDrawing layout="wide" geometry={wide} className="hidden md:max-lg:block" />
+    <figure ref={figureRef} className="agents-canvas mt-12 rounded-2xl p-5 sm:p-10">
+      <div className="relative mx-auto aspect-[320/480] w-full max-w-[420px] md:aspect-[1000/360] md:max-w-none">
+        <FlowDrawing layout="narrow" geometry={narrow} className="md:hidden" />
+        <FlowDrawing layout="wide" geometry={wide} className="hidden md:block" />
 
         <ul aria-label={agents.listLabel} className="absolute inset-0">
           {agents.list.map((name, i) => (
             <li
               key={name}
-              className="absolute top-[var(--n-top)] left-[var(--n-left)] w-[42%] -translate-y-1/2 md:max-lg:top-[var(--w-top)] md:max-lg:left-[var(--w-left)] md:max-lg:w-[20%]"
+              className="absolute top-[var(--n-top)] left-[var(--n-left)] w-[46%] -translate-y-1/2 md:top-[var(--w-top)] md:left-[var(--w-left)] md:w-[20%]"
               style={{
                 '--n-top': pct(narrow.chips[i].y, narrow.height),
                 '--n-left': `${narrow.chips[i].left}%`,
@@ -101,15 +105,26 @@ function AgentDiagram() {
                 '--w-left': `${wide.chips[i].left}%`,
               }}
             >
-              <span className="block truncate rounded-full border border-[var(--border)] bg-white px-3 py-2 text-center text-sm font-semibold text-[var(--memry-dark)] md:max-lg:py-1.5 md:max-lg:text-xs lg:py-2 lg:text-sm">
-                {name}
+              <span className={`${glass} flex items-center justify-center gap-1.5 rounded-full px-2 py-2 text-[0.8125rem] font-semibold sm:gap-2 sm:px-3 sm:text-sm md:py-1.5 md:text-xs lg:py-2 lg:text-sm`}>
+                {!reduced && (
+                  // Lights up as this agent's save pulse leaves: same delay and cycle as the SVG pulse.
+                  <span
+                    aria-hidden="true"
+                    className="agent-status size-1.5 shrink-0 rounded-full"
+                    style={{
+                      animationDelay: seconds(SAVE_START + SAVE_OFFSETS[i]),
+                      animationDuration: seconds(SAVE_CYCLE),
+                    }}
+                  />
+                )}
+                <span className="truncate">{name}</span>
               </span>
             </li>
           ))}
         </ul>
 
         <span
-          className="absolute top-[var(--n-top)] left-[var(--n-left)] -translate-x-1/2 -translate-y-1/2 rounded-xl border border-[var(--memry-teal)] bg-[var(--memry-dark)] px-6 py-4 text-base font-semibold whitespace-nowrap text-white md:max-lg:top-[var(--w-top)] md:max-lg:left-[var(--w-left)]"
+          className="absolute top-[var(--n-top)] left-[var(--n-left)] -translate-x-1/2 -translate-y-1/2 rounded-xl border border-[var(--memry-turquoise)] bg-[var(--memry-teal)] px-6 py-4 text-base font-semibold whitespace-nowrap text-white md:top-[var(--w-top)] md:left-[var(--w-left)]"
           style={{
             '--n-top': pct(narrow.hub.y, narrow.height),
             '--n-left': pct(narrow.hub.x, narrow.width),
@@ -117,15 +132,19 @@ function AgentDiagram() {
             '--w-left': pct(wide.hub.x, wide.width),
           }}
         >
+          {!reduced && <span aria-hidden="true" className="hub-ring pointer-events-none absolute -inset-1.5 rounded-[1rem]" />}
           {agents.hub}
         </span>
 
-        <span className="absolute top-[90%] left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-3 rounded-xl border border-[var(--border)] bg-white px-5 py-4 text-sm font-semibold whitespace-nowrap text-[var(--memry-dark)] md:max-lg:top-1/2 md:max-lg:right-[2%] md:max-lg:left-auto md:max-lg:max-w-[26%] md:max-lg:translate-x-0 md:max-lg:whitespace-normal lg:max-w-none lg:whitespace-nowrap">
-          <AcornIcon className="h-6 w-5 shrink-0" />
+        <span className={`absolute top-[90%] left-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-3 rounded-xl px-5 py-4 text-sm font-semibold whitespace-nowrap ${glass} md:top-1/2 md:right-[2%] md:left-auto md:max-w-[26%] md:translate-x-0 md:whitespace-normal lg:max-w-none lg:whitespace-nowrap`}>
+          {/* The acorn's cap is dark ink by default; lighten it for the navy canvas. */}
+          <span className="flex shrink-0 [--memry-dark:var(--hero-ink)]">
+            <AcornIcon className="h-6 w-5" />
+          </span>
           {agents.memory}
         </span>
       </div>
-      <figcaption className="mt-8 border-t border-[var(--border)] pt-4 text-sm leading-relaxed text-[var(--text-muted)]">
+      <figcaption className="mt-8 border-t border-white/10 pt-4 text-sm leading-relaxed text-[var(--hero-ink-muted)]">
         {agents.diagramNote}
       </figcaption>
     </figure>
@@ -133,7 +152,7 @@ function AgentDiagram() {
 }
 
 /**
- * Holds the SVG animation clocks until the diagram is on screen, and pauses
+ * Holds the diagram's animation clocks until the diagram is on screen, and pauses
  * them again when it scrolls away, so the pulses cost nothing off-screen and
  * start in step with the curves drawing in.
  */
@@ -143,10 +162,14 @@ function usePauseAnimationsOffscreen(ref) {
       (svg) => typeof svg.pauseAnimations === 'function',
     )
     if (svgs.length === 0) return undefined
-    svgs.forEach((svg) => svg.pauseAnimations())
-    const observer = new IntersectionObserver(([entry]) => {
-      svgs.forEach((svg) => (entry.isIntersecting ? svg.unpauseAnimations() : svg.pauseAnimations()))
-    })
+    // CSS animations in the diagram (status dots, memry's ring) follow the same switch.
+    const figure = ref.current
+    const play = (playing) => {
+      figure.dataset.playing = String(playing)
+      svgs.forEach((svg) => (playing ? svg.unpauseAnimations() : svg.pauseAnimations()))
+    }
+    play(false)
+    const observer = new IntersectionObserver(([entry]) => play(entry.isIntersecting))
     observer.observe(ref.current)
     return () => observer.disconnect()
   }, [ref])
@@ -164,10 +187,11 @@ function FlowDrawing({ layout, geometry, className }) {
           viewport: { once: true, amount: 0.5 },
           transition: { duration: 1.1, delay, ease: 'easeOut' },
         }
+  const strokeId = `${layout}AgentsStroke`
+  const haloId = `${layout}AgentsHalo`
   const stroke = {
     fill: 'none',
-    stroke: 'var(--memry-turquoise)',
-    strokeOpacity: 0.45,
+    stroke: `url(#${strokeId})`,
     strokeWidth: 1.75,
     strokeLinecap: 'round',
     vectorEffect: 'non-scaling-stroke',
@@ -181,6 +205,26 @@ function FlowDrawing({ layout, geometry, className }) {
       viewBox={`0 0 ${geometry.width} ${geometry.height}`}
       className={`absolute inset-0 h-full w-full overflow-visible ${className}`}
     >
+      <defs>
+        {/* Teal at the agents, turquoise towards memry and the memory. */}
+        <linearGradient id={strokeId} gradientUnits="userSpaceOnUse" {...geometry.strokeAxis}>
+          <stop offset="0" stopColor="var(--memry-teal)" stopOpacity="0.55" />
+          <stop offset="1" stopColor="var(--memry-turquoise)" stopOpacity="0.75" />
+        </linearGradient>
+        <filter id={haloId} x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="14" />
+        </filter>
+      </defs>
+      {/* A soft, steady halo behind memry. */}
+      <ellipse
+        cx={geometry.hub.x}
+        cy={geometry.hub.y}
+        rx="78"
+        ry="44"
+        fill="var(--memry-turquoise)"
+        fillOpacity="0.22"
+        filter={`url(#${haloId})`}
+      />
       {geometry.chips.map((chip, i) => (
         <motion.path key={chip.curve} className="agent-curve" d={chip.curve} {...stroke} {...draw(i * 0.08)} />
       ))}
@@ -267,7 +311,7 @@ function Pulses({ layout, geometry }) {
         ))}
       </rect>
 
-      {/* The project memory's faint glow, as each save pulse arrives. */}
+      {/* The project memory's faint, warm glow (the acorn's colour), as each save pulse arrives. */}
       <rect
         className="memory-glow"
         x={box.x}
@@ -275,8 +319,8 @@ function Pulses({ layout, geometry }) {
         width={box.width}
         height={box.height}
         rx="16"
-        fill="var(--memry-turquoise)"
-        fillOpacity="0.4"
+        fill="var(--memry-orange)"
+        fillOpacity="0.32"
         filter={`url(#${softId})`}
         opacity="0"
       >
