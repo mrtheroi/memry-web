@@ -11,7 +11,7 @@ export const nav = {
   items: [
     { label: 'How it works', href: '#how-it-works' },
     { label: 'Get started', href: '#get-started' },
-    { label: 'Privacy', href: '#privacy' },
+    { label: 'Privacy', href: '#security' },
   ],
   github: 'GitHub',
 }
@@ -23,14 +23,39 @@ export const hero = {
   // Accessible name for the temporary artwork, which has the wordmark baked in.
   imageAlt:
     'The Memry squirrel holding a glowing orange acorn, with ribbons of turquoise and orange light flowing from it.',
-  primaryCta: { label: 'Get started', href: '#get-started' },
-  secondaryCta: { label: 'GitHub', href: links.github },
+  hook: "Your agents forget. Your project shouldn't.",
+  primaryCta: { label: "Get started, it's free", href: '#get-started' },
+  secondaryCta: { label: 'View on GitHub', href: links.github },
 }
 
-export const intro = {
-  heading: 'Your project remembers.',
-  body: 'Keep project context across sessions and retrieve only what matters.',
-  benefit: 'Less repeated context. Fewer tokens. Better continuity.',
+export const trust = {
+  worksWith: 'Works with',
+  factsLabel: 'Key facts',
+  facts: ['2 commands to install', 'Open source (MIT)', 'Never used to train AI models'],
+}
+
+export const problem = {
+  heading: 'Every session starts from zero.',
+  body: 'You explain the architecture. The decisions. The bug you fixed last week. Then the session ends, and tomorrow you explain it all again. Your agents are brilliant, but they have no memory.',
+  closing: 'memry gives your project one.',
+}
+
+export const outcomes = {
+  heading: 'What changes with memry',
+  items: [
+    {
+      title: 'Pick up where you left off.',
+      body: 'Every session opens with the decisions, fixes and conventions that matter for this project. No warm-up.',
+    },
+    {
+      title: 'Switch agents, keep the context.',
+      body: 'Start in Claude Code, continue in Codex. The memory follows the project, not the tool.',
+    },
+    {
+      title: 'Spend tokens on work, not repetition.',
+      body: 'memry loads a compact summary first and fetches the details only when they matter.',
+    },
+  ],
 }
 
 export const howItWorks = {
@@ -38,24 +63,19 @@ export const howItWorks = {
   lead: 'Decisions, bug fixes and discoveries saved in one session are there in the next one, so you stop explaining the same context again.',
   steps: [
     {
-      title: 'Install with Homebrew',
-      body: 'One formula from the memry tap. No server to run.',
+      title: 'Install in seconds.',
       code: 'brew install mrtheroi/tap/memry',
     },
     {
-      title: 'Run memry setup',
-      body: 'Log in with a 6-digit code sent to your email, then choose the agents you use. Setup connects memry to each one, with the agents it finds already selected.',
-      code: 'memry setup',
+      title: 'Connect your agents.',
+      body: '`memry setup` logs you in with an email code and wires every agent you choose.',
     },
     {
-      title: 'Start a session',
-      body: 'Every session starts with the recent memories of your project, in every agent. Claude Code loads them automatically through its SessionStart hook; the other agents fetch them when a session starts.',
-    },
-    {
-      title: 'Let your agent remember',
-      body: 'As it works, your agent saves decisions, bug fixes and discoveries, and searches them when they matter again.',
+      title: 'Work. memry remembers.',
+      body: 'Your agents save what matters as they go, and every new session starts with it.',
     },
   ],
+  stepsLabel: 'Steps',
   projects: {
     heading: 'One project, several repositories',
     body: 'By default a project is its directory name. To group repositories into one project, such as the backend and frontend of one product, add a .memry.json file at the root of each one.',
@@ -67,8 +87,8 @@ export const howItWorks = {
 }
 
 export const agents = {
-  heading: 'One memory, every agent',
-  body: 'memry works with Claude Code, Codex, OpenCode, Antigravity and Windsurf. Every agent reads and saves the same project memory, so a decision saved in Claude Code is there when you open Codex, and the other way around.',
+  heading: 'Five agents. One memory.',
+  body: "A decision saved in Claude Code is waiting for you in Codex. Switch tools whenever you want; your project's context comes with you.",
   listLabel: 'Supported agents',
   list: ['Claude Code', 'Codex', 'OpenCode', 'Antigravity', 'Windsurf'],
   hub: 'memry',
@@ -77,26 +97,24 @@ export const agents = {
     'memry setup asks which agents you use and connects each one. memry uninstall removes it from all of them.',
 }
 
-export const why = {
-  heading: 'Why memry',
+export const useCases = {
+  heading: 'Built for the way you actually work',
   items: [
     {
-      title: 'Switch agents, keep the context',
-      body: 'Claude Code, Codex, OpenCode, Antigravity and Windsurf share one memory. Start in one, continue in another.',
+      title: 'Long-running projects.',
+      body: 'Weeks of decisions stay available, not buried in old chats.',
     },
     {
-      title: 'Across machines and projects',
-      body: 'memry is hosted, so there is no server to run. Your memories follow your account, and a new laptop picks up the same context.',
+      title: 'Multi-agent workflows.',
+      body: 'Use the best agent for each task without re-explaining the project.',
     },
     {
-      title: 'One command to uninstall',
-      body: 'memry uninstall removes memry from every agent you set up and deletes your local login.',
-      code: 'memry uninstall',
+      title: 'Coming back after a break.',
+      body: 'Monday morning, or after vacation: your agent already knows where you were.',
     },
     {
-      title: 'Delete your account anytime',
-      body: 'memry delete-account permanently deletes your account and every memory on the server.',
-      code: 'memry delete-account',
+      title: 'One product, many repos.',
+      body: 'Group backend and frontend into one project with a `.memry.json`.',
     },
   ],
 }
@@ -127,17 +145,38 @@ export const getStarted = {
   beta: 'Free public beta.',
 }
 
-export const privacy = {
-  heading: 'Your memories stay yours',
-  commitments: [
-    'We do not sell your data or share it with advertisers.',
-    'Your memories are never used to train AI models.',
-    'We do not read your memories, unless you ask us to help with a problem or the law requires it.',
-    'If we change how your data is used, we email you before it applies.',
+export const security = {
+  heading: 'Built to be trusted with your work.',
+  items: [
+    {
+      title: 'Your token stays with you.',
+      body: "It never lands in your agents' config files.",
+    },
+    {
+      title: 'No passwords.',
+      body: 'One-time email codes that expire in 5 minutes.',
+    },
+    {
+      title: 'Your memories are yours.',
+      body: "Never used to train AI models. We don't read them unless you ask us to help or the law requires it.",
+    },
+    {
+      title: 'Leave anytime.',
+      body: '`memry uninstall` removes memry from every agent; `memry delete-account` erases everything.',
+    },
+    {
+      title: 'Open source.',
+      body: 'MIT licensed. No tracking, no cookies.',
+    },
   ],
-  note: 'This site has no tracking, analytics or cookies.',
   policyLabel: 'Read the privacy policy',
   policyEsLabel: 'Versión en español',
+}
+
+export const closing = {
+  heading: 'Give your project a memory.',
+  line: 'Free during the public beta. Two commands. Every agent.',
+  cta: { label: 'Get started', href: '#get-started' },
 }
 
 export const footer = {
