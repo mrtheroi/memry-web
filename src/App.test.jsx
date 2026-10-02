@@ -4,11 +4,12 @@ import App from './App'
 import { agents } from './content'
 
 describe('App', () => {
-  it('drops the light trust strip under the hero; the agents live in the hero now', () => {
+  it('has no trust strip or "Works with" line; the Agents diagram shows the agents', () => {
     render(<App />)
     expect(screen.queryByRole('region', { name: 'Works with' })).toBeNull()
     expect(screen.queryByRole('list', { name: 'Key facts' })).toBeNull()
-    expect(screen.getAllByRole('list', { name: 'Works with' })).toHaveLength(1)
+    expect(screen.queryByRole('list', { name: 'Works with' })).toBeNull()
+    expect(screen.queryByText('Works with')).toBeNull()
   })
 
   it('keeps only three dark bands and alternates the light sections between them', () => {
@@ -33,6 +34,39 @@ describe('App', () => {
       expect(section.classList.contains('border-t'), section.getAttribute('aria-labelledby')).toBe(afterLight)
       previous = surface
     })
+  })
+
+  it('answers common questions between Security and Get started', () => {
+    const { container } = render(<App />)
+    const order = [...container.querySelectorAll('main > section')].map((s) => s.getAttribute('aria-labelledby'))
+    expect(order.slice(order.indexOf('security-title'), order.indexOf('security-title') + 3)).toEqual([
+      'security-title',
+      'faq-title',
+      'get-started-title',
+    ])
+  })
+
+  it('never names the hosting provider, not even in illustration scenes that rotate in later', async () => {
+    const { container } = render(<App />)
+    expect(container.textContent).not.toMatch(/laravel cloud/i)
+    expect(JSON.stringify(await import('./content'))).not.toMatch(/laravel cloud/i)
+  })
+
+  it('shows no unverifiable trust signals: counts, testimonials, logos, ratings, certifications or uptime', () => {
+    const { container } = render(<App />)
+    const text = container.textContent
+    expect(text).not.toMatch(/\b\d[\d,.]*k?\+? (users|developers|devs|teams|companies|stars|downloads|installs)\b/i)
+    expect(text).not.toMatch(/trusted by|loved by|used by|join (thousands|hundreds)|testimonial|as seen (on|in)|★|\b\d(\.\d)? ?\/ ?5\b/i)
+    expect(text).not.toMatch(/\b(soc ?2|iso ?27001|hipaa|gdpr[- ]compliant|certified)\b/i)
+    expect(text).not.toMatch(/\d+(\.\d+)?% uptime|\buptime\b|\bsla\b/i)
+    expect(container.querySelector('blockquote, img[alt*="logo" i], [class*="testimonial" i], [class*="logo-cloud" i]')).toBeNull()
+  })
+
+  it('points the FAQ nav link at the FAQ section', () => {
+    render(<App />)
+    const nav = screen.getByRole('navigation', { name: 'Main' })
+    expect(within(nav).getByRole('link', { name: 'FAQ' })).toHaveAttribute('href', '#faq')
+    expect(document.getElementById('faq')).toHaveAttribute('aria-labelledby', 'faq-title')
   })
 
   it('labels every get started call to action with exactly "Get started"', () => {
@@ -214,16 +248,20 @@ describe('App content without repetition', () => {
     return clone.textContent
   }
 
-  it('names the five agents only in the hero chips, the Agents diagram and the setup terminal', () => {
+  it('names the five agents only in the Agents diagram, the setup terminal and the FAQ "Which agents" answer', () => {
     const { container } = render(<App />)
-    const text = textOutside(container, '[aria-labelledby="hero-works-with"], .agents-canvas, figure[aria-label^="Terminal"]')
+    const whichAgents = [...container.querySelectorAll('#faq details')].find(
+      (d) => d.querySelector('summary').textContent === 'Which agents does it work with?',
+    )
+    whichAgents.classList.add('allowed-agent-names')
+    const text = textOutside(container, '.agents-canvas, figure[aria-label^="Terminal"], .allowed-agent-names')
 
     agents.list.forEach((name) => expect(text).not.toContain(name))
   })
 
-  it('mentions the free beta at most twice', () => {
+  it('mentions the free beta at most twice outside the FAQ', () => {
     const { container } = render(<App />)
-    const mentions = [...container.querySelectorAll('p, li, span')].filter(
+    const mentions = [...container.querySelectorAll('p, li, span')].filter((el) => !el.closest('#faq')).filter(
       (el) => el.children.length === 0 && /\bfree\b|\bbeta\b/i.test(el.textContent),
     )
 
@@ -245,11 +283,11 @@ describe('App content without repetition', () => {
     expect(explanations.map((s) => s.getAttribute('aria-labelledby'))).toEqual(['how-title'])
   })
 
-  it('covers uninstalling and deleting the account in Security only', () => {
+  it('covers uninstalling and deleting the account in Security and the FAQ only', () => {
     const { container } = render(<App />)
     const sections = [...container.querySelectorAll('section')].filter((s) => /uninstall|delete-account/.test(s.textContent))
 
-    expect(sections.map((s) => s.getAttribute('aria-labelledby'))).toEqual(['security-title'])
+    expect(sections.map((s) => s.getAttribute('aria-labelledby'))).toEqual(['security-title', 'faq-title'])
   })
 
   it('keeps the switch-agents idea out of the use cases', () => {

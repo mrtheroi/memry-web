@@ -1,5 +1,5 @@
 import { motion } from 'motion/react'
-import { agents, hero } from '../../content'
+import { hero } from '../../content'
 import { usePrefersReducedMotion } from '../../hooks/usePrefersReducedMotion'
 import { ButtonLink } from '../atoms/ButtonLink'
 import { Wordmark } from '../atoms/Wordmark'
@@ -30,7 +30,7 @@ export function Hero() {
   return (
     <section aria-labelledby="hero-title" className="hero-bg relative overflow-hidden">
       <div className="relative mx-auto max-w-[1672px]">
-        <div className="relative z-10 px-4 pt-28 sm:px-8 xl:absolute xl:left-[55.5%] xl:bottom-[5%] xl:p-0 xl:pr-6">
+        <div className="relative z-10 px-4 pt-28 sm:px-8 xl:absolute xl:left-[55.5%] xl:bottom-[7%] xl:p-0 xl:pr-6">
           <motion.h1 id="hero-title" {...reveal(0.15)} className="text-white">
             <Wordmark className="block text-[clamp(3.75rem,8.2vw,8.5rem)] leading-[0.9]" />
             <span className="sr-only"> — </span>
@@ -45,7 +45,7 @@ export function Hero() {
           >
             {hero.hook}
           </motion.p>
-          <motion.div {...reveal(0.35)} className="mt-7 xl:mt-9">
+          <motion.div {...reveal(0.35)} className="mt-7 pb-8 xl:mt-9 xl:pb-0">
             <div className="flex flex-col gap-3 min-[360px]:flex-row">
               <ButtonLink href={hero.primaryCta.href} variant="onDark">
                 {hero.primaryCta.label}
@@ -55,22 +55,6 @@ export function Hero() {
               </ButtonLink>
             </div>
             <p className="mt-3 text-sm text-[var(--hero-ink-muted)]">{hero.betaNote}</p>
-          </motion.div>
-          {/* Inline flow, so the label and the chips share rows when they wrap. */}
-          <motion.div {...reveal(0.5)} className="mt-4 max-w-[34rem] pb-8 xl:mt-6 xl:pb-0">
-            <p id="hero-works-with" className="mr-2 inline align-middle text-sm text-[var(--hero-ink-muted)]">
-              {hero.worksWith}
-            </p>
-            <ul aria-labelledby="hero-works-with" className="inline">
-              {agents.list.map((name) => (
-                <li
-                  key={name}
-                  className="mt-2 mr-1.5 inline-block whitespace-nowrap last:mr-0 align-middle rounded-full border border-[var(--border-glass-strong)] bg-[rgba(3,30,39,0.72)] px-2.5 py-1 text-xs font-medium text-[var(--hero-ink)] backdrop-blur-sm"
-                >
-                  {name}
-                </li>
-              ))}
-            </ul>
           </motion.div>
         </div>
         <picture>

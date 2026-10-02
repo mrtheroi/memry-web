@@ -1,7 +1,8 @@
-import { getStarted } from '../../content'
+import { getStarted, project } from '../../content'
 import { ButtonLink } from '../atoms/ButtonLink'
 import { Container } from '../atoms/Container'
 import { SectionHeading } from '../atoms/SectionHeading'
+import { TextLink } from '../atoms/TextLink'
 import { CopyButton } from '../molecules/CopyButton'
 import { Terminal } from '../molecules/Terminal'
 
@@ -10,7 +11,7 @@ export function GetStarted() {
     <section
       id="get-started"
       aria-labelledby="get-started-title"
-      className="scroll-mt-8 bg-[var(--background)] py-24 sm:py-32"
+      className="scroll-mt-8 border-t border-[var(--border)] bg-[var(--background)] py-24 sm:py-32"
     >
       <Container className="grid gap-12 lg:grid-cols-[1fr_1.25fr] lg:items-center lg:gap-20">
         <div>
@@ -42,6 +43,17 @@ export function GetStarted() {
               {getStarted.githubCta.label}
             </ButtonLink>
           </div>
+          <ul
+            aria-label={project.label}
+            className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm"
+          >
+            <li className="text-[var(--text-primary)]">{project.release}</li>
+            {project.links.map((link) => (
+              <li key={link.label}>
+                <TextLink href={link.href}>{link.label}</TextLink>
+              </li>
+            ))}
+          </ul>
         </div>
       </Container>
     </section>
