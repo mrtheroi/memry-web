@@ -27,4 +27,10 @@ describe('Footer', () => {
       })
     expect(screen.getByRole('link', { name: 'Security' })).not.toHaveAttribute('target')
   })
+
+  it('shows the Memory Tree brand mark, not the mascot image', () => {
+    const { container } = render(<Footer />)
+    expect(screen.getByTestId('tree-mark')).toBeInTheDocument()
+    expect(container.querySelector('img')).toBeNull()
+  })
 })
