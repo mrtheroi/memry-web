@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { agents } from '../../content'
 import { Hero } from './Hero'
@@ -64,11 +64,11 @@ describe('Hero', () => {
     expect(group).not.toHaveClass('flex-wrap')
   })
 
-  it('lists the five supported agents under the CTAs', () => {
-    render(<Hero />)
+  it('no longer lists the agents in the hero; the Agents diagram shows them', () => {
+    const { container } = render(<Hero />)
 
-    expect(screen.getByText('Works with')).toBeInTheDocument()
-    const list = screen.getByRole('list', { name: 'Works with' })
-    expect(within(list).getAllByRole('listitem').map((item) => item.textContent)).toEqual(agents.list)
+    expect(screen.queryByText('Works with')).toBeNull()
+    expect(screen.queryByRole('list')).toBeNull()
+    agents.list.forEach((name) => expect(container.textContent).not.toContain(name))
   })
 })

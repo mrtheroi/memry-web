@@ -6,6 +6,9 @@ export const links = {
   privacy: 'https://github.com/mrtheroi/memry-cli/blob/main/PRIVACY.md',
   privacyEs: 'https://github.com/mrtheroi/memry-cli/blob/main/PRIVACY.es.md',
   license: 'https://github.com/mrtheroi/memry-cli/blob/main/LICENSE',
+  changelog: 'https://github.com/mrtheroi/memry-cli/blob/main/CHANGELOG.md',
+  releases: 'https://github.com/mrtheroi/memry-cli/releases',
+  security: 'mailto:mrtheroi@gmail.com',
 }
 
 export const nav = {
@@ -13,6 +16,7 @@ export const nav = {
     { label: 'How it works', href: '#how-it-works' },
     { label: 'Get started', href: '#get-started' },
     { label: 'Privacy', href: '#security' },
+    { label: 'FAQ', href: '#faq' },
   ],
   github: 'GitHub',
 }
@@ -28,7 +32,6 @@ export const hero = {
   primaryCta: { label: 'Get started', href: '#get-started' },
   betaNote: 'Free during the public beta.',
   secondaryCta: { label: 'View on GitHub', href: links.github },
-  worksWith: 'Works with',
 }
 
 export const problem = {
@@ -49,11 +52,11 @@ export const problem = {
       },
       {
         sessions: [
-          { day: 'Monday', prompt: 'Again, we deploy with Laravel Cloud…' },
+          { day: 'Monday', prompt: 'Again, we deploy with Docker…' },
           { day: 'Tuesday', prompt: 'Reminder: never push to main directly…' },
           { day: 'Wednesday', prompt: '…and staging uses its own database' },
         ],
-        memories: ['Config: deploy on Laravel Cloud', 'Decision: PRs only, no direct pushes', 'Config: separate staging database'],
+        memories: ['Config: deploy with Docker', 'Decision: PRs only, no direct pushes', 'Config: separate staging database'],
       },
       {
         sessions: [
@@ -191,6 +194,18 @@ export const getStarted = {
   githubCta: { label: 'View on GitHub', href: links.github },
 }
 
+export const project = {
+  label: 'Project',
+  // Static on purpose (no API calls from the page): update on each release.
+  release: 'Latest release: v0.5.0',
+  links: [
+    { label: 'Docs', href: links.docs },
+    { label: 'Changelog', href: links.changelog },
+    { label: 'Releases', href: links.releases },
+    { label: 'Source', href: links.github },
+  ],
+}
+
 export const security = {
   heading: 'Built to be trusted with your work.',
   items: [
@@ -231,6 +246,55 @@ export const security = {
   policyEsLabel: 'Versión en español',
 }
 
+export const faq = {
+  heading: 'Questions, answered.',
+  // `link.label` must appear verbatim in `answer`; that phrase becomes the link.
+  items: [
+    {
+      question: 'Is Memry free?',
+      answer: "Yes, during the public beta. Pricing after the beta hasn't been decided yet.",
+    },
+    {
+      question: 'Which agents does it work with?',
+      answer:
+        'Claude Code, Codex, OpenCode, Antigravity and Windsurf. `memry setup` asks which ones you use and connects each of them.',
+    },
+    {
+      question: 'Where are my memories stored?',
+      answer: "On Memry's infrastructure, tied to your account and protected in transit with HTTPS.",
+    },
+    {
+      question: 'What does Memry store?',
+      answer:
+        "Your email, and the memories and prompts your agents choose to save. Don't let them save passwords or API keys. See the privacy policy.",
+      link: { label: 'privacy policy', href: links.privacy },
+    },
+    {
+      question: 'Do you use my memories to train AI models?',
+      answer: "No. And we don't read them unless you ask us to help or the law requires it.",
+    },
+    {
+      question: 'Does it work offline?',
+      answer:
+        "No. Your agents need to reach the Memry server to load and save memories. If it can't be reached, the session simply starts without the memory context.",
+    },
+    {
+      question: 'How do I remove it?',
+      answer:
+        '`memry uninstall` removes Memry from every agent and revokes your token on this machine. `memry delete-account` permanently deletes your account and every memory.',
+    },
+    {
+      question: 'Who builds Memry?',
+      answer: 'Cesar Valero, in Mexico. Memry is open source under the MIT license.',
+    },
+    {
+      question: 'How do I report a security issue?',
+      answer: 'Email mrtheroi@gmail.com.',
+      link: { label: 'mrtheroi@gmail.com', href: links.security },
+    },
+  ],
+}
+
 export const closing = {
   heading: 'Give your project a memory.',
   line: 'Two commands. Every agent.',
@@ -241,7 +305,10 @@ export const closing = {
 export const footer = {
   links: [
     { label: 'GitHub', href: links.github },
+    { label: 'Docs', href: links.docs },
+    { label: 'Changelog', href: links.changelog },
     { label: 'Privacy policy', href: links.privacy },
+    { label: 'Security', href: links.security },
     { label: 'MIT licensed', href: links.license },
   ],
   copyright: '© 2026 Cesar Valero',
