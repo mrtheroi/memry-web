@@ -10,6 +10,15 @@ function drawing(container, layout) {
   return container.querySelector(`svg[data-layout="${layout}"]`)
 }
 
+/** The coordinate pairs of a path's d attribute, as numbers. */
+const points = (d) => {
+  const values = d.match(/-?[\d.]+/g).map(Number)
+  return values.reduce((pairs, value, i) => (i % 2 ? [...pairs.slice(0, -1), [pairs.at(-1)[0], value]] : [...pairs, [value]]), [])
+}
+
+/** The wide drawing's junction: where the hub curve starts. */
+const wideJunction = (container) => points(drawing(container, 'wide').querySelector('path.hub-curve').getAttribute('d'))[0]
+
 const endPoint = (d) => d.trim().split(/[\s,A-Z]+/).filter(Boolean).slice(-2).join(' ')
 
 describe('Agents diagram', () => {
@@ -262,6 +271,51 @@ describe('Agents diagram', () => {
     container.querySelectorAll('.agent-curve, .hub-curve').forEach((curve) => {
       expect(curve.getAttribute('pathLength')).toBeNull()
       expect(curve.style.strokeDasharray ?? '').toBe('')
+    })
+  })
+
+  describe('wide layout: one horizontal centre axis through the middle agent', () => {
+    it('runs the middle agent (OpenCode) straight into the junction, on its axis', () => {
+      const { container } = render(<Agents />)
+      const [, axisY] = wideJunction(container)
+      const middle = drawing(container, 'wide').querySelectorAll('path.agent-curve')[2].getAttribute('d')
+
+      points(middle).forEach(([, y]) => expect(y).toBe(axisY))
+    })
+
+    it('runs the hub curve straight along the axis into the folder', () => {
+      const { container } = render(<Agents />)
+      const [, axisY] = wideJunction(container)
+      const hubCurve = drawing(container, 'wide').querySelector('path.hub-curve').getAttribute('d')
+
+      points(hubCurve).forEach(([, y]) => expect(y).toBe(axisY))
+    })
+
+    it('centres the folder vertically on the junction', () => {
+      const { container } = render(<Agents />)
+      const folder = container.querySelector('[data-testid="project-folder"]')
+      const junction = container.querySelector('.hub-junction')
+
+      expect(folder.style.getPropertyValue('--w-top')).toBe(junction.style.getPropertyValue('--w-top'))
+      expect(folder).toHaveClass('md:-translate-y-1/2')
+    })
+
+    it('mirrors the upper agents\' curves onto the lower ones around the axis', () => {
+      const { container } = render(<Agents />)
+      const [, axisY] = wideJunction(container)
+      const curves = [...drawing(container, 'wide').querySelectorAll('path.agent-curve')].map((path) =>
+        points(path.getAttribute('d')),
+      )
+
+      ;[
+        [0, 4], // Claude Code and Windsurf
+        [1, 3], // Codex and Antigravity
+      ].forEach(([above, below]) => {
+        curves[above].forEach(([x, y], k) => {
+          expect(curves[below][k][0]).toBe(x)
+          expect(curves[below][k][1] - axisY).toBeCloseTo(axisY - y, 6)
+        })
+      })
     })
   })
 })

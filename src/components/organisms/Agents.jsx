@@ -33,13 +33,13 @@ export function Agents() {
  */
 const wide = (() => {
   /*
-   * The tree + wordmark group is centred on the canvas's middle (y 180), and so is
-   * the folder. Group: tree top = hub.y - (102 + 4.5) * 1.3, wordmark bottom =
-   * hub.y + 12 + 30, so hub.y = (360 + 138.45 - 42) / 2 ≈ 228.
+   * One horizontal centre axis (y 180, the canvas's middle) runs through the middle
+   * agent, the junction and the folder. Tree top = 180 - (102 + 4.5) * 1.3 ≈ 41.5,
+   * wordmark bottom = 180 + 12 + 30 = 222: both stay inside the canvas.
    */
-  const hub = { x: 560, y: 228 }
+  const hub = { x: 560, y: 180 }
   const folder = { x: 740, y: 180 } // the folder's left edge, vertically centred
-  const bends = [10, -8, -14, 8, -10]
+  const bends = [10, -8, 0, 8, -10]
   const chips = [44, 112, 180, 248, 316].map((y, i) => ({
     left: 2,
     y,
