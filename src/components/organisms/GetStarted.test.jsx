@@ -47,7 +47,7 @@ describe('GetStarted', () => {
 
   it('shows the static release label stored in content', () => {
     render(<GetStarted />)
-    expect(project.release).toBe('Latest release: v0.5.0')
+    expect(project.release).toBe('Latest release: v0.6.0')
     expect(within(screen.getByRole('list', { name: 'Project' })).getByText(project.release)).toBeInTheDocument()
   })
 })

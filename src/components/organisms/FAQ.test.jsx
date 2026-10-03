@@ -58,10 +58,10 @@ describe('FAQ', () => {
     expect(email).not.toHaveAttribute('target')
   })
 
-  it('says where memories live without naming a hosting provider', () => {
+  it('says where memories live for each edition without naming a hosting provider', () => {
     const { container } = render(<FAQ />)
-    expect(answerTo(container, 'Where are my memories stored?')).toHaveTextContent(
-      "On Memry's infrastructure, tied to your account and protected in transit with HTTPS.",
+    expect(answerTo(container, 'Where are my memories stored?').querySelector('p').textContent).toBe(
+      "Memry Cloud: On Memry's infrastructure, tied to your account and protected in transit with HTTPS. Memry Community: In your own PostgreSQL database.",
     )
     expect(container.textContent).not.toMatch(/laravel cloud/i)
   })

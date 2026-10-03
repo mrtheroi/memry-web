@@ -21,7 +21,7 @@ export function Nav() {
         </a>
         <ul className="flex items-center gap-1 text-base font-medium text-[var(--hero-ink)] sm:gap-2">
           {nav.items.map((item) => (
-            <li key={item.href} className="hidden md:block">
+            <li key={item.href} className={item.fromLg ? 'hidden lg:block' : 'hidden md:block'}>
               <a href={item.href} className="focus-ring-dark rounded-lg px-3 py-2 transition-colors hover:text-white">
                 {item.label}
               </a>

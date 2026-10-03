@@ -18,7 +18,8 @@ export const nav = {
     { label: 'How it works', href: '#how-it-works' },
     { label: 'Get started', href: '#get-started' },
     { label: 'Privacy', href: '#security' },
-    { label: 'Self-hosting', href: '#community' },
+    // Shown only from lg: five links don't fit beside the brand and GitHub at md (768px).
+    { label: 'Self-hosting', href: '#community', fromLg: true },
     { label: 'FAQ', href: '#faq' },
   ],
   github: 'GitHub',
@@ -200,7 +201,7 @@ export const getStarted = {
 export const project = {
   label: 'Project',
   // Static on purpose (no API calls from the page): update on each release.
-  release: 'Latest release: v0.5.0',
+  release: 'Latest release: v0.6.0',
   links: [
     { label: 'Docs', href: links.docs },
     { label: 'Changelog', href: links.changelog },
@@ -290,7 +291,8 @@ export const faq = {
     },
     {
       question: 'Where are my memories stored?',
-      answer: "On Memry's infrastructure, tied to your account and protected in transit with HTTPS.",
+      answer:
+        "Memry Cloud: On Memry's infrastructure, tied to your account and protected in transit with HTTPS. Memry Community: In your own PostgreSQL database.",
     },
     {
       question: 'Can I host Memry myself?',
