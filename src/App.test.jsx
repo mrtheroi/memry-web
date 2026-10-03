@@ -36,11 +36,12 @@ describe('App', () => {
     })
   })
 
-  it('answers common questions between Security and Get started', () => {
+  it('offers Cloud or self-hosting right after Security, then answers common questions before Get started', () => {
     const { container } = render(<App />)
     const order = [...container.querySelectorAll('main > section')].map((s) => s.getAttribute('aria-labelledby'))
-    expect(order.slice(order.indexOf('security-title'), order.indexOf('security-title') + 3)).toEqual([
+    expect(order.slice(order.indexOf('security-title'), order.indexOf('security-title') + 4)).toEqual([
       'security-title',
+      'community-title',
       'faq-title',
       'get-started-title',
     ])
@@ -67,6 +68,13 @@ describe('App', () => {
     const nav = screen.getByRole('navigation', { name: 'Main' })
     expect(within(nav).getByRole('link', { name: 'FAQ' })).toHaveAttribute('href', '#faq')
     expect(document.getElementById('faq')).toHaveAttribute('aria-labelledby', 'faq-title')
+  })
+
+  it('points the Self-hosting nav link at the Cloud vs Community section', () => {
+    render(<App />)
+    const nav = screen.getByRole('navigation', { name: 'Main' })
+    expect(within(nav).getByRole('link', { name: 'Self-hosting' })).toHaveAttribute('href', '#community')
+    expect(document.getElementById('community')).toHaveAttribute('aria-labelledby', 'community-title')
   })
 
   it('labels every get started call to action with exactly "Get started"', () => {
@@ -259,9 +267,10 @@ describe('App content without repetition', () => {
     agents.list.forEach((name) => expect(text).not.toContain(name))
   })
 
-  it('mentions the free beta at most twice outside the FAQ', () => {
+  it('mentions the free beta at most twice outside the FAQ and the Cloud vs Community comparison', () => {
     const { container } = render(<App />)
-    const mentions = [...container.querySelectorAll('p, li, span')].filter((el) => !el.closest('#faq')).filter(
+    // The comparison has to state each edition's price, so it is exempt like the FAQ.
+    const mentions = [...container.querySelectorAll('p, li, span')].filter((el) => !el.closest('#faq, #community')).filter(
       (el) => el.children.length === 0 && /\bfree\b|\bbeta\b/i.test(el.textContent),
     )
 

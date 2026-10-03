@@ -9,6 +9,8 @@ export const links = {
   changelog: 'https://github.com/mrtheroi/memry-cli/blob/main/CHANGELOG.md',
   releases: 'https://github.com/mrtheroi/memry-cli/releases',
   security: 'mailto:mrtheroi@gmail.com',
+  selfHosting: 'https://github.com/mrtheroi/memry-server/blob/main/docs/self-hosting.md',
+  server: 'https://github.com/mrtheroi/memry-server',
 }
 
 export const nav = {
@@ -16,6 +18,7 @@ export const nav = {
     { label: 'How it works', href: '#how-it-works' },
     { label: 'Get started', href: '#get-started' },
     { label: 'Privacy', href: '#security' },
+    { label: 'Self-hosting', href: '#community' },
     { label: 'FAQ', href: '#faq' },
   ],
   github: 'GitHub',
@@ -246,6 +249,32 @@ export const security = {
   policyEsLabel: 'Versión en español',
 }
 
+export const community = {
+  heading: 'Hosted for you, or on your own servers.',
+  editions: [
+    {
+      title: 'Memry Cloud',
+      points: [
+        'We run the server for you.',
+        'Log in with an email code from `memry setup`.',
+        "Free during the beta. Pricing after it hasn't been decided yet.",
+      ],
+      cta: { label: 'Get started', href: '#get-started' },
+    },
+    {
+      title: 'Memry Community',
+      points: [
+        'The same open-source server, MIT licensed. Free.',
+        'Runs on your own infrastructure with Docker and PostgreSQL.',
+        'Your memories stay in your database. The server sends no telemetry.',
+        'Your admin creates users and tokens; you connect with `memry setup --url`. Requires Memry CLI 0.6.0 or newer.',
+      ],
+      cta: { label: 'Read the self-hosting guide', href: links.selfHosting },
+      secondaryCta: { label: 'Server source on GitHub', href: links.server },
+    },
+  ],
+}
+
 export const faq = {
   heading: 'Questions, answered.',
   // `link.label` must appear verbatim in `answer`; that phrase becomes the link.
@@ -262,6 +291,12 @@ export const faq = {
     {
       question: 'Where are my memories stored?',
       answer: "On Memry's infrastructure, tied to your account and protected in transit with HTTPS.",
+    },
+    {
+      question: 'Can I host Memry myself?',
+      answer:
+        'Yes. Memry Community is the same open-source server, MIT licensed and free, run on your own infrastructure with Docker and PostgreSQL. Your memories stay in your database and the server sends no telemetry. The server admin creates users and tokens with `memry token <email>`; people connect with `memry setup --url` followed by your server address and `--token`, which asks for the token without showing it. Requires Memry CLI 0.6.0 or newer. See the self-hosting guide.',
+      link: { label: 'self-hosting guide', href: links.selfHosting },
     },
     {
       question: 'What does Memry store?',
