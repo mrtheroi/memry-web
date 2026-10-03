@@ -7,12 +7,13 @@ const answerTo = (container, question) =>
   items(container).find((item) => item.querySelector('summary').textContent === question)
 
 describe('FAQ', () => {
-  it('asks exactly nine questions, each in a native disclosure', () => {
+  it('asks exactly ten questions, each in a native disclosure', () => {
     const { container } = render(<FAQ />)
     expect(items(container).map((item) => item.querySelector('summary').textContent)).toEqual([
       'Is Memry free?',
       'Which agents does it work with?',
       'Where are my memories stored?',
+      'Can I host Memry myself?',
       'What does Memry store?',
       'Do you use my memories to train AI models?',
       'Does it work offline?',
@@ -57,11 +58,22 @@ describe('FAQ', () => {
     expect(email).not.toHaveAttribute('target')
   })
 
-  it('says where memories live without naming a hosting provider', () => {
+  it('says where memories live for each edition without naming a hosting provider', () => {
     const { container } = render(<FAQ />)
-    expect(answerTo(container, 'Where are my memories stored?')).toHaveTextContent(
-      "On Memry's infrastructure, tied to your account and protected in transit with HTTPS.",
+    expect(answerTo(container, 'Where are my memories stored?').querySelector('p').textContent).toBe(
+      "Memry Cloud: On Memry's infrastructure, tied to your account and protected in transit with HTTPS. Memry Community: In your own PostgreSQL database.",
     )
     expect(container.textContent).not.toMatch(/laravel cloud/i)
+  })
+  it('answers the self-hosting question from the stated facts and links the guide safely', () => {
+    const { container } = render(<FAQ />)
+    const answer = answerTo(container, 'Can I host Memry myself?')
+    expect(answer).toHaveTextContent(
+      'Yes. Memry Community is the same open-source server, MIT licensed and free, run on your own infrastructure with Docker and PostgreSQL. Your memories stay in your database and the server sends no telemetry. The server admin creates users and tokens with memry token <email>; people connect with memry setup --url followed by your server address and --token, which asks for the token without showing it. Requires Memry CLI 0.6.0 or newer. See the self-hosting guide.',
+    )
+    expect(answer.textContent).not.toMatch(/docker pull|[$€£]|\/mo|per month|plan|tier|premium|subscription/i)
+    const guide = within(answer).getByRole('link', { name: 'self-hosting guide' })
+    expect(guide).toHaveAttribute('href', 'https://github.com/mrtheroi/memry-server/blob/main/docs/self-hosting.md')
+    expect(guide).toHaveAttribute('rel', 'noopener noreferrer')
   })
 })

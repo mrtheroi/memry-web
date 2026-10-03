@@ -7,7 +7,7 @@ import { TextLink } from '../atoms/TextLink'
 /** Light band of native disclosures: works with the keyboard, screen readers and without JavaScript. */
 export function FAQ() {
   return (
-    <section id="faq" aria-labelledby="faq-title" className="scroll-mt-8 bg-white py-24 sm:py-32">
+    <section id="faq" aria-labelledby="faq-title" className="scroll-mt-8 border-t border-[var(--border)] bg-white py-24 sm:py-32">
       <Container className="grid gap-10 lg:grid-cols-[1fr_1.75fr] lg:gap-20">
         <SectionHeading id="faq-title" className="max-w-[12ch] lg:sticky lg:top-8 lg:self-start">
           {faq.heading}
