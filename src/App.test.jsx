@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import App from './App'
@@ -193,7 +195,7 @@ describe('App', () => {
   it('closes with a next step forward (the docs and GitHub), never an anchor back up to get started', () => {
     render(<App />)
     const closing = screen.getByRole('region', { name: 'Give your project a memory.' })
-    // The free beta is said once in the hero and once in Get started; the closing line doesn't repeat it.
+    // Free is said in the hero and in Get started; the closing line doesn't repeat it.
     expect(closing).toHaveTextContent('Two commands. Every agent.')
     expect(closing).not.toHaveTextContent(/free/i)
     expect(closing.querySelector('a[href="#get-started"]')).toBeNull()
@@ -267,14 +269,14 @@ describe('App content without repetition', () => {
     agents.list.forEach((name) => expect(text).not.toContain(name))
   })
 
-  it('mentions the free beta at most twice outside the FAQ and the Cloud vs Community comparison', () => {
+  it('never hints at future pricing: free is not tied to the beta, on the page or in the meta tags', () => {
     const { container } = render(<App />)
-    // The comparison has to state each edition's price, so it is exempt like the FAQ.
-    const mentions = [...container.querySelectorAll('p, li, span')].filter((el) => !el.closest('#faq, #community')).filter(
-      (el) => el.children.length === 0 && /\bfree\b|\bbeta\b/i.test(el.textContent),
-    )
+    const meta = readFileSync(resolve(process.cwd(), 'index.html'), 'utf8')
+    const futurePricing =
+      /pricing|\bprices?\b|\bpaid\b|subscription|after the beta|during the (public )?beta|free (public )?beta|until .*beta/i
 
-    expect(mentions.length).toBeLessThanOrEqual(2)
+    expect(container.textContent).not.toMatch(futurePricing)
+    expect(meta).not.toMatch(futurePricing)
   })
 
   it('says "two commands" at most twice', () => {

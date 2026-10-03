@@ -26,7 +26,7 @@ describe('GetStarted', () => {
       expect(link).toHaveAttribute('target', '_blank')
       expect(link).toHaveAttribute('rel', 'noopener noreferrer')
     })
-    expect(screen.getByText('Free public beta.')).toBeInTheDocument()
+    expect(screen.getByText('Free.')).toBeInTheDocument()
   })
 
   it('lists the project facts: docs, changelog, releases and source, opened safely', () => {

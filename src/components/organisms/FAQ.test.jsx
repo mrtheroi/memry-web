@@ -7,10 +7,9 @@ const answerTo = (container, question) =>
   items(container).find((item) => item.querySelector('summary').textContent === question)
 
 describe('FAQ', () => {
-  it('asks exactly ten questions, each in a native disclosure', () => {
+  it('asks exactly nine questions, each in a native disclosure', () => {
     const { container } = render(<FAQ />)
     expect(items(container).map((item) => item.querySelector('summary').textContent)).toEqual([
-      'Is Memry free?',
       'Which agents does it work with?',
       'Where are my memories stored?',
       'Can I host Memry myself?',
@@ -21,13 +20,6 @@ describe('FAQ', () => {
       'Who builds Memry?',
       'How do I report a security issue?',
     ])
-  })
-
-  it('says the beta is free and that pricing is undecided, naming no price or plan', () => {
-    const { container } = render(<FAQ />)
-    const answer = answerTo(container, 'Is Memry free?')
-    expect(answer).toHaveTextContent("Yes, during the public beta. Pricing after the beta hasn't been decided yet.")
-    expect(answer.textContent).not.toMatch(/[$€£]|\d|\/mo|per month|plan|tier|pro\b|premium|subscription/i)
   })
 
   it('answers the training question in the privacy policy wording', () => {
