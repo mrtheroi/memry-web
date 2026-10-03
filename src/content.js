@@ -34,7 +34,7 @@ export const hero = {
     'The Memry squirrel holding a glowing orange acorn, with ribbons of turquoise and orange light flowing from it.',
   hook: "Your agents forget. Your project shouldn't.",
   primaryCta: { label: 'Get started', href: '#get-started' },
-  betaNote: 'Free during the public beta.',
+  freeNote: 'Free.',
   secondaryCta: { label: 'View on GitHub', href: links.github },
 }
 
@@ -192,7 +192,7 @@ export const getStarted = {
   copyLabel: 'Copy install commands',
   copiedLabel: 'Copied',
   requirements: 'Requires macOS or Linux, Homebrew and at least one supported agent.',
-  beta: 'Free public beta.',
+  free: 'Free.',
   nextLabel: 'Next steps',
   docsCta: { label: 'Read the docs', href: links.docs },
   githubCta: { label: 'View on GitHub', href: links.github },
@@ -255,15 +255,17 @@ export const community = {
   editions: [
     {
       title: 'Memry Cloud',
+      tagline: 'Nothing to host.',
       points: [
         'We run the server for you.',
         'Log in with an email code from `memry setup`.',
-        "Free during the beta. Pricing after it hasn't been decided yet.",
+        'Free.',
       ],
       cta: { label: 'Get started', href: '#get-started' },
     },
     {
       title: 'Memry Community',
+      tagline: 'Your servers, your data.',
       points: [
         'The same open-source server, MIT licensed. Free.',
         'Runs on your own infrastructure with Docker and PostgreSQL.',
@@ -274,16 +276,22 @@ export const community = {
       secondaryCta: { label: 'Server source on GitHub', href: links.server },
     },
   ],
+  // Labels inside the decorative card illustrations: the same agents, and whose boundary the server sits in.
+  visuals: {
+    agents: ['CC', 'Cx', 'OC'],
+    agentsLabel: 'your agents',
+    hub: 'memry',
+    cloud: 'run by Memry',
+    servers: 'your servers',
+    containers: 'Docker',
+    database: 'PostgreSQL',
+  },
 }
 
 export const faq = {
   heading: 'Questions, answered.',
   // `link.label` must appear verbatim in `answer`; that phrase becomes the link.
   items: [
-    {
-      question: 'Is Memry free?',
-      answer: "Yes, during the public beta. Pricing after the beta hasn't been decided yet.",
-    },
     {
       question: 'Which agents does it work with?',
       answer:

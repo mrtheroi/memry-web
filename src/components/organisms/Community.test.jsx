@@ -14,14 +14,65 @@ describe('Community', () => {
       'Memry Community',
     ])
   })
-  it('describes Memry Cloud as the hosted beta and sends it to the existing get started target', () => {
+  it('gives each edition a short tagline under its title', () => {
+    render(<Community />)
+
+    expect(within(card('Memry Cloud')).getByText('Nothing to host.')).toBeInTheDocument()
+    expect(within(card('Memry Community')).getByText('Your servers, your data.')).toBeInTheDocument()
+  })
+  it('marks every point with a small decorative checkmark', () => {
+    render(<Community />)
+
+    ;[card('Memry Cloud'), card('Memry Community')].forEach((c) => {
+      within(within(c).getByRole('list'))
+        .getAllByRole('listitem')
+        .forEach((li) => {
+          const icon = li.querySelector('svg[data-icon="check"]')
+          expect(icon).not.toBeNull()
+          expect(icon).toHaveAttribute('aria-hidden', 'true')
+        })
+    })
+  })
+  it('opens Memry Cloud with a decorative picture: your agents connected to a memry server that Memry runs', () => {
+    render(<Community />)
+    const picture = card('Memry Cloud').querySelector('[data-illustration]')
+
+    expect(picture).toHaveAttribute('aria-hidden', 'true')
+    expect([...picture.querySelectorAll('[data-monogram]')].map((tile) => tile.dataset.monogram)).toEqual(['CC', 'Cx', 'OC'])
+    expect(picture).toHaveTextContent('your agents')
+    expect(picture.querySelectorAll('path.edition-line')).toHaveLength(3)
+    const boundary = picture.querySelector('[data-boundary]')
+    expect(boundary).toHaveAttribute('data-boundary', 'memry')
+    expect(boundary).toHaveTextContent('run by Memry')
+    expect(within(boundary).getByTestId('tree-mark')).toBeInTheDocument()
+  })
+  it('opens Memry Community with the same picture, but memry runs in containers beside PostgreSQL inside your servers', () => {
+    render(<Community />)
+    const picture = card('Memry Community').querySelector('[data-illustration]')
+
+    expect(picture).toHaveAttribute('aria-hidden', 'true')
+    expect([...picture.querySelectorAll('[data-monogram]')].map((tile) => tile.dataset.monogram)).toEqual(['CC', 'Cx', 'OC'])
+    expect(picture).toHaveTextContent('your agents')
+    expect(picture.querySelectorAll('path.edition-line')).toHaveLength(3)
+    const boundary = picture.querySelector('[data-boundary]')
+    expect(boundary).toHaveAttribute('data-boundary', 'yours')
+    expect(boundary).toHaveClass('border-dashed')
+    expect(boundary).toHaveTextContent('your servers')
+    // A generic stack of shipping containers (not any product's logo), carrying memry's mark, named in plain text.
+    const containers = boundary.querySelector('[data-containers]')
+    expect(containers).toHaveTextContent('Docker')
+    expect(containers.querySelectorAll('[data-container]')).toHaveLength(3)
+    expect(within(containers).getByTestId('tree-mark')).toBeInTheDocument()
+    expect(boundary.querySelector('[data-database]')).toHaveTextContent('PostgreSQL')
+  })
+  it('describes Memry Cloud as hosted and free, and sends it to the existing get started target', () => {
     render(<Community />)
     const cloud = card('Memry Cloud')
 
     expect(within(within(cloud).getByRole('list')).getAllByRole('listitem').map((li) => li.textContent)).toEqual([
       'We run the server for you.',
       'Log in with an email code from memry setup.',
-      "Free during the beta. Pricing after it hasn't been decided yet.",
+      'Free.',
     ])
     expect(within(cloud).getByRole('link', { name: 'Get started' })).toHaveAttribute('href', '#get-started')
   })

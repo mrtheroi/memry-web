@@ -22,7 +22,7 @@ export function GetStarted() {
           </p>
           <p className="mt-6 inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--background-warm)] px-3.5 py-1.5 text-sm font-medium text-[var(--memry-dark)]">
             <span aria-hidden="true" className="h-2 w-2 rounded-full bg-[var(--memry-orange)]" />
-            {getStarted.beta}
+            {getStarted.free}
           </p>
         </div>
         <div className="min-w-0">

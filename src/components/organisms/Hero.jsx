@@ -54,7 +54,7 @@ export function Hero() {
                 {hero.secondaryCta.label}
               </ButtonLink>
             </div>
-            <p className="mt-3 text-sm text-[var(--hero-ink-muted)]">{hero.betaNote}</p>
+            <p className="mt-3 text-sm text-[var(--hero-ink-muted)]">{hero.freeNote}</p>
           </motion.div>
         </div>
         <picture>

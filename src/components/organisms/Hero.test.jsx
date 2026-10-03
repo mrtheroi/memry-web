@@ -13,10 +13,10 @@ describe('Hero', () => {
     expect(github).toHaveAttribute('rel', 'noopener noreferrer')
   })
 
-  it('keeps the free beta note out of the button, as a small line near the CTAs', () => {
+  it('keeps the free note out of the button, as a small line near the CTAs', () => {
     render(<Hero />)
 
-    expect(screen.getByText('Free during the public beta.')).toBeInTheDocument()
+    expect(screen.getByText('Free.')).toBeInTheDocument()
     expect(screen.queryByRole('link', { name: /free/i })).toBeNull()
   })
 
