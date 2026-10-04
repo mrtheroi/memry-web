@@ -21,8 +21,14 @@ const tones = {
 /** Chip on the navy (Agents diagram): near-white label, translucent navy fill, faint turquoise edge. */
 export const glassChip = 'border border-[var(--border-glass-strong)] bg-[rgba(3,30,39,0.72)] text-[var(--hero-ink)]'
 
+/** Illustration box inset in the card, or (`bleed`) run edge to edge across the card's top, under its rounded corners. */
+const slots = {
+  inset: 'flex min-h-20 flex-col justify-center rounded-lg border px-4 py-3 sm:min-h-28',
+  bleed: '-mx-5 -mt-5 rounded-t-[15px] border-b sm:-mx-7 sm:-mt-7',
+}
+
 /** A list item: optional decorative illustration box, title and body; `children` for anything else. */
-export function GlassCard({ illustration, title, body, tone = 'dark', className = '', children }) {
+export function GlassCard({ illustration, bleed = false, title, body, tone = 'dark', className = '', children }) {
   const t = tones[tone]
   return (
     <li data-glass-card data-tone={tone} className={className ? `${t.shell} ${className}` : t.shell}>
@@ -30,7 +36,7 @@ export function GlassCard({ illustration, title, body, tone = 'dark', className 
         <div
           data-illustration
           aria-hidden="true"
-          className={`flex min-h-20 flex-col justify-center rounded-lg border px-4 py-3 sm:min-h-28 ${t.illustration}`}
+          className={`${bleed ? slots.bleed : slots.inset} ${t.illustration}`}
         >
           {illustration}
         </div>

@@ -11,6 +11,20 @@ describe.each([
     window.matchMedia = original
   })
 
+  it('lets the boundary take all the width left beside the agents, uncapped', () => {
+    const { container } = render(<Visual />)
+    const area = container.querySelector('[data-boundary]').parentElement
+
+    expect(area).toHaveClass('flex-1')
+    expect(area.className).not.toMatch(/(^|\s)max-w-/)
+  })
+
+  it('measures itself against the card width, so the whole picture scales with it', () => {
+    const { container } = render(<Visual />)
+
+    expect(container.firstElementChild).toHaveClass('@container')
+  })
+
   it('does not animate at all when the user prefers reduced motion', () => {
     window.matchMedia = vi.fn().mockReturnValue({
       matches: true,
