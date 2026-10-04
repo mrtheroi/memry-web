@@ -20,7 +20,7 @@ export function Community() {
           {community.editions.map((edition, i) => {
             const Visual = visuals[i]
             return (
-              <GlassCard key={edition.title} tone="light" illustration={<Visual />} title={edition.title}>
+              <GlassCard key={edition.title} tone="light" illustration={<Visual />} bleed title={edition.title}>
                 <p className="mt-1.5 font-semibold text-[var(--memry-teal)]">{edition.tagline}</p>
                 <ul className="mt-5 space-y-3 leading-relaxed text-[var(--text-primary)]">
                   {edition.points.map((point) => (

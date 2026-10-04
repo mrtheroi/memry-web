@@ -65,6 +65,15 @@ describe('Community', () => {
     expect(within(containers).getByTestId('tree-mark')).toBeInTheDocument()
     expect(boundary.querySelector('[data-database]')).toHaveTextContent('PostgreSQL')
   })
+  it('runs each illustration full-bleed across the top of its card, edge to edge', () => {
+    render(<Community />)
+
+    ;[card('Memry Cloud'), card('Memry Community')].forEach((c) => {
+      const slot = c.querySelector('[data-illustration]')
+      expect(slot).toHaveClass('-mx-5', '-mt-5', 'sm:-mx-7', 'sm:-mt-7', 'rounded-t-[15px]')
+      expect(slot.className).not.toMatch(/(^|\s)(px-4|py-3|rounded-lg)(\s|$)/)
+    })
+  })
   it('describes Memry Cloud as hosted and free, and sends it to the existing get started target', () => {
     render(<Community />)
     const cloud = card('Memry Cloud')
