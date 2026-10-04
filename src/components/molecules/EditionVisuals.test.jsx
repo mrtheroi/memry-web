@@ -25,6 +25,16 @@ describe.each([
     expect(container.firstElementChild).toHaveClass('@container')
   })
 
+  it('keeps shrinking with the card down to a 320px phone, so nothing spills out of the boundary', () => {
+    const { container } = render(<Visual />)
+    const unit = container.firstElementChild.firstElementChild.style.getPropertyValue('--u')
+    const floor = Number(unit.match(/^clamp\(([\d.]+)px,/)[1])
+    // At a 320px viewport the card is 288px wide and its full-bleed picture 286px, so 1cqw is 2.86px.
+    const narrowestCqw = 286 / 100
+
+    expect(floor).toBeLessThanOrEqual(narrowestCqw)
+  })
+
   it('does not animate at all when the user prefers reduced motion', () => {
     window.matchMedia = vi.fn().mockReturnValue({
       matches: true,
