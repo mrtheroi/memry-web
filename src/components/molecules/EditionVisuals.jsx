@@ -19,7 +19,7 @@ import { TreeMark } from '../atoms/TreeMark'
  */
 const { agents, agentsLabel, hub, cloud, servers, containers, database } = community.visuals
 const u = (n) => `calc(var(--u) * ${n})`
-const UNIT = 'clamp(3.2px, 1cqw, 4.2px)'
+const UNIT = 'clamp(2.6px, 1cqw, 4.2px)'
 const ROW = 38
 const TILE = 10
 const LINE_WIDTH = 20
