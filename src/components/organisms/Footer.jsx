@@ -7,7 +7,10 @@ export function Footer() {
   return (
     <footer className="border-t border-[var(--border)] py-12">
       <Container className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
-        <BrandMark />
+        <div>
+          <BrandMark />
+          <p className="mt-2 text-sm text-[var(--text-muted)]">{footer.slogan}</p>
+        </div>
         <nav aria-label="Footer">
           <ul className="flex flex-wrap gap-x-6 gap-y-3 text-sm font-medium">
             {footer.links.map((link) => (

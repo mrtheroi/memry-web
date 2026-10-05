@@ -71,4 +71,12 @@ describe('Hero', () => {
     expect(screen.queryByRole('list')).toBeNull()
     agents.list.forEach((name) => expect(container.textContent).not.toContain(name))
   })
+  it('opens with the brand slogan just above the heading, outside it', () => {
+    render(<Hero />)
+    const heading = screen.getByRole('heading', { level: 1 })
+    const slogan = screen.getByText('Because even agents need to remember.')
+
+    expect(heading).not.toContainElement(slogan)
+    expect(slogan.compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+  })
 })

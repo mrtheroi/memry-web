@@ -25,7 +25,12 @@ export const nav = {
   github: 'GitHub',
 }
 
+// The brand slogan, shown above the hero heading and in the footer. It never
+// repeats "Memry": the wordmark sits right next to it in both places.
+const slogan = 'Because even agents need to remember.'
+
 export const hero = {
+  slogan,
   // The wordmark "Memry" is rendered by the Wordmark atom.
   taglineLead: 'Persistent memory for your',
   taglineAccent: 'AI agents.',
@@ -361,6 +366,7 @@ export const closing = {
 }
 
 export const footer = {
+  slogan,
   links: [
     { label: 'GitHub', href: links.github },
     { label: 'Docs', href: links.docs },
