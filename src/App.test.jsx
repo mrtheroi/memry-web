@@ -269,6 +269,14 @@ describe('App content without repetition', () => {
     agents.list.forEach((name) => expect(text).not.toContain(name))
   })
 
+  it('opens every link preview description with the brand slogan, not the old hook', () => {
+    const meta = readFileSync(resolve(process.cwd(), 'index.html'), 'utf8')
+    const descriptions = [...meta.matchAll(/name="(?:description|twitter:description)"[^>]*|property="og:description"[^>]*/g)]
+
+    expect(meta).not.toContain("Your project shouldn't")
+    expect(meta.match(/content="Because even agents need to remember\. /g)).toHaveLength(3)
+    expect(descriptions.length).toBeGreaterThan(0)
+  })
   it('never hints at future pricing: free is not tied to the beta, on the page or in the meta tags', () => {
     const { container } = render(<App />)
     const meta = readFileSync(resolve(process.cwd(), 'index.html'), 'utf8')

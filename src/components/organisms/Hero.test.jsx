@@ -29,11 +29,15 @@ describe('Hero', () => {
     expect(h1.className).not.toMatch(/sr-only/)
   })
 
-  it('adds the hook line under the tagline, outside the h1', () => {
-    render(<Hero />)
+  it('puts the brand slogan once, under the tagline and outside the h1, in place of the old hook', () => {
+    const { container } = render(<Hero />)
+    const heading = screen.getByRole('heading', { level: 1 })
+    const slogan = screen.getByText('Because even agents need to remember.')
 
-    const hook = screen.getByText("Your agents forget. Your project shouldn't.")
-    expect(screen.getByRole('heading', { level: 1 })).not.toContainElement(hook)
+    expect(heading).not.toContainElement(slogan)
+    expect(heading.compareDocumentPosition(slogan) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(container.textContent.split('Because even agents need to remember.')).toHaveLength(2)
+    expect(container.textContent).not.toContain("Your project shouldn't")
   })
 
   it('serves the text-free art, with a vertical crop for mobile', () => {
@@ -70,13 +74,5 @@ describe('Hero', () => {
     expect(screen.queryByText('Works with')).toBeNull()
     expect(screen.queryByRole('list')).toBeNull()
     agents.list.forEach((name) => expect(container.textContent).not.toContain(name))
-  })
-  it('opens with the brand slogan just above the heading, outside it', () => {
-    render(<Hero />)
-    const heading = screen.getByRole('heading', { level: 1 })
-    const slogan = screen.getByText('Because even agents need to remember.')
-
-    expect(heading).not.toContainElement(slogan)
-    expect(slogan.compareDocumentPosition(heading) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   })
 })
