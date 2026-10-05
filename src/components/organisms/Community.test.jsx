@@ -1,4 +1,5 @@
 import { render, screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import { Community } from './Community'
 
@@ -93,10 +94,33 @@ describe('Community', () => {
       'The same open-source server, MIT licensed. Free.',
       'Runs on your own infrastructure with Docker and PostgreSQL.',
       'Your memories stay in your database. The server sends no telemetry.',
-      'Your admin creates users and tokens; you connect with memry setup --url. Requires Memry CLI 0.6.0 or newer.',
+      'One command starts the server, creates your user and connects your agents. You need Docker and curl.',
     ])
-    // No published image to promise yet, and no price beyond free.
-    expect(self.textContent).not.toMatch(/docker pull|docker\.io|ghcr\.io|[$€£]|\/mo|per month|plan|tier|premium|subscription/i)
+    // No price beyond free (outside the terminal, whose "$" is the shell prompt).
+    const prose = self.textContent.replace(within(self).getByRole('figure').textContent, '')
+    expect(prose).not.toMatch(/[$€£]|\/mo|per month|plan|tier|premium|subscription/i)
+  })
+  it('shows the one-command install as a single chained command that never touches files in the current directory', async () => {
+    const user = userEvent.setup()
+    render(<Community />)
+    const self = card('Memry Community')
+    // A fresh mktemp file, so no existing install.sh is overwritten, and && so
+    // the installer only runs after a successful download.
+    const command =
+      'f=$(mktemp) && curl -fsSLo "$f" https://raw.githubusercontent.com/mrtheroi/memry-server/v0.18.1/install.sh && sh "$f" --email YOUR_EMAIL'
+
+    expect(within(self).getByRole('figure')).toHaveTextContent(command)
+    await user.click(within(self).getByRole('button', { name: 'Copy the self-hosting install command' }))
+    expect(await navigator.clipboard.readText()).toBe(command)
+  })
+  it('asks to replace the email placeholder, which the installer rejects if pasted unchanged', () => {
+    render(<Community />)
+    const self = card('Memry Community')
+
+    // A real-looking example address would create a user for it; YOUR_EMAIL
+    // fails the installer's email check instead.
+    expect(within(self).getByRole('figure').textContent).not.toMatch(/@example\.com/)
+    expect(self).toHaveTextContent('Replace YOUR_EMAIL with your email address before running it.')
   })
   it('points Memry Community to the self-hosting guide and the server source, in a safe new tab', () => {
     render(<Community />)
