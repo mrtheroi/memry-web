@@ -100,20 +100,18 @@ describe('Community', () => {
     const prose = self.textContent.replace(within(self).getByRole('figure').textContent, '')
     expect(prose).not.toMatch(/[$€£]|\/mo|per month|plan|tier|premium|subscription/i)
   })
-  it('shows the one-command install of the released installer and copies exactly those commands', async () => {
+  it('shows the one-command install as a single chained command that never touches files in the current directory', async () => {
     const user = userEvent.setup()
     render(<Community />)
     const self = card('Memry Community')
+    // A fresh mktemp file, so no existing install.sh is overwritten, and && so
+    // the installer only runs after a successful download.
+    const command =
+      'f=$(mktemp) && curl -fsSLo "$f" https://raw.githubusercontent.com/mrtheroi/memry-server/v0.18.1/install.sh && sh "$f" --email you@example.com'
 
-    const terminal = within(self).getByRole('figure')
-    expect(terminal).toHaveTextContent(
-      'curl -fsSLo install.sh https://raw.githubusercontent.com/mrtheroi/memry-server/v0.18.1/install.sh',
-    )
-    expect(terminal).toHaveTextContent('sh install.sh --email you@example.com')
-    await user.click(within(self).getByRole('button', { name: 'Copy the self-hosting install commands' }))
-    expect(await navigator.clipboard.readText()).toBe(
-      'curl -fsSLo install.sh https://raw.githubusercontent.com/mrtheroi/memry-server/v0.18.1/install.sh\nsh install.sh --email you@example.com',
-    )
+    expect(within(self).getByRole('figure')).toHaveTextContent(command)
+    await user.click(within(self).getByRole('button', { name: 'Copy the self-hosting install command' }))
+    expect(await navigator.clipboard.readText()).toBe(command)
   })
   it('points Memry Community to the self-hosting guide and the server source, in a safe new tab', () => {
     render(<Community />)
