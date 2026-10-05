@@ -46,6 +46,9 @@ export function Community() {
                         />
                       }
                     />
+                    <p className="mt-2.5 text-sm leading-relaxed text-[var(--text-muted)]">
+                      <CodeText>{edition.install.note}</CodeText>
+                    </p>
                   </div>
                 )}
                 <div className="mt-auto flex flex-wrap gap-3 pt-8">

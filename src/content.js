@@ -275,11 +275,13 @@ export const community = {
       // Static on purpose, like project.release: pin the latest server release.
       // One chained command: a fresh mktemp file never overwrites an install.sh
       // in the current directory, and && runs the installer only after a
-      // successful download.
+      // successful download. YOUR_EMAIL is not a valid address, so the
+      // installer refuses it if the command is pasted unchanged.
       install: {
         commands: [
-          'f=$(mktemp) && curl -fsSLo "$f" https://raw.githubusercontent.com/mrtheroi/memry-server/v0.18.1/install.sh && sh "$f" --email you@example.com',
+          'f=$(mktemp) && curl -fsSLo "$f" https://raw.githubusercontent.com/mrtheroi/memry-server/v0.18.1/install.sh && sh "$f" --email YOUR_EMAIL',
         ],
+        note: 'Replace YOUR_EMAIL with your email address before running it.',
         copyLabel: 'Copy the self-hosting install command',
         copiedLabel: 'Copied',
       },

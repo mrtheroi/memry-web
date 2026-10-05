@@ -107,11 +107,20 @@ describe('Community', () => {
     // A fresh mktemp file, so no existing install.sh is overwritten, and && so
     // the installer only runs after a successful download.
     const command =
-      'f=$(mktemp) && curl -fsSLo "$f" https://raw.githubusercontent.com/mrtheroi/memry-server/v0.18.1/install.sh && sh "$f" --email you@example.com'
+      'f=$(mktemp) && curl -fsSLo "$f" https://raw.githubusercontent.com/mrtheroi/memry-server/v0.18.1/install.sh && sh "$f" --email YOUR_EMAIL'
 
     expect(within(self).getByRole('figure')).toHaveTextContent(command)
     await user.click(within(self).getByRole('button', { name: 'Copy the self-hosting install command' }))
     expect(await navigator.clipboard.readText()).toBe(command)
+  })
+  it('asks to replace the email placeholder, which the installer rejects if pasted unchanged', () => {
+    render(<Community />)
+    const self = card('Memry Community')
+
+    // A real-looking example address would create a user for it; YOUR_EMAIL
+    // fails the installer's email check instead.
+    expect(within(self).getByRole('figure').textContent).not.toMatch(/@example\.com/)
+    expect(self).toHaveTextContent('Replace YOUR_EMAIL with your email address before running it.')
   })
   it('points Memry Community to the self-hosting guide and the server source, in a safe new tab', () => {
     render(<Community />)
