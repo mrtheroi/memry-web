@@ -61,7 +61,7 @@ describe('FAQ', () => {
     const { container } = render(<FAQ />)
     const answer = answerTo(container, 'Can I host Memry myself?')
     expect(answer).toHaveTextContent(
-      'Yes. Memry Community is the same open-source server, MIT licensed and free, run on your own infrastructure with Docker and PostgreSQL. Your memories stay in your database and the server sends no telemetry. With Docker installed, one command starts the server, creates your user and connects your agents. See the self-hosting guide.',
+      'Yes. Memry Community is the same open-source server, MIT licensed and free, run on your own infrastructure with Docker and PostgreSQL. Your memories stay in your database and the server sends no telemetry. With Docker and curl installed, one command starts the server, creates your user and connects your agents. See the self-hosting guide.',
     )
     expect(answer.textContent).not.toMatch(/[$€£]|\/mo|per month|plan|tier|premium|subscription/i)
     const guide = within(answer).getByRole('link', { name: 'self-hosting guide' })

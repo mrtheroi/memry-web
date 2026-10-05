@@ -270,7 +270,7 @@ export const community = {
         'The same open-source server, MIT licensed. Free.',
         'Runs on your own infrastructure with Docker and PostgreSQL.',
         'Your memories stay in your database. The server sends no telemetry.',
-        'One command starts the server, creates your user and connects your agents. You only need Docker.',
+        'One command starts the server, creates your user and connects your agents. You need Docker and curl.',
       ],
       // Static on purpose, like project.release: pin the latest server release.
       // One chained command: a fresh mktemp file never overwrites an install.sh
@@ -316,7 +316,7 @@ export const faq = {
     {
       question: 'Can I host Memry myself?',
       answer:
-        'Yes. Memry Community is the same open-source server, MIT licensed and free, run on your own infrastructure with Docker and PostgreSQL. Your memories stay in your database and the server sends no telemetry. With Docker installed, one command starts the server, creates your user and connects your agents. See the self-hosting guide.',
+        'Yes. Memry Community is the same open-source server, MIT licensed and free, run on your own infrastructure with Docker and PostgreSQL. Your memories stay in your database and the server sends no telemetry. With Docker and curl installed, one command starts the server, creates your user and connects your agents. See the self-hosting guide.',
       link: { label: 'self-hosting guide', href: links.selfHosting },
     },
     {

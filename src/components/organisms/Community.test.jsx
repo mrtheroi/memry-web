@@ -94,7 +94,7 @@ describe('Community', () => {
       'The same open-source server, MIT licensed. Free.',
       'Runs on your own infrastructure with Docker and PostgreSQL.',
       'Your memories stay in your database. The server sends no telemetry.',
-      'One command starts the server, creates your user and connects your agents. You only need Docker.',
+      'One command starts the server, creates your user and connects your agents. You need Docker and curl.',
     ])
     // No price beyond free (outside the terminal, whose "$" is the shell prompt).
     const prose = self.textContent.replace(within(self).getByRole('figure').textContent, '')
