@@ -83,8 +83,20 @@ describe('Community', () => {
       'We run the server for you.',
       'Log in with an email code from memry setup.',
       'Free.',
+      'You need Homebrew, on macOS or Linux.',
     ])
     expect(within(cloud).getByRole('link', { name: 'Get started' })).toHaveAttribute('href', '#get-started')
+  })
+  it('shows the two Memry Cloud install commands in a terminal and copies exactly those', async () => {
+    const user = userEvent.setup()
+    render(<Community />)
+    const cloud = card('Memry Cloud')
+
+    const terminal = within(cloud).getByRole('figure')
+    expect(terminal).toHaveTextContent('brew install mrtheroi/tap/memry')
+    expect(terminal).toHaveTextContent('memry setup')
+    await user.click(within(cloud).getByRole('button', { name: 'Copy the Memry Cloud install commands' }))
+    expect(await navigator.clipboard.readText()).toBe('brew install mrtheroi/tap/memry\nmemry setup')
   })
   it('describes Memry Community with the stated facts only', () => {
     render(<Community />)

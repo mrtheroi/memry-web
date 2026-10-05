@@ -13,11 +13,10 @@ describe('Hero', () => {
     expect(github).toHaveAttribute('rel', 'noopener noreferrer')
   })
 
-  it('keeps the free note out of the button, as a small line near the CTAs', () => {
+  it('has no free note under the CTAs; the edition cards and get started say it', () => {
     render(<Hero />)
 
-    expect(screen.getByText('Free.')).toBeInTheDocument()
-    expect(screen.queryByRole('link', { name: /free/i })).toBeNull()
+    expect(screen.queryByText(/free/i)).toBeNull()
   })
 
   it('shows the wordmark and tagline as a visible h1', () => {
