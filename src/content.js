@@ -37,7 +37,6 @@ export const hero = {
   // Accessible name for the temporary artwork, which has the wordmark baked in.
   imageAlt:
     'The Memry squirrel holding a glowing orange acorn, with ribbons of turquoise and orange light flowing from it.',
-  hook: "Your agents forget. Your project shouldn't.",
   primaryCta: { label: 'Get started', href: '#get-started' },
   freeNote: 'Free.',
   secondaryCta: { label: 'View on GitHub', href: links.github },
