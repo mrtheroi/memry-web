@@ -33,4 +33,8 @@ describe('Footer', () => {
     expect(screen.getByTestId('tree-mark')).toBeInTheDocument()
     expect(container.querySelector('img')).toBeNull()
   })
+  it('signs off with the brand slogan', () => {
+    render(<Footer />)
+    expect(screen.getByRole('contentinfo')).toHaveTextContent('Because even agents need to remember.')
+  })
 })

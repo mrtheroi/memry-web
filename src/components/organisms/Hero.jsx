@@ -31,6 +31,12 @@ export function Hero() {
     <section aria-labelledby="hero-title" className="hero-bg relative overflow-hidden">
       <div className="relative mx-auto max-w-[1672px]">
         <div className="relative z-10 px-4 pt-28 sm:px-8 xl:absolute xl:left-[55.5%] xl:bottom-[7%] xl:p-0 xl:pr-6">
+          <motion.p
+            {...reveal(0.05)}
+            className="mb-3 text-[clamp(0.95rem,1.15vw,1.125rem)] font-medium tracking-[-0.005em] text-[var(--memry-turquoise)]"
+          >
+            {hero.slogan}
+          </motion.p>
           <motion.h1 id="hero-title" {...reveal(0.15)} className="text-white">
             <Wordmark className="block text-[clamp(3.75rem,8.2vw,8.5rem)] leading-[0.9]" />
             <span className="sr-only"> — </span>
