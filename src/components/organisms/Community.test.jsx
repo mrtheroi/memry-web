@@ -1,4 +1,5 @@
 import { render, screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import { Community } from './Community'
 
@@ -93,10 +94,26 @@ describe('Community', () => {
       'The same open-source server, MIT licensed. Free.',
       'Runs on your own infrastructure with Docker and PostgreSQL.',
       'Your memories stay in your database. The server sends no telemetry.',
-      'Your admin creates users and tokens; you connect with memry setup --url. Requires Memry CLI 0.6.0 or newer.',
+      'One command starts the server, creates your user and connects your agents. You only need Docker.',
     ])
-    // No published image to promise yet, and no price beyond free.
-    expect(self.textContent).not.toMatch(/docker pull|docker\.io|ghcr\.io|[$€£]|\/mo|per month|plan|tier|premium|subscription/i)
+    // No price beyond free (outside the terminal, whose "$" is the shell prompt).
+    const prose = self.textContent.replace(within(self).getByRole('figure').textContent, '')
+    expect(prose).not.toMatch(/[$€£]|\/mo|per month|plan|tier|premium|subscription/i)
+  })
+  it('shows the one-command install of the released installer and copies exactly those commands', async () => {
+    const user = userEvent.setup()
+    render(<Community />)
+    const self = card('Memry Community')
+
+    const terminal = within(self).getByRole('figure')
+    expect(terminal).toHaveTextContent(
+      'curl -fsSLo install.sh https://raw.githubusercontent.com/mrtheroi/memry-server/v0.18.1/install.sh',
+    )
+    expect(terminal).toHaveTextContent('sh install.sh --email you@example.com')
+    await user.click(within(self).getByRole('button', { name: 'Copy the self-hosting install commands' }))
+    expect(await navigator.clipboard.readText()).toBe(
+      'curl -fsSLo install.sh https://raw.githubusercontent.com/mrtheroi/memry-server/v0.18.1/install.sh\nsh install.sh --email you@example.com',
+    )
   })
   it('points Memry Community to the self-hosting guide and the server source, in a safe new tab', () => {
     render(<Community />)

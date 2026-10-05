@@ -3,8 +3,10 @@ import { ButtonLink } from '../atoms/ButtonLink'
 import { CodeText } from '../atoms/CodeText'
 import { Container } from '../atoms/Container'
 import { SectionHeading } from '../atoms/SectionHeading'
+import { CopyButton } from '../molecules/CopyButton'
 import { CloudVisual, CommunityVisual } from '../molecules/EditionVisuals'
 import { GlassCard } from '../molecules/GlassCard'
+import { Terminal } from '../molecules/Terminal'
 
 const visuals = [CloudVisual, CommunityVisual]
 
@@ -32,6 +34,20 @@ export function Community() {
                     </li>
                   ))}
                 </ul>
+                {edition.install && (
+                  <div className="mt-6 min-w-0">
+                    <Terminal
+                      commands={edition.install.commands}
+                      action={
+                        <CopyButton
+                          text={edition.install.commands.join('\n')}
+                          label={edition.install.copyLabel}
+                          copiedLabel={edition.install.copiedLabel}
+                        />
+                      }
+                    />
+                  </div>
+                )}
                 <div className="mt-auto flex flex-wrap gap-3 pt-8">
                   <ButtonLink href={edition.cta.href}>{edition.cta.label}</ButtonLink>
                   {edition.secondaryCta && (

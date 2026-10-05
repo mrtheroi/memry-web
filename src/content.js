@@ -201,7 +201,7 @@ export const getStarted = {
 export const project = {
   label: 'Project',
   // Static on purpose (no API calls from the page): update on each release.
-  release: 'Latest release: v0.6.0',
+  release: 'Latest release: v0.7.0',
   links: [
     { label: 'Docs', href: links.docs },
     { label: 'Changelog', href: links.changelog },
@@ -270,8 +270,17 @@ export const community = {
         'The same open-source server, MIT licensed. Free.',
         'Runs on your own infrastructure with Docker and PostgreSQL.',
         'Your memories stay in your database. The server sends no telemetry.',
-        'Your admin creates users and tokens; you connect with `memry setup --url`. Requires Memry CLI 0.6.0 or newer.',
+        'One command starts the server, creates your user and connects your agents. You only need Docker.',
       ],
+      // Static on purpose, like project.release: pin the latest server release.
+      install: {
+        commands: [
+          'curl -fsSLo install.sh https://raw.githubusercontent.com/mrtheroi/memry-server/v0.18.1/install.sh',
+          'sh install.sh --email you@example.com',
+        ],
+        copyLabel: 'Copy the self-hosting install commands',
+        copiedLabel: 'Copied',
+      },
       cta: { label: 'Read the self-hosting guide', href: links.selfHosting },
       secondaryCta: { label: 'Server source on GitHub', href: links.server },
     },
@@ -305,7 +314,7 @@ export const faq = {
     {
       question: 'Can I host Memry myself?',
       answer:
-        'Yes. Memry Community is the same open-source server, MIT licensed and free, run on your own infrastructure with Docker and PostgreSQL. Your memories stay in your database and the server sends no telemetry. The server admin creates users and tokens with `memry token <email>`; people connect with `memry setup --url` followed by your server address and `--token`, which asks for the token without showing it. Requires Memry CLI 0.6.0 or newer. See the self-hosting guide.',
+        'Yes. Memry Community is the same open-source server, MIT licensed and free, run on your own infrastructure with Docker and PostgreSQL. Your memories stay in your database and the server sends no telemetry. With Docker installed, one command starts the server, creates your user and connects your agents. See the self-hosting guide.',
       link: { label: 'self-hosting guide', href: links.selfHosting },
     },
     {
