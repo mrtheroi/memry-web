@@ -38,7 +38,6 @@ export const hero = {
   imageAlt:
     'The Memry squirrel holding a glowing orange acorn, with ribbons of turquoise and orange light flowing from it.',
   primaryCta: { label: 'Get started', href: '#get-started' },
-  freeNote: 'Free.',
   secondaryCta: { label: 'View on GitHub', href: links.github },
 }
 
@@ -264,7 +263,13 @@ export const community = {
         'We run the server for you.',
         'Log in with an email code from `memry setup`.',
         'Free.',
+        'You need Homebrew, on macOS or Linux.',
       ],
+      install: {
+        commands: ['brew install mrtheroi/tap/memry', 'memry setup'],
+        copyLabel: 'Copy the Memry Cloud install commands',
+        copiedLabel: 'Copied',
+      },
       cta: { label: 'Get started', href: '#get-started' },
     },
     {
