@@ -204,7 +204,7 @@ export const getStarted = {
 export const project = {
   label: 'Project',
   // Static on purpose (no API calls from the page): update on each release.
-  release: 'Latest release: v0.7.0',
+  release: 'Latest release: v1.0.0',
   links: [
     { label: 'Docs', href: links.docs },
     { label: 'Changelog', href: links.changelog },
