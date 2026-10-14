@@ -288,7 +288,7 @@ export const community = {
       // installer refuses it if the command is pasted unchanged.
       install: {
         commands: [
-          'f=$(mktemp) && curl -fsSLo "$f" https://raw.githubusercontent.com/mrtheroi/memry-server/v0.18.1/install.sh && sh "$f" --email YOUR_EMAIL',
+          'f=$(mktemp) && curl -fsSLo "$f" https://raw.githubusercontent.com/mrtheroi/memry-server/v0.19.0/install.sh && sh "$f" --email YOUR_EMAIL',
         ],
         note: 'Replace YOUR_EMAIL with your email address before running it.',
         copyLabel: 'Copy the self-hosting install command',
