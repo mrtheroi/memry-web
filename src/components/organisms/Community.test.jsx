@@ -119,7 +119,7 @@ describe('Community', () => {
     // A fresh mktemp file, so no existing install.sh is overwritten, and && so
     // the installer only runs after a successful download.
     const command =
-      'f=$(mktemp) && curl -fsSLo "$f" https://raw.githubusercontent.com/mrtheroi/memry-server/v0.19.0/install.sh && sh "$f" --email YOUR_EMAIL'
+      'f=$(mktemp) && curl -fsSLo "$f" https://raw.githubusercontent.com/mrtheroi/memry-server/v0.20.0/install.sh && sh "$f" --email YOUR_EMAIL'
 
     expect(within(self).getByRole('figure')).toHaveTextContent(command)
     await user.click(within(self).getByRole('button', { name: 'Copy the self-hosting install command' }))
